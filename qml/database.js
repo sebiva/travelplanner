@@ -31,7 +31,9 @@ function setup() {
         //console.log("TABLE CLEARED" + setuped)
     //});
     db.transaction(function (trans) {
+        //trans.executeSql('DELETE FROM lastsearch')
         trans.executeSql('CREATE TABLE IF NOT EXISTS favourites(fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT, time INTEGER, PRIMARY KEY(fromid, toid))');
+        trans.executeSql('CREATE TABLE IF NOT EXISTS lastsearch(fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT)')
     });
 }
 
@@ -74,7 +76,7 @@ function getfaves() {
     var result = [];
     db.transaction(function (trans) {
         var x = trans.executeSql('SELECT * FROM favourites ORDER BY datetime(time) DESC');
-        console.log("SIZE of fav: " + x.rows.length);
+        //console.log("SIZE of fav: " + x.rows.length);
         for(var i=0; i<x.rows.length; i++) {
             var row = x.rows.item(i);
             result[i] = {
@@ -83,7 +85,7 @@ function getfaves() {
                 from: row['fromstop'],
                 to: row['tostop']
             }
-            console.log(row['fromid'], row['toid'], row['fromstop'], row['tostop'], row['time']);
+            //console.log(row['fromid'], row['toid'], row['fromstop'], row['tostop'], row['time']);
         }
 
         if(x.rows.length === 0) {
@@ -91,4 +93,42 @@ function getfaves() {
         }
     });
     return result;
+}
+
+function getlastsearch() {
+    var db = getDatabase();
+    var result;
+    db.transaction(function (trans) {
+        var x = trans.executeSql('SELECT * FROM lastsearch');
+        //console.log("Getting : " + x.rows.length)
+        if (x.rows.length !== 1) {
+            result = 0;
+        }
+
+        var row = x.rows.item(0);
+
+        result = {
+            fromid: row['fromid'],
+            toid: row['toid'],
+            from: row['fromstop'],
+            to: row['tostop']
+        }
+        console.log("Getting: " + result.fromid + result.toid + result.from + result.to)
+    });
+    return result;
+}
+
+function setlastsearch(fromid, toid, from, to) {
+    var db = getDatabase();
+    var result;
+    db.transaction(function (trans) {
+        //console.log("Setting: " + fromid + toid + from + to)
+        trans.executeSql('DELETE FROM lastsearch')
+        var x = trans.executeSql('INSERT INTO lastsearch VALUES(?, ?, ?, ?)', [fromid, toid, from, to]);
+        if(x.rowsAffected > 0) {
+            result= 1;
+        } else {
+            result = 0;
+        }
+    });
 }

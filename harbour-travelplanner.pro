@@ -17,13 +17,10 @@ OTHER_FILES += qml/harbour-travelplanner.qml \
     rpm/harbour-travelplanner.spec \
     rpm/harbour-travelplanner.yaml \
     harbour-travelplanner.desktop \
-    qml/pages/SettingsPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/SearchPage.qml \
-    qml/pages/DialogTemp.qml \
     search.js \
     qml/search.js \
-    qml/pages/SearchTemp.qml \
     qml/pages/database.js \
     qml/database.js
 

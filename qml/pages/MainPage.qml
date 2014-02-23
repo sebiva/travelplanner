@@ -40,11 +40,12 @@ Dialog {
     property string date
     property string from
     property string to
-    property string fromid: "null"
+    property string fromid:"null"
     property string toid: "null"
     property bool typing: fromtext.typing || totext.typing
     property int animtime: 500
-    canAccept: (fromid !== "null") && (toid !== "null") && !typing;
+
+    canAccept: (fromid !== "null") && (toid !== "null") && !typing; // && (from !== "") && (to !== "");
     acceptDestination: canAccept ? Qt.resolvedUrl("SearchPage.qml") : null
     onAcceptPendingChanged: {
         console.log("fore searchfunc")
@@ -54,15 +55,30 @@ Dialog {
     property bool fromready: false
     property bool toready: false
 
-    Component.onCompleted: DBjs.setup();
+    Component.onCompleted: {
+        DBjs.setup();
+        var lastsearch = DBjs.getlastsearch();
+        if (lastsearch === 0) {
+            return;
+        }
+        fromid = lastsearch.fromid
+        toid = lastsearch.toid
+        fromtext.text = lastsearch.from
+        totext.text = lastsearch.to
+        from = lastsearch.from
+        to = lastsearch.to
 
+    }
     function searchfunc() {
-        acceptDestinationInstance.from = fromtext.text
-        acceptDestinationInstance.to = totext.text
-        acceptDestinationInstance.fromid = fromid
-        acceptDestinationInstance.toid = toid
-        acceptDestinationInstance.time = timepicker.value// === "Select") ? Searchjs.getcurrenttime() : timepicker.value
-        acceptDestinationInstance.date = datepicker.value//(datepicker.value === "Select") ? Searchjs.getcurrentdate() : datepicker.value
+        if (fromready && toready) { //&& (from !== "") && (to !== "")) {
+            DBjs.setlastsearch(fromid,toid,from,to)
+            acceptDestinationInstance.from = fromtext.text
+            acceptDestinationInstance.to = totext.text
+            acceptDestinationInstance.fromid = fromid
+            acceptDestinationInstance.toid = toid
+            acceptDestinationInstance.time = timepicker.value// === "Select") ? Searchjs.getcurrenttime() : timepicker.value
+            acceptDestinationInstance.date = datepicker.value//(datepicker.value === "Select") ? Searchjs.getcurrentdate() : datepicker.value
+        }
     }
 
     Column {
@@ -77,6 +93,7 @@ Dialog {
             contentHeight: height
             PullDownMenu {
                 visible: !fromtext.typing && !totext.typing
+                enabled: fromready || toready
                 MenuItem {
                     text: "Change direction"
                     IconButton {
@@ -96,24 +113,24 @@ Dialog {
                     }
                 }
 
-                MenuItem {
-                    text: "Update favourites"
-                    IconButton {
-                        anchors.right: parent.right
-                        icon.source: "image://theme/icon-m-developer-mode"
-                    }
+//                MenuItem {
+//                    text: "Update favourites"
+//                    IconButton {
+//                        anchors.right: parent.right
+//                        icon.source: "image://theme/icon-m-developer-mode"
+//                    }
 
-                    onClicked: {
-                        var res = DBjs.getfaves(); //pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
-                        favmodel.clear();
-                        for(var i=0;i<res.length;i++) {
-                            //console.log("UPDATING: " + res[i].fromid + res[i].to + favlist.count);
+//                    onClicked: {
+//                        var res = DBjs.getfaves(); //pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
+//                        favmodel.clear();
+//                        for(var i=0;i<res.length;i++) {
+//                            //console.log("UPDATING: " + res[i].fromid + res[i].to + favlist.count);
 
-                            favmodel.append(res[i]);
-                        }
+//                            favmodel.append(res[i]);
+//                        }
 
-                    }
-                }
+//                    }
+//                }
             }
 
 
@@ -186,7 +203,7 @@ Dialog {
                     visible: !maindialog.typing || fromtext.typing
                     TextField {
                         property bool typing: false
-                        property bool cleared: false
+                        //property bool cleared: false
                         id: fromtext
                         width: parent.width - height
                         onTextChanged: column.textchang(true);
@@ -213,9 +230,11 @@ Dialog {
 
                         }
                         function clikked() {
+                            fromready = false
                             fromtext.text = ""
                             maindialog.from = ""
                             maindialog.fromid = "null"
+
                         }
 
                         onClicked: clikked()
@@ -228,7 +247,7 @@ Dialog {
                     visible: !maindialog.typing || totext.typing
                     TextField {
                         property bool typing: false
-                        property bool cleared: false
+                        //property bool cleared: false
                         id: totext
 
                         width: parent.width - height
@@ -239,10 +258,10 @@ Dialog {
                         onActiveFocusChanged: { focusChanged(focus) }
                         onFocusChanged: {
                             searchmodel.clear();
-                            if (!cleared) {
-                                typing = focus;
-                                text = maindialog.to;
-                            }
+//                            if (!cleared) {
+                            typing = focus;
+                            text = maindialog.to;
+//                            }
 
 
                         }
@@ -261,10 +280,11 @@ Dialog {
                             onClicked: buttonto.clikked()
                         }
                         function clikked() {
-                            //totext.cleared = true
+                            toready = false
                             totext.text = ""
                             maindialog.to = ""
                             maindialog.toid = "null"
+
                         }
                         onClicked: clikked()
                     }
@@ -382,14 +402,25 @@ Dialog {
                 }
             }
         }
+
+        Item { height: maindialog.height - search.height; width: parent.width; visible: favlist.empty; Label{ anchors.centerIn: parent; text: "No favourites yet";  color: Theme.highlightColor; Component.onCompleted: favlist.updatefavs()}}
         SilicaListView {
             id: favlist
             property bool empty: true
 
             property int database: mainWindow.database
             function updatefavs() {
+
                 var res = DBjs.getfaves();
                 favmodel.clear();
+                if (res === 0) {
+                    empty = true;
+                    return;
+                } else {
+                    empty = false;
+                }
+                console.log("Updating favourites " + empty)
+
                 for(var i=0;i<res.length;i++) {
                     //console.log("UPDATING: " + res[i].fromid + res[i].to + favlist.count);
                     favmodel.append(res[i]);
@@ -399,7 +430,7 @@ Dialog {
             Component.onCompleted: updatefavs()
             onDatabaseChanged: updatefavs()
 
-            visible: !maindialog.typing
+            visible: !maindialog.typing && !empty
             header: Label {
                 text: "Favourites"
                 anchors.right: parent.right
@@ -423,7 +454,6 @@ Dialog {
 
             ListModel {
                 id: favmodel
-                //ListElement {from: "f"; to: "u"; fromid: "oeu"; toid: "oeuaao"}
             }
             Component {
                 id: favdelegate
@@ -459,7 +489,15 @@ Dialog {
                     menu: ContextMenu {
                         MenuItem {
                             text: "delete"
-                            onClicked: { DBjs.remfav(fid, tid); favmodel.remove(index) }
+                            onClicked: {
+                                console.log(favmodel.count + " " + index + " uahoeutna hej");
+                                DBjs.remfav(fid, tid);
+
+                                favmodel.remove(index);
+                                if (favmodel.count === 0) {
+                                    favlist.empty = true
+                                }
+                                }
                         }
                         MenuItem {
                             text: "move to top"
@@ -513,20 +551,13 @@ Dialog {
 
 
             }
-            ListModel {
-                id: favemptymodel
-            }
-            Component {
-                id: favemptydelegate
-                Label {text: "No favourites yet"}
-            }
 
             clip: true
             spacing: Theme.paddingMedium
             height: parent.height - search.height
             //contentHeight: childrenRect.height
-            model: empty ? favmodel : favemptymodel
-            delegate: empty ? favdelegate : favemptydelegate
+            model: favmodel
+            delegate: favdelegate
             width: parent.width
             VerticalScrollDecorator{}
         }

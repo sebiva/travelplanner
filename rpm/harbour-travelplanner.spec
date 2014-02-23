@@ -63,6 +63,7 @@ desktop-file-install --delete-original       \
 
 %files
 %defattr(-,root,root,-)
+%defattr(644,root,root,755)
 %{_bindir}
 %{_datadir}/%{name}/qml
 %{_datadir}/applications/%{name}.desktop
@@ -71,5 +72,6 @@ desktop-file-install --delete-original       \
 /usr/share/harbour-travelplanner
 /usr/share/applications
 /usr/share/icons/hicolor/86x86/apps
+%attr(755,root,root) %{_bindir}/%{name}
 # >> files
 # << files
