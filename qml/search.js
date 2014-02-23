@@ -41,19 +41,17 @@ function sendnamerequest(name, func) {
 
 function removespecials(text) {
     var ans = text;
-    while (ans.indexOf("å") !== -1) {
-        var x = ans.indexOf("å");
-        ans = ans.substring(0, x) + "%C5" + ans.substring(x+1);
+    var i;
+
+    for(i=0;i<ans.length;i++) {
+        if (ans.substring(i, i+1)=== "å" || ans.substring(i,i+1) === "Å") {
+            ans = ans.substring(0, i) + "%C5" + ans.substring(i+1);
+        } else if (ans.substring(i, i+1) === "ä" || ans.substring(i, i+1) === "Ä") {
+            ans = ans.substring(0, i) + "%C4" + ans.substring(i+1);
+        } else if (ans.substring(i, i+1) === "ö" || ans.substring(i, i+1) === "Ö") {
+            ans = ans.substring(0, i) + "%D6" + ans.substring(i+1);
+        }
     }
-    while (ans.indexOf("ä") !== -1) {
-        var x = ans.indexOf("ä");
-        ans = ans.substring(0, x) + "%C4" + ans.substring(x+1);
-    }
-    while (ans.indexOf("ö") !== -1) {
-        var x = ans.indexOf("ö");
-        ans = ans.substring(0, x) + "%D6" + ans.substring(x+1);
-    }
-    console.log(ans)
     return ans;
 }
 
@@ -257,6 +255,10 @@ function parse(response) {
             leginfo.deptime = getAttr(origin, "time");
             leginfo.depdate = getAttr(origin, "date");
             leginfo.origtrack = getAttr(origin, "track");
+            if(leginfo.origtrack === null) {
+                leginfo.origtrack = "";
+            }
+
             leginfo.deprttime = getAttr(origin, "rtTime");
             if(leginfo.deprttime === null) {
                 leginfo.deprttime = leginfo.deptime;
@@ -278,6 +280,10 @@ function parse(response) {
             leginfo.arivtime = getAttr(dest, "time");
             leginfo.arivdate = getAttr(dest, "date");
             leginfo.desttrack = getAttr(dest, "track")
+            if(leginfo.desttrack === null) {
+                leginfo.desttrack = "";
+            }
+
             leginfo.arivrttime = getAttr(dest, "rtTime");
             if(leginfo.arivrttime === null) {
                 leginfo.arivrttime = leginfo.arivtime;

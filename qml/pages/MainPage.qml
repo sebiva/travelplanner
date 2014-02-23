@@ -72,8 +72,8 @@ Dialog {
     function searchfunc() {
         if (fromready && toready) { //&& (from !== "") && (to !== "")) {
             DBjs.setlastsearch(fromid,toid,from,to)
-            acceptDestinationInstance.from = fromtext.text
-            acceptDestinationInstance.to = totext.text
+            acceptDestinationInstance.from = from//text.text
+            acceptDestinationInstance.to = to//text.text
             acceptDestinationInstance.fromid = fromid
             acceptDestinationInstance.toid = toid
             acceptDestinationInstance.time = timepicker.value// === "Select") ? Searchjs.getcurrenttime() : timepicker.value
@@ -101,15 +101,18 @@ Dialog {
                         icon.source: "image://theme/icon-m-shuffle"
                     }
                     onClicked: {
-                        var temp = fromtext.text
+                        var temp = from
+                        from = to
+                        to = temp
+                        var temptext = fromtext.text
                         fromtext.text = totext.text
-                        totext.text = temp
-                        temp = fromready
+                        totext.text = temptext
+                        var tempbool = fromready
                         fromready = toready
-                        toready = temp
-                        temp = fromid
+                        toready = tempbool
+                        var tempid = fromid
                         fromid = toid
-                        toid = temp
+                        toid = tempid
                     }
                 }
 
@@ -183,7 +186,6 @@ Dialog {
                     var txt = from ? fromtext : totext;
                     searchmodel.clear();
                     if (txt.text !== "") {
-
                         if(from) {
                             fromready = true;
                             searchlist.from = true
@@ -397,13 +399,21 @@ Dialog {
                             maindialog.to = name
                         }
                         searchmodel.clear()
-                       // console.log(searchmodel.count)
                     }
                 }
             }
         }
 
-        Item { height: maindialog.height - search.height; width: parent.width; visible: favlist.empty; Label{ anchors.centerIn: parent; text: "No favourites yet";  color: Theme.highlightColor; Component.onCompleted: favlist.updatefavs()}}
+        Item {
+            height: maindialog.height - search.height; width: parent.width;
+            visible: favlist.empty && !maindialog.typing;
+            Label{
+                anchors.centerIn: parent;
+                text: "No favourites yet";
+                color: Theme.highlightColor;
+                Component.onCompleted: favlist.updatefavs()
+            }
+        }
         SilicaListView {
             id: favlist
             property bool empty: true

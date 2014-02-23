@@ -31,7 +31,7 @@ function setup() {
         //console.log("TABLE CLEARED" + setuped)
     //});
     db.transaction(function (trans) {
-        //trans.executeSql('DELETE FROM lastsearch')
+        //trans.executeSql('DELETE FROM favourites')
         trans.executeSql('CREATE TABLE IF NOT EXISTS favourites(fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT, time INTEGER, PRIMARY KEY(fromid, toid))');
         trans.executeSql('CREATE TABLE IF NOT EXISTS lastsearch(fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT)')
     });
