@@ -5,10 +5,12 @@ Simple Sailfish app for Västtrafik.
 
 Features so far
 ---------------
--Searching for trips
--Autocompletion on stops
--Last search visible on cover
+* Searching for trips, taking suggestions for stops from västtrafik
+* Ability to save trips as favourites
+* Last search is saved for next startup
+* Last search visible on cover
 
 Todo
 ----
--Making it harbour-compatible and releasing it
+* Fixes and tweaks
+* Adding more features
