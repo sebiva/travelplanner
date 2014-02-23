@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Name=Travelplanner
+Icon=harbour-travelplanner
+Exec=harbour-travelplanner
+
+Name[en_GB]=harbour-travelplanner.desktop

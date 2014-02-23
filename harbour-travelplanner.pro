@@ -6,17 +6,17 @@
 #         - desktop icon filename must be changed
 #         - desktop filename must be changed
 #         - icon definition filename in desktop file must be changed
-TARGET = Travelplanner
+TARGET = harbour-travelplanner
 
 CONFIG += sailfishapp
 
-SOURCES += src/Travelplanner.cpp
+SOURCES += src/harbour-travelplanner.cpp
 
-OTHER_FILES += qml/Travelplanner.qml \
+OTHER_FILES += qml/harbour-travelplanner.qml \
     qml/cover/CoverPage.qml \
-    rpm/Travelplanner.spec \
-    rpm/Travelplanner.yaml \
-    Travelplanner.desktop \
+    rpm/harbour-travelplanner.spec \
+    rpm/harbour-travelplanner.yaml \
+    harbour-travelplanner.desktop \
     qml/pages/SettingsPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/SearchPage.qml \

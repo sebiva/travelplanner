@@ -1,5 +1,5 @@
-Name: Travelplanner
-Summary: My SailfishOS Application
+Name: harbour-travelplanner
+Summary: "Travelplanner for V\xE4sttrafik"
 Version: 0.1
 Release: 1
 Group: Qt/Qt
@@ -7,8 +7,7 @@ URL: http://example.org/
 License: LICENSE
 Sources:
 - '%{name}-%{version}.tar.bz2'
-Description: |
-  Short description of my SailfishOS Application
+Description: "Simple travelplanner for Swedish V\xE4sttrafik\n"
 Configure: none
 Builder: qtc5
 PkgConfigBR:
@@ -24,6 +23,6 @@ Files:
 - '%{_datadir}/applications/%{name}.desktop'
 - '%{_datadir}/icons/hicolor/86x86/apps/%{name}.png'
 - /usr/bin
-- /usr/share/Travelplanner
+- /usr/share/harbour-travelplanner
 - /usr/share/applications
 - /usr/share/icons/hicolor/86x86/apps
