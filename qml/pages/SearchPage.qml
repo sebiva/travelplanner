@@ -26,6 +26,7 @@ Page {
     onVisibleChanged: search();
 
     function search() {
+        //console.log("DATUM " + date)
         Searchjs.sendrequest(fromid, toid, date, time, listView.answerrecieved, listmodel)  //listView.doneloading)
     }
 
@@ -124,13 +125,15 @@ Page {
 
             }
 
-            property var allstates: ["small", "small", "small", "small", "small"]
+            property var allstates: ["small", "small", "small", "small", "small", "small", "small", "small"]
 
             Label {
                 id: placeholdertext
                 visible: error
                 anchors.centerIn: parent
                 text: mainWindow.errmsg
+                font.pixelSize: Theme.fontSizeLarge
+                color: Theme.highlightColor
             }
 
             BusyIndicator {
@@ -166,14 +169,18 @@ Page {
                         height: searchpage.height / 10
                         Label {
                             id: deptimelabel
-                            text: deptime + Searchjs.delay(deptime, deprttime, depdate, deprtdate)
+                            property string nextday : Searchjs.duration("00:00", "00:00", Searchjs.convertdate(date), depdate)
+                            property int daypos : nextday.indexOf("d")
+                            text: deptime + Searchjs.delay(deptime, deprttime, depdate, deprtdate) + (daypos > 0 ? " [+" + nextday.substring(daypos-1) + "]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                         Label {
                             id: arivtimelabel
-                            text: arivtime + Searchjs.delay(arivtime, arivrttime, arivdate, arivrtdate)
+                            property string nextday : Searchjs.duration("00:00", "00:00", Searchjs.convertdate(date), arivdate)
+                            property int daypos : nextday.indexOf("d")
+                            text: arivtime + Searchjs.delay(arivtime, arivrttime, arivdate, arivrtdate) + (daypos > 0 ? " [+" + nextday.substring(daypos-1) + "]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor

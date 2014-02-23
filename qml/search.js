@@ -14,11 +14,11 @@ function gettrip(x) {
 function sendrequest(fromstop, tostop, date, time, func, model) {
     var formateddate = convertdate(date);
     var formatedtime = time.substring(0,2) + ":" + time.substring(3,5);
-    console.log(formateddate + " " + formatedtime);
+    console.log("Searching at: " + formateddate + " " + formatedtime);
 
     var req = baseadress + key + format + "&date=" + formateddate + "&time=" + formatedtime + "&originId=" + fromstop + "&destId=" + tostop;
 
-    console.log(req);
+    console.log("\n" + req + "\n");
 
     getPage(req, func, model)
 
@@ -150,10 +150,8 @@ function getPage(url, functionToCallWhenDone, model) {
         if (http.readyState == XMLHttpRequest.DONE) {
             var resp = (http.responseText);
             var parsed = parse(resp);
-            if (parsed === "No response") {
-                return functionToCallWhenDone(parsed);
-            } else if (parsed === "No connections found") {
-                return functionToCallWhenDone(parsed);
+            if (parsed.indexOf("ERROR") === 0) {
+                return functionToCallWhenDone(parsed.substring(5));
             }
             setuplist(parsed, model);
             mainWindow.response = resp;
@@ -170,13 +168,13 @@ function parse(response) {
     var xmlpos = getTag(response, "<?", "?>");
     if (response == null || response == ""|| xmlpos == null) {
         //Error, no response
-        return "No response";
+        return "ERRORNo response";
     }
     response = response.substring(xmlpos[1]+2);
     var err = getAttr(response.substring(0,400), "errorText");
     if (err != null) {
         //Error, No connections found
-        return err;
+        return "ERROR" + err;
     }
 
     var triplistpos = getTag(response, "<TripList", ">");
@@ -365,10 +363,6 @@ function setuplist(answer, model) {
 
 
 
-
-
-
-
 //Returns the attribute as a string
 function getAttr(string, attr) {
     var start, end;
@@ -404,30 +398,12 @@ function getTag(string, stag, etag) {
 
 
 function convertdate(date) {
-    var dates = date.split(" ");
-    var day = dates[0];
-    if (day.length===1) {
-        day = "0" + day;
+    if (date.length === 10 && date.indexOf("-") !== 0) {
+        return date;
+    } else if (date.indexOf("/") !== -1 && date.split("/").length === 3) {
+        return date.split("/")[2] + "-" + date.split("/")[1] + "-" + date.split("/")[0];
     }
-
-    var month;
-    switch (dates[1]){
-    case "Jan": month = "01"; break;
-    case "Feb": month = "02"; break;
-    case "Mar": month = "03"; break;
-    case "Apr": month = "04"; break;
-    case "May": month = "05"; break;
-    case "Jun": month = "06"; break;
-    case "Jul": month = "07"; break;
-    case "Aug": month = "08"; break;
-    case "Sep": month = "09"; break;
-    case "Oct": month = "10"; break;
-    case "Nov": month = "11"; break;
-    case "Dec": month = "12"; break;
-    }
-    var year = dates[2];
-    return(year + "-" + month + "-" + day);
-
+    return "";
 }
 
 
@@ -442,13 +418,14 @@ function duration(deptime, arivtime, depdate, arivdate ) {
     var minutes = 0;
     var extradays = 0;
     if (depdate !== arivdate) {
+        console.log("Different days!, " + depdate + " " + arivdate)
         var dep = depdate.split("-");
-        var dyear = parseInt(dep[0]); var dmonth = parseInt(dep[1]); var dday = parseInt(dep[2]);
+        var dyear = parseInt(dep[0]); var dmonth = parseInt(dep[1]) - 1; var dday = parseInt(dep[2]);
         var ariv = arivdate.split("-");
-        var ayear = parseInt(ariv[0]); var amonth = parseInt(ariv[1]); var aday = parseInt(ariv[2]);
+        var ayear = parseInt(ariv[0]); var amonth = parseInt(ariv[1]) - 1; var aday = parseInt(ariv[2]);
         var ddate = new Date(dyear, dmonth, dday, 0, 0, 0, 0);
         var adate = new Date(ayear, amonth, aday, 0, 0, 0, 0);
-
+        console.log("Different days!, " + ddate + " " + adate)
         extradays = dateDiffInDays(ddate, adate);
     }
     hours = parseInt(arivhr) - parseInt(dephr);
@@ -491,9 +468,10 @@ function duration(deptime, arivtime, depdate, arivdate ) {
     }
 
     if (extradays !== 0) {
+        console.log("Extra day" + extradays)
         answer = answer + " +" + extradays + "d";
     }
-    console.log("\n\n\nDURATION: " + answer);
+    console.log("DURATION: \nfrom " + deptime + " , " + depdate + "\nto " + arivtime + " , " + arivdate + " : " +  answer);
     return answer;
 }
 
@@ -505,7 +483,7 @@ function dateDiffInDays(a, b) {
 }
 
 function delay(time, rttime, date, rtdate) {
-    //console.log(time + "  " + rttime + "  " + date + "  " + rtdate + " " + (date === rtdate))
+    //console.log("DELAY" + time + "  " + rttime + "  " + date + "  " + rtdate + " " + (date === rtdate))
     if ((time === rttime) && (date === rtdate)) {
         //console.log("no delay")
         return ""
@@ -517,13 +495,13 @@ function delay(time, rttime, date, rtdate) {
         minus = true;
     }
 
-    var min, hr;
+
     if (dur === null || dur === undefined) {
         return "";
     }
 
-    //console.log("\n\n\nDELAYDURATION: " + dur);
-
+    console.log("DELAYDURATION: \nfrom " + time + " , " + date + "\nto " + rttime + " , " + rtdate + " : " +  dur);
+    var min, hr;
     if (dur.indexOf("h") === -1) {
         //console.log("no hour")
         min = dur.split("min")[0];
@@ -543,7 +521,7 @@ function delay(time, rttime, date, rtdate) {
 }
 
 function getcurrentdate() {
-    return Qt.formatDateTime(new Date(), "d MMM yyyy")
+    return Qt.formatDateTime(new Date(), "yyyy-MM-dd")
 }
 function getcurrenttime() {
     return Qt.formatDateTime(new Date(), "hh:mm")

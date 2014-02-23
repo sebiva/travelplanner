@@ -61,8 +61,8 @@ Dialog {
         acceptDestinationInstance.to = totext.text
         acceptDestinationInstance.fromid = fromid
         acceptDestinationInstance.toid = toid
-        acceptDestinationInstance.time = (timepicker.value === "Select") ? Searchjs.getcurrenttime() : timepicker.value
-        acceptDestinationInstance.date = (datepicker.value === "Select") ? Searchjs.getcurrentdate() : datepicker.value
+        acceptDestinationInstance.time = timepicker.value// === "Select") ? Searchjs.getcurrenttime() : timepicker.value
+        acceptDestinationInstance.date = datepicker.value//(datepicker.value === "Select") ? Searchjs.getcurrentdate() : datepicker.value
     }
 
     Column {
@@ -107,7 +107,7 @@ Dialog {
                         var res = DBjs.getfaves(); //pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
                         favmodel.clear();
                         for(var i=0;i<res.length;i++) {
-                            console.log("UPDATING: " + res[i].fromid + res[i].to + favlist.count);
+                            //console.log("UPDATING: " + res[i].fromid + res[i].to + favlist.count);
 
                             favmodel.append(res[i]);
                         }
@@ -162,7 +162,7 @@ Dialog {
                 }
 
                 function textchang(from) {
-                    console.log("textchanged : from/to" + from)
+                    //console.log("textchanged : from/to" + from)
                     var txt = from ? fromtext : totext;
                     searchmodel.clear();
                     if (txt.text !== "") {
@@ -199,20 +199,26 @@ Dialog {
                         }
                     }
                     BackgroundItem {
+                        id: buttonfrom
                         width: iconfrom.width * 2
                         highlighted: iconfrom.highlighted
                         IconButton {
                             id: iconfrom
+                            z: 0
                             visible: !maindialog.typing
                             icon.source: "image://theme/icon-m-clear"
                             anchors.centerIn: parent
                             width: fromtext.height / 2
-                            onClicked: {
-                                fromtext.text = ""
-                                maindialog.from = ""
-                                maindialog.fromid = "null"
-                            }
+                            onClicked: buttonfrom.clikked()
+
                         }
+                        function clikked() {
+                            fromtext.text = ""
+                            maindialog.from = ""
+                            maindialog.fromid = "null"
+                        }
+
+                        onClicked: clikked()
                     }
                 }
 
@@ -243,6 +249,7 @@ Dialog {
 
                     }
                     BackgroundItem {
+                        id: buttonto
                         width: iconto.width * 2
                         highlighted: iconto.highlighted
                         IconButton {
@@ -251,13 +258,15 @@ Dialog {
                             icon.source: "image://theme/icon-m-clear"
                             anchors.centerIn: parent
                             width: fromtext.height / 2
-                            onClicked: {
-                                //totext.cleared = true
-                                totext.text = ""
-                                maindialog.to = ""
-                                maindialog.toid = "null"
-                            }
+                            onClicked: buttonto.clikked()
                         }
+                        function clikked() {
+                            //totext.cleared = true
+                            totext.text = ""
+                            maindialog.to = ""
+                            maindialog.toid = "null"
+                        }
+                        onClicked: clikked()
                     }
                 }
 
@@ -274,44 +283,45 @@ Dialog {
 
                         ValueButton {
                             id: datepicker
-                            property date selectedDate
-
+                            value : Searchjs.getcurrentdate() // new Date().getDate() + "/" + (new Date().getMonth()+1) + "/" + new Date().getFullYear()
                             function openDateDialog() {
-                                var dialog = pageStack.push("Sailfish.Silica.DatePickerDialog", { date: selectedDate})
+                                var dialog = pageStack.push("Sailfish.Silica.DatePickerDialog", { date: new Date(value.split("-")[0],  (parseInt(value.split("-")[1])-1), value.split("-")[2] )})
 
                                 dialog.accepted.connect(function() {
-                                    value = dialog.dateText
-                                    selectedDate = dialog.date
+                                    var month = dialog.month; var day = dialog.day;
+                                    if (month < 10) {
+                                        month = "0" + month;
+                                    }
+                                    if (day < 10) {
+                                        day = "0" + day;
+                                    }
+
+                                    value = dialog.year + "-" + month + "-" + day
                                 })
                             }
 
                             label: "Date"
-                            value: "Select"
                             onClicked: openDateDialog()
                             opacity: 0.8
                         }
 
                         ValueButton {
                             id: timepicker
-                            property int selectedHour
-                            property int selectedMinute
+                            value : Searchjs.getcurrenttime()
 
                             function openTimeDialog() {
                                 var dialog = pageStack.push("Sailfish.Silica.TimePickerDialog", {
                                                                 hourMode: DateTime.TwentyFourHours,
-                                                                hour: selectedHour,
-                                                                minute: selectedMinute
+                                                                hour: value.split(":")[0],
+                                                                minute: value.split(":")[0]
                                                             })
 
                                 dialog.accepted.connect(function() {
                                     value = dialog.timeText
-                                    selectedHour = dialog.hour
-                                    selectedMinute = dialog.minute
                                 })
                             }
 
                             label: "Time"
-                            value: "Select"
                             onClicked: openTimeDialog()
                             opacity: 0.8
                         }
@@ -321,13 +331,8 @@ Dialog {
                         width: parent.width / 4
                         anchors.verticalCenter: parent.verticalCenter
                         onClicked: {
-                            datepicker.value = Searchjs.getcurrentdate()
+                            datepicker.value = Searchjs.getcurrentdate()//new Date().getDate() + "/" + (new Date().getMonth()+1) + "/" + new Date().getFullYear()
                             timepicker.value = Searchjs.getcurrenttime()
-                            datepicker.selectedDate = new Date()
-                            var hour = parseInt(timepicker.value.substring(0,2), 10)
-                            var minute = parseInt(timepicker.value.substring(3,5), 10)
-                            timepicker.selectedHour = hour
-                            timepicker.selectedMinute = minute
                         }
                     }
                 }
@@ -361,7 +366,7 @@ Dialog {
                         text: name
                     }
                     onClicked: {
-                        console.log("clicked: " + name)
+                        //console.log("clicked: " + name)
                         if (searchlist.from) {
                             fromtext.typing = false;
                             maindialog.fromid = nmbr;
@@ -372,7 +377,7 @@ Dialog {
                             maindialog.to = name
                         }
                         searchmodel.clear()
-                        console.log(searchmodel.count)
+                       // console.log(searchmodel.count)
                     }
                 }
             }
@@ -386,7 +391,7 @@ Dialog {
                 var res = DBjs.getfaves();
                 favmodel.clear();
                 for(var i=0;i<res.length;i++) {
-                    console.log("UPDATING: " + res[i].fromid + res[i].to + favlist.count);
+                    //console.log("UPDATING: " + res[i].fromid + res[i].to + favlist.count);
                     favmodel.append(res[i]);
                 }
             }
