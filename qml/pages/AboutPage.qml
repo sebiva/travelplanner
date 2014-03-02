@@ -20,7 +20,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Page {
-    id: abootpage
+    id: aboutpage
     
 
     Item {
@@ -28,7 +28,7 @@ Page {
         Column {
             anchors.centerIn: parent
             Item {
-                height: abootpage.width/4
+                height: aboutpage.width/4
                 width: parent.width
                 Image {
                     id: logo

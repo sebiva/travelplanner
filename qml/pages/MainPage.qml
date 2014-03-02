@@ -83,6 +83,13 @@ Dialog {
                 visible: !fromtext.typing && !totext.typing
                 enabled: fromready || toready
                 MenuItem {
+                    text: "About"
+                    onClicked: {
+                        pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
+                    }
+                }
+
+                MenuItem {
                     text: "Change direction"
                     IconButton {
                         anchors.right: parent.right
@@ -101,13 +108,6 @@ Dialog {
                         var tempid = fromid
                         fromid = toid
                         toid = tempid
-                    }
-                }
-
-                MenuItem {
-                    text: "Aboot"
-                    onClicked: {
-                        pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
                     }
                 }
             }

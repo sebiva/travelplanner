@@ -34,7 +34,7 @@ CoverBackground {
         if (mainWindow.avail) {
 
             console.log("DURTIME " + Searchjs.duration(mainWindow.time, Searchjs.getcurrenttime(),mainWindow.date, Searchjs.getcurrentdate()));
-            if (!now || (Searchjs.duration(mainWindow.time, Searchjs.getcurrenttime(),mainWindow.date, Searchjs.getcurrentdate()) === "")) {
+            if (!now || (Searchjs.duration(mainWindow.time, Searchjs.getcurrenttime(),mainWindow.date, Searchjs.getcurrentdate()) === "0min")) {
                 console.log("IFFFFFFF" + mainWindow.response.substring(0,200));
                 Searchjs.setuplist(Searchjs.parse(mainWindow.response),listmodel);
             } else {

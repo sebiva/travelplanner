@@ -496,6 +496,10 @@ function duration(deptime, arivtime, depdate, arivdate ) {
         answer = answer + " +" + extradays + "d";
     }
     console.log("DURATION: \nfrom " + deptime + " , " + depdate + "\nto " + arivtime + " , " + arivdate + " : " +  answer);
+    if (answer === "") {
+        answer = "0min";
+    }
+
     return answer;
 }
 
