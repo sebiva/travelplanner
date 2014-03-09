@@ -26,8 +26,16 @@ CoverBackground {
     property bool avail: mainWindow.avail
     property bool error: false
     property string from: mainWindow.from
+    property string to: mainWindow.to
+    property int searched: mainWindow.searched
+    property string lang: mainWindow.lang
+    property string err: mainWindow.errmsg
+    onErrChanged: search(false)
+    onLangChanged: search(false)
+    onSearchedChanged: search(false)
     onAvailChanged: search(false)
     onFromChanged: search(false)
+    onToChanged: search(false)
     function search(now) {
         console.log("SEARCHING FROM COVER " + avail)
         listmodel.clear();
@@ -45,14 +53,32 @@ CoverBackground {
                 Searchjs.sendrequest(mainWindow.fromid, mainWindow.toid, mainWindow.date, mainWindow.time, triplist.doneloading, listmodel);
             }
         } else {
-            placeholdertext.text = mainWindow.errmsg === "" ? "Travelplanner" : mainWindow.errmsg;
+            console.log("HELLO " + mainWindow.lang + "::" + mainWindow.errmsg + "::" + mainWindow.strcovererr + "::" + mainWindow.errmsg === mainWindow.strerr)
+            placeholdertext.text = mainWindow.errmsg === mainWindow.strerr ? mainWindow.strappname : mainWindow.strappname + "\n" + mainWindow.strcovererr;
         }
     }
-
-    Label {
-        id: placeholdertext
-        visible: !mainWindow.avail || error
+    Column {
         anchors.centerIn: parent
+        width: parent.width
+        Item {
+            height: coverpage.height/3
+            width: parent.width
+            opacity: !mainWindow.avail || error ? 1 : 0.3
+
+            Image {
+                id: logo
+                width: 86
+                height: 86
+                anchors.centerIn: parent
+                source: "/usr/share/icons/hicolor/86x86/apps/harbour-travelplanner.png"
+            }
+        }
+        Label {
+            id: placeholdertext
+            text: mainWindow.strappname
+            visible: !mainWindow.avail || error
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
     }
 
 

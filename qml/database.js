@@ -52,8 +52,40 @@ function setup() {
         //trans.executeSql('DELETE FROM favourites')
         trans.executeSql('CREATE TABLE IF NOT EXISTS favourites(fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT, time INTEGER, PRIMARY KEY(fromid, toid))');
         trans.executeSql('CREATE TABLE IF NOT EXISTS lastsearch(fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT)')
+        trans.executeSql('CREATE TABLE IF NOT EXISTS settings(keyattr TEXT PRIMARY KEY, valueattr TEXT)')
     });
 }
+
+function setlanguage(language) {
+    var db = getDatabase();
+    var result;
+    db.transaction(function (trans) {
+        trans.executeSql('DELETE FROM settings WHERE keyattr="language"')
+        var x = trans.executeSql('INSERT INTO settings VALUES(?, ?)', ["language", language]);
+        if(x.rowsAffected > 0) {
+            console.log("Lang saved: " + language)
+            result= 1;
+        } else {
+            result = 0;
+        }
+    });
+    return result;
+}
+
+function getlanguage() {
+    var db = getDatabase();
+    var result;
+    db.transaction(function (trans) {
+        var x = trans.executeSql('SELECT MAX(valueattr) AS lang FROM settings WHERE keyattr = "language"');
+        if(x.rows.length === 0) {
+            result = 0;
+        }
+        result = x.rows.item(0)['lang'];
+    });
+    console.log("Getting lang: " + result)
+    return result;
+}
+
 
 function setfav(fromid, toid, from, to) {
     var db = getDatabase();

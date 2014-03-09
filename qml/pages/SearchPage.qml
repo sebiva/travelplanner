@@ -58,7 +58,7 @@ Page {
             contentHeight: column.height
             PullDownMenu {
                 MenuItem {
-                    text: "Save as favourite"
+                    text: mainWindow.straddfavourite
                     onClicked: {
                         DBjs.setfav(searchpage.fromid, searchpage.toid, searchpage.from, searchpage.to);
                         mainWindow.database = (mainWindow.database + 2) % 4
@@ -70,7 +70,7 @@ Page {
                 width: parent.width
                 PageHeader {
                     id: head
-                    title: "Search Results"
+                    title: mainWindow.strsearchres
                 }
                 Row {
                     id: row1
@@ -78,7 +78,7 @@ Page {
                     width: parent.width - 2*x
                     Label {
                         id: fromlabel
-                        text: "from: " + from
+                        text: mainWindow.strfrom + " " + from
                         truncationMode: TruncationMode.Elide
                         width: parent.width - timelabel.width
                         color: Theme.secondaryHighlightColor
@@ -96,7 +96,7 @@ Page {
                     width: parent.width - 2*x
                     Label {
                         id: tolabel
-                        text: "to: " + to
+                        text: mainWindow.strto + " " + to
                         truncationMode: TruncationMode.Elide
                         width: parent.width - datelabel.width
                         color: Theme.highlightColor
@@ -137,7 +137,7 @@ Page {
                     mainWindow.avail = false;
                     searchpage.error = true;
                     searchpage.searching = false;
-                    mainWindow.errmsg = msg;
+                    mainWindow.errmsg = mainWindow.strerr + msg;
                 }
 
 
@@ -269,7 +269,7 @@ Page {
                                             width: searchpage.width - iconlist.recsize0 - legdeptime.width - legdeprttime.width - 2 * parent.x
                                             Label {
                                                 id: legfromlabel
-                                                text: "from: "
+                                                text: mainWindow.strfrom + ": "
                                                 visible: iconlist.textvis
                                                 font.pixelSize: (Theme.fontSizeTiny + Theme.fontSizeSmall) /2
                                                 color: Theme.secondaryHighlightColor
@@ -307,7 +307,7 @@ Page {
                                             width: searchpage.width - iconlist.recsize0 - legarivtime.width - legarivrttime.width - 2 * parent.x
                                             Label {
                                                 id: legtolabel
-                                                text: "to: "
+                                                text: mainWindow.strto + ": "
                                                 width: legfromlabel.width
                                                 visible: iconlist.textvis
                                                 font.pixelSize: (Theme.fontSizeTiny + Theme.fontSizeSmall) /2

@@ -45,6 +45,7 @@ Dialog {
 
     Component.onCompleted: {
         DBjs.setup();
+        mainWindow.getlanguage()
         var lastsearch = DBjs.getlastsearch();
         if (lastsearch === 0) {
             return;
@@ -66,6 +67,7 @@ Dialog {
             acceptDestinationInstance.toid = toid
             acceptDestinationInstance.time = timepicker.value// === "Select") ? Searchjs.getcurrenttime() : timepicker.value
             acceptDestinationInstance.date = datepicker.value//(datepicker.value === "Select") ? Searchjs.getcurrentdate() : datepicker.value
+            mainWindow.searched = mainWindow.searched + 1 % 2
         }
     }
 
@@ -81,17 +83,19 @@ Dialog {
             contentHeight: height
             PullDownMenu {
                 visible: !fromtext.typing && !totext.typing
-                enabled: fromready || toready
+
                 MenuItem {
-                    text: "About"
+                    text: mainWindow.strsettings
                     onClicked: {
-                        pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
+                        pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
                     }
                 }
 
                 MenuItem {
-                    text: "Change direction"
+                    enabled: fromready || toready
+                    text: mainWindow.strchangedir
                     IconButton {
+                        visible: parent.enabled
                         anchors.right: parent.right
                         icon.source: "image://theme/icon-m-shuffle"
                     }
@@ -137,7 +141,7 @@ Dialog {
 
                 DialogHeader {
                     id: topheader
-                    acceptText: canAccept ? "Search" : "TravelPlanner"
+                    acceptText: canAccept ? mainWindow.strsearch : mainWindow.strappname
                     opacity: canAccept ? 1 : 0.8
                     visible: !maindialog.typing
                 }
@@ -181,7 +185,7 @@ Dialog {
                         id: fromtext
                         width: parent.width - height
                         onTextChanged: column.textchang(true);
-                        placeholderText: "from"
+                        placeholderText: mainWindow.strfrom
                         EnterKey.onClicked: totext.focus = true
                         onFocusChanged: {
                             searchmodel.clear();
@@ -227,7 +231,7 @@ Dialog {
                         width: parent.width - height
                         onTextChanged: column.textchang(false);
                         EnterKey.onClicked: accept();
-                        placeholderText: "to"
+                        placeholderText: mainWindow.strto
                         anchors.topMargin: Theme.paddingMedium
                         onActiveFocusChanged: { focusChanged(focus) }
                         onFocusChanged: {
@@ -294,7 +298,7 @@ Dialog {
                                 })
                             }
 
-                            label: "Date"
+                            label: mainWindow.strdate
                             onClicked: openDateDialog()
                             opacity: 0.8
                         }
@@ -315,13 +319,13 @@ Dialog {
                                 })
                             }
 
-                            label: "Time"
+                            label: mainWindow.strtime
                             onClicked: openTimeDialog()
                             opacity: 0.8
                         }
                     }
                     Button {
-                        text: "now"
+                        text: mainWindow.strnow
                         width: parent.width / 4
                         anchors.verticalCenter: parent.verticalCenter
                         onClicked: {
@@ -381,7 +385,7 @@ Dialog {
             visible: favlist.empty && !maindialog.typing;
             Label{
                 anchors.centerIn: parent;
-                text: "No favourites yet";
+                text: mainWindow.strnofavourites
                 color: Theme.highlightColor;
                 Component.onCompleted: favlist.updatefavs()
             }
@@ -414,7 +418,7 @@ Dialog {
 
             visible: !maindialog.typing && !empty
             header: Label {
-                text: "Favourites"
+                text: mainWindow.strfavourites
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.paddingLarge
                 font.pixelSize: Theme.fontSizeMedium
@@ -470,7 +474,7 @@ Dialog {
 
                     menu: ContextMenu {
                         MenuItem {
-                            text: "delete"
+                            text: mainWindow.strdelete
                             onClicked: {
                                 console.log(favmodel.count + " " + index + " uahoeutna hej");
                                 DBjs.remfav(fid, tid);
@@ -482,7 +486,7 @@ Dialog {
                                 }
                         }
                         MenuItem {
-                            text: "move to top"
+                            text: mainWindow.strmovetotop
                             onClicked: {
                                 favmodel.move(index, 0, 1);
                                 DBjs.movetotop(fid, tid, favfromtext.text, favtotext.text);
@@ -497,7 +501,7 @@ Dialog {
                             Label {
                                 id: favfromheadtext
                                 x: Theme.paddingMedium
-                                text: "From: "
+                                text: mainWindow.strfrom + ": "
                                 color: Theme.secondaryHighlightColor
                             }
 
@@ -515,7 +519,7 @@ Dialog {
                             Label {
                                 id: favtoheadtext
                                 x: Theme.paddingMedium
-                                text: "To:"
+                                text: mainWindow.strto + ":"
                                 color: Theme.highlightColor
                                 width: favfromheadtext.width
                                 opacity: 0.6

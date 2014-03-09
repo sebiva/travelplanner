@@ -19,6 +19,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "pages"
+import "database.js" as DBjs
 
 ApplicationWindow
 {
@@ -33,9 +34,57 @@ ApplicationWindow
     property string toid: ""
     property string time: ""
     property string date: ""
-    property string errmsg: ""
+    property string errmsg: strerr
     property string response: ""
     property int database: 1
+
+    property int searched: 1
+
+    function getlanguage() {
+        var language = DBjs.getlanguage()
+        if (language === null) {
+            setlanguage(stren)
+        } else {
+            lang = language
+        }
+        return lang;
+    }
+    function setlanguage(language) {
+        lang = language
+        DBjs.setlanguage(language)
+    }
+
+    //Language
+    property string lang: stren
+    property string strsv: "Svenska"
+    property string stren: "English"
+
+    //All strings
+    property string strappname: lang === stren ? "Travelplanner" : "Reseplaneraren"
+    property string strsearch: lang === stren ? "Search" : "Sök"
+    property string strfrom: lang === stren ? "From" : "Från"
+    property string strto: lang === stren ? "To" : "Till"
+    property string strdate: lang === stren ? "Date" : "Datum"
+    property string strtime: lang === stren ? "Time" : "Tid"
+    property string strnow: lang === stren ? "Now" : "Nu"
+    property string strfavourites: lang === stren ? "Favourites" : "Favoriter"
+    property string strnofavourites: lang === stren ? "No favourites" : "Inga favoriter"
+    property string strmovetotop: lang === stren ? "Move to top" : "Flytta överst"
+    property string strdelete: lang === stren ? "Delete" : "Ta bort"
+
+    property string strchangedir: lang === stren ? "Change direction" : "Byt riktning"
+    property string strsettings: lang === stren ? "Settings" : "Inställningar"
+    property string strlanguage: lang === stren ? "Language" : "Språk"
+    property string strabout: lang === stren ? "About" : "Info"
+    property string strcreated: lang === stren ? "Created by Sebastian Ivarsson" : "Skapad av Sebastian Ivarsson"
+    property string strapi: lang === stren ? "Uses the" : "Använder"
+    property string strvasttrafik: lang === stren ? "Västtrafik API" : "Västtrafiks API"
+    property string strgit: lang === stren ? "The source code is available on" : "Källkoden finns tillgänglig på"
+    property string strgpl: lang === stren ? "Licensed under" : "Licensierat under"
+    property string strsearchres: lang === stren ? "Search Results" : "Sökresultat"
+    property string straddfavourite: lang === stren ? "Save as favourite" : "Spara som favorit"
+    property string strerr: lang === stren ? "Search failed:\n" : "Sökningen misslyckades:\n"
+    property string strcovererr: lang === stren ? "Search failed" : "Sökningen\nmisslyckades"
 }
 
 

@@ -23,5 +23,5 @@ OTHER_FILES += qml/harbour-travelplanner.qml \
     qml/search.js \
     qml/pages/database.js \
     qml/database.js \
-    qml/pages/AboutPage.qml
+    qml/pages/SettingsPage.qml
 
