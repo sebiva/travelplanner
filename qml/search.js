@@ -22,6 +22,7 @@ var http;
 var key = "authKey=924b3c93-d187-47ab-bfde-12c230a7e97b"
 var baseadress = "http://api.vasttrafik.se/bin/rest.exe/v1/trip?"
 var format = "&format=xml"
+var addchgtime = "&disregardDefaultChangeMargin=1&additionalChangeTime="
 var namequery = "http://api.vasttrafik.se/bin/rest.exe/v1/location.name?authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml&input="
 
 var triparray = [];
@@ -29,12 +30,14 @@ function gettrip(x) {
     return triparray[x];
 }
 
-function sendrequest(fromstop, tostop, date, time, func, model) {
+function sendrequest(fromstop, tostop, date, time, func, model, changetime) {
+
+    console.log("CHANGETIME::" +changetime)
     var formateddate = convertdate(date);
     var formatedtime = time.substring(0,2) + ":" + time.substring(3,5);
     console.log("Searching at: " + formateddate + " " + formatedtime);
 
-    var req = baseadress + key + format + "&date=" + formateddate + "&time=" + formatedtime + "&originId=" + fromstop + "&destId=" + tostop;
+    var req = baseadress + key + format + "&date=" + formateddate + "&time=" + formatedtime + "&originId=" + fromstop + "&destId=" + tostop; // + addchgtime + changetime;
 
     console.log("\n" + req + "\n");
 

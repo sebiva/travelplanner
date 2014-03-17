@@ -50,7 +50,7 @@ CoverBackground {
                 triplist.searching = true;
                 mainWindow.time = Searchjs.getcurrenttime();
                 mainWindow.date = Searchjs.getcurrentdate();
-                Searchjs.sendrequest(mainWindow.fromid, mainWindow.toid, mainWindow.date, mainWindow.time, triplist.doneloading, listmodel);
+                Searchjs.sendrequest(mainWindow.fromid, mainWindow.toid, mainWindow.date, mainWindow.time, triplist.doneloading, listmodel, mainWindow.changetime);
             }
         } else {
             console.log("HELLO " + mainWindow.lang + "::" + mainWindow.errmsg + "::" + mainWindow.strcovererr + "::" + mainWindow.errmsg === mainWindow.strerr)

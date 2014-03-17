@@ -45,7 +45,7 @@ Dialog {
 
     Component.onCompleted: {
         DBjs.setup();
-        mainWindow.getlanguage()
+        mainWindow.getsettings()
         var lastsearch = DBjs.getlastsearch();
         if (lastsearch === 0) {
             return;
@@ -174,19 +174,20 @@ Dialog {
                         }
                     }
                 }
-
+                property bool fromtyping: false
                 Row {
+                    onFocusChanged: console.log("FROMROW")
                     id: fromrow
                     width: parent.width
                     visible: !maindialog.typing || fromtext.typing
                     TextField {
                         property bool typing: false
-                        //property bool cleared: false
                         id: fromtext
                         width: parent.width - height
                         onTextChanged: column.textchang(true);
                         placeholderText: mainWindow.strfrom
                         EnterKey.onClicked: totext.focus = true
+                        onClicked: console.log("Clicked")
                         onFocusChanged: {
                             searchmodel.clear();
                             typing = focus;
@@ -212,22 +213,19 @@ Dialog {
                             fromtext.text = ""
                             maindialog.from = ""
                             maindialog.fromid = "null"
-
                         }
 
                         onClicked: clikked()
                     }
                 }
-
+                property bool totyping: false
                 Row {
                     id: torow
                     width: parent.width
                     visible: !maindialog.typing || totext.typing
                     TextField {
                         property bool typing: false
-                        //property bool cleared: false
                         id: totext
-
                         width: parent.width - height
                         onTextChanged: column.textchang(false);
                         EnterKey.onClicked: accept();
@@ -236,12 +234,8 @@ Dialog {
                         onActiveFocusChanged: { focusChanged(focus) }
                         onFocusChanged: {
                             searchmodel.clear();
-//                            if (!cleared) {
                             typing = focus;
                             text = maindialog.to;
-//                            }
-
-
                         }
 
                     }

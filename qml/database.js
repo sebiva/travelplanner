@@ -56,14 +56,14 @@ function setup() {
     });
 }
 
-function setlanguage(language) {
+function setsetting(setting, value) {
     var db = getDatabase();
     var result;
     db.transaction(function (trans) {
-        trans.executeSql('DELETE FROM settings WHERE keyattr="language"')
-        var x = trans.executeSql('INSERT INTO settings VALUES(?, ?)', ["language", language]);
+        trans.executeSql('DELETE FROM settings WHERE keyattr=?',[setting])
+        var x = trans.executeSql('INSERT INTO settings VALUES(?, ?)', [setting, value]);
         if(x.rowsAffected > 0) {
-            console.log("Lang saved: " + language)
+            console.log("Setting saved: " + setting + ":" + value)
             result= 1;
         } else {
             result = 0;
@@ -72,17 +72,17 @@ function setlanguage(language) {
     return result;
 }
 
-function getlanguage() {
+function getsetting(setting) {
     var db = getDatabase();
     var result;
     db.transaction(function (trans) {
-        var x = trans.executeSql('SELECT MAX(valueattr) AS lang FROM settings WHERE keyattr = "language"');
+        var x = trans.executeSql('SELECT MAX(valueattr) AS val FROM settings WHERE keyattr = ?', setting);
         if(x.rows.length === 0) {
             result = 0;
         }
-        result = x.rows.item(0)['lang'];
+        result = x.rows.item(0)['val'];
     });
-    console.log("Getting lang: " + result)
+    console.log("Getting val: " + result + ", " + setting)
     return result;
 }
 

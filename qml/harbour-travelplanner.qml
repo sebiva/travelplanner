@@ -34,24 +34,55 @@ ApplicationWindow
     property string toid: ""
     property string time: ""
     property string date: ""
+    property string changetime: "5"
     property string errmsg: strerr
     property string response: ""
     property int database: 1
 
     property int searched: 1
 
-    function getlanguage() {
-        var language = DBjs.getlanguage()
-        if (language === null) {
-            setlanguage(stren)
-        } else {
+    function getsettings() {
+        var language = DBjs.getsetting("language")
+        if (language !== null) {
             lang = language
+        } else {
+            lang = stren
         }
-        return lang;
+        var time = DBjs.getsetting("changetime")
+        if (time !== null) {
+            changetime = time
+        } else {
+            changetime = "5"
+        }
     }
-    function setlanguage(language) {
-        lang = language
-        DBjs.setlanguage(language)
+
+    function getsetting(setting) {
+        var value = DBjs.getsetting(setting)
+        if (setting === "language") {
+            if (value === null) {
+                setsetting(setting, stren)
+                value = stren
+                lang = stren
+            }
+            return value
+        } else if (setting === "changetime") {
+            if (value === null) {
+                setsetting(setting, "5")
+                value = "5"
+                changetime = "5"
+            }
+            return value
+        }
+
+    }
+    function setsetting(setting, value) {
+        console.log("Setting " + setting + " : " + value)
+        if (setting === "language") {
+            lang = value;
+        } else if (setting === "changetime") {
+            changetime = value
+        }
+        DBjs.setsetting(setting, value)
     }
 
     //Language
@@ -75,6 +106,9 @@ ApplicationWindow
     property string strchangedir: lang === stren ? "Change direction" : "Byt riktning"
     property string strsettings: lang === stren ? "Settings" : "Inställningar"
     property string strlanguage: lang === stren ? "Language" : "Språk"
+    property string strchangetime: lang === stren ? "Exchange time" : "Bytestid"
+    property string strminute: lang === stren ? "minute" : "minut"
+    property string strminutes: lang === stren ? "minutes" : "minuter"
     property string strabout: lang === stren ? "About" : "Info"
     property string strcreated: lang === stren ? "Created by Sebastian Ivarsson" : "Skapad av Sebastian Ivarsson"
     property string strapi: lang === stren ? "Uses the" : "Använder"

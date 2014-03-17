@@ -45,7 +45,7 @@ Page {
 
     function search() {
         //console.log("DATUM " + date)
-        Searchjs.sendrequest(fromid, toid, date, time, listView.answerrecieved, listmodel)  //listView.doneloading)
+        Searchjs.sendrequest(fromid, toid, date, time, listView.answerrecieved, listmodel, mainWindow.changetime)  //listView.doneloading)
     }
 
     Column {

@@ -47,7 +47,7 @@ Page {
                 label: mainWindow.strlanguage
                 width: parent.width
                 Component.onCompleted: {
-                    var lang = mainWindow.getlanguage()
+                    var lang = mainWindow.getsetting("language")
                     var i = 0;
                     while(languagepicker.currentItem !== null) {
                         if (languagepicker.currentItem.text === lang) {
@@ -58,10 +58,44 @@ Page {
                 }
 
                 menu: ContextMenu {
-                    MenuItem {text: mainWindow.stren; onClicked: mainWindow.setlanguage(text)}
-                    MenuItem {text: mainWindow.strsv; onClicked: mainWindow.setlanguage(text)}
+                    MenuItem {text: mainWindow.stren; onClicked: mainWindow.setsetting("language", text)}
+                    MenuItem {text: mainWindow.strsv; onClicked: mainWindow.setsetting("language", text)}
                 }
             }
+
+
+            //Doesn't work properly with Västtrafik...
+
+//            ComboBox {
+//                id: changetimepicker
+//                label: mainWindow.strchangetime
+//                width: parent.width
+//                property string val: value
+//                Component.onCompleted: {
+//                    var time = mainWindow.getsetting("changetime")
+//                    console.log("TIEMME" + time)
+//                    var i = 0;
+//                    while(changetimepicker.currentItem !== null) {
+//                        if (changetimepicker.currentItem.text.split(" ")[0] === time) {
+//                            return;
+//                        }
+//                        currentIndex = ++i;
+//                    }
+//                }
+
+
+//                menu: ContextMenu {
+//                    onActivated: mainWindow.setsetting("changetime", index)
+//                    MenuItem {text: "0 " + mainWindow.strminutes; }
+//                    MenuItem {text: "1 " + mainWindow.strminute; }
+//                    MenuItem {text: "2 " + mainWindow.strminutes; }
+//                    MenuItem {text: "3 " + mainWindow.strminutes; }
+//                    MenuItem {text: "4 " + mainWindow.strminutes; }
+//                    MenuItem {text: "5 " + mainWindow.strminutes; }
+//                    MenuItem {text: "6 " + mainWindow.strminutes; }
+//                    MenuItem {text: "7 " + mainWindow.strminutes; }
+//                }
+//            }
             Column {
                 width: parent.width
                 Label {
