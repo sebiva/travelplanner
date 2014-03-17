@@ -41,15 +41,22 @@ CoverBackground {
         listmodel.clear();
         if (mainWindow.avail) {
 
+            if (now) {
+                mainWindow.time = Searchjs.getcurrenttime();
+                mainWindow.date = Searchjs.getcurrentdate();
+            }
+
+
             console.log("DURTIME " + Searchjs.duration(mainWindow.time, Searchjs.getcurrenttime(),mainWindow.date, Searchjs.getcurrentdate()));
-            if (!now || (Searchjs.duration(mainWindow.time, Searchjs.getcurrenttime(),mainWindow.date, Searchjs.getcurrentdate()) === "0min")) {
+            if ((Searchjs.duration(mainWindow.timeofsearch, Searchjs.getcurrenttime(),mainWindow.dateofsearch, Searchjs.getcurrentdate()) === "0min")) {
                 console.log("IFFFFFFF" + mainWindow.response.substring(0,200));
                 Searchjs.setuplist(Searchjs.parse(mainWindow.response),listmodel);
             } else {
                 console.log("ELSEEEEEE" + avail)
+                mainWindow.timeofsearch = Searchjs.getcurrenttime()
+                mainWindow.dateofsearch = Searchjs.getcurrentdate()
                 triplist.searching = true;
-                mainWindow.time = Searchjs.getcurrenttime();
-                mainWindow.date = Searchjs.getcurrentdate();
+
                 Searchjs.sendrequest(mainWindow.fromid, mainWindow.toid, mainWindow.date, mainWindow.time, triplist.doneloading, listmodel, mainWindow.changetime);
             }
         } else {

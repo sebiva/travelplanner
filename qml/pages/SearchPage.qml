@@ -45,6 +45,8 @@ Page {
 
     function search() {
         //console.log("DATUM " + date)
+        mainWindow.timeofsearch = Searchjs.getcurrenttime()
+        mainWindow.dateofsearch = Searchjs.getcurrentdate()
         Searchjs.sendrequest(fromid, toid, date, time, listView.answerrecieved, listmodel, mainWindow.changetime)  //listView.doneloading)
     }
 

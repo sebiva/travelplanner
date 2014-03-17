@@ -38,6 +38,8 @@ ApplicationWindow
     property string errmsg: strerr
     property string response: ""
     property int database: 1
+    property string timeofsearch: ""
+    property string dateofsearch: ""
 
     property int searched: 1
 

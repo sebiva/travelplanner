@@ -255,7 +255,6 @@ Dialog {
                             } else {
                                 column.textchang(false)
                             }
-
                             Qt.inputMethod.show();
                         }
                         onFocusChanged: {
@@ -368,11 +367,11 @@ Dialog {
                 anchors.top: column.bottom
                 height: maindialog.typing ? maindialog.height - column.height : 0
                 spacing: Theme.paddingMedium
+                clip: true
                 currentIndex: -1
                 property bool from: false
 
                 function filllist(stops) {
-
                     searchmodel.clear();
                     var i = 0;
                     while(stops[i] !== undefined) {
@@ -381,13 +380,19 @@ Dialog {
                     }
                 }
                 model: ListModel {id: searchmodel}
-                delegate: ListItem {
+                delegate:
+                    BackgroundItem {
                     id: searchdelegate
-                    x: Theme.paddingSmall
+                    width: parent.width
+                    height: searchtext.height + 2 * Theme.paddingLarge
                     Label {
                         id: searchtext
-                        width: parent.width
+                        width: parent.width- 2 * Theme.paddingLarge
+                        truncationMode: TruncationMode.Elide
                         text: name
+                        anchors.centerIn: parent
+                        x: Theme.paddingLarge
+                        color: searchdelegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                     }
                     onClicked: {
                         //console.log("clicked: " + name)
@@ -400,6 +405,7 @@ Dialog {
                             maindialog.toid = nmbr;
                             maindialog.to = name
                         }
+
                         searchmodel.clear()
                     }
                 }
@@ -509,7 +515,7 @@ Dialog {
                                 if (favmodel.count === 0) {
                                     favlist.empty = true
                                 }
-                                }
+                            }
                         }
                         MenuItem {
                             text: mainWindow.strmovetotop
