@@ -116,7 +116,6 @@ Dialog {
                 }
             }
 
-
             Column {
                 id: column
 
@@ -158,7 +157,6 @@ Dialog {
                 }
 
                 function textchang(from) {
-                    //console.log("textchanged : from/to" + from)
                     var txt = from ? fromtext : totext;
                     searchmodel.clear();
                     if (txt.text !== "") {
@@ -174,34 +172,50 @@ Dialog {
                         }
                     }
                 }
-                property bool fromtyping: false
+
                 Row {
                     onFocusChanged: console.log("FROMROW")
                     id: fromrow
-                    width: parent.width
+                    width: column.width
                     visible: !maindialog.typing || fromtext.typing
                     TextField {
                         property bool typing: false
                         id: fromtext
-                        width: parent.width - height
+                        width: fromrow.width - height
                         onTextChanged: column.textchang(true);
                         placeholderText: mainWindow.strfrom
                         EnterKey.onClicked: totext.focus = true
-                        onClicked: console.log("Clicked")
+                        onClicked: {
+                            if (text.length < 3) {
+                                searchmodel.clear()
+                            } else {
+                                column.textchang(true)
+                            }
+
+                            Qt.inputMethod.show();
+                        }
                         onFocusChanged: {
                             searchmodel.clear();
+                            console.log("Focus changed " + activeFocus)
+                            if (activeFocus === false && buttonfrom.clicked === true) {
+                                buttonfrom.clicked = false
+                                focus = true
+                                console.log("No focus")
+                                Qt.inputMethod.show()
+                            }
                             typing = focus;
                             text = maindialog.from;
                         }
                     }
                     BackgroundItem {
                         id: buttonfrom
-                        width: iconfrom.width * 2
+                        width: maindialog.width - fromtext.width
+                        height: fromtext.height - 2 * Theme.paddingLarge
                         highlighted: iconfrom.highlighted
+                        property  bool clicked: false
                         IconButton {
                             id: iconfrom
                             z: 0
-                            visible: !maindialog.typing
                             icon.source: "image://theme/icon-m-clear"
                             anchors.centerIn: parent
                             width: fromtext.height / 2
@@ -209,16 +223,19 @@ Dialog {
 
                         }
                         function clikked() {
+                            searchmodel.clear()
+                            clicked = true
+                            searchlist.currentIndex = -1
                             fromready = false
                             fromtext.text = ""
                             maindialog.from = ""
                             maindialog.fromid = "null"
                         }
-
                         onClicked: clikked()
                     }
+
                 }
-                property bool totyping: false
+
                 Row {
                     id: torow
                     width: parent.width
@@ -231,27 +248,43 @@ Dialog {
                         EnterKey.onClicked: accept();
                         placeholderText: mainWindow.strto
                         anchors.topMargin: Theme.paddingMedium
-                        onActiveFocusChanged: { focusChanged(focus) }
+                        onClicked: {
+                            console.log("To" + text.length)
+                            if(text.length < 3) {
+                                searchmodel.clear()
+                            } else {
+                                column.textchang(false)
+                            }
+
+                            Qt.inputMethod.show();
+                        }
                         onFocusChanged: {
                             searchmodel.clear();
+                            if (activeFocus === false && buttonto.clicked === true) {
+                                buttonto.clicked = false
+                                focus = true
+                                Qt.inputMethod.show()
+                            }
                             typing = focus;
                             text = maindialog.to;
                         }
-
                     }
                     BackgroundItem {
                         id: buttonto
-                        width: iconto.width * 2
+                        height: totext.height - 2 * Theme.paddingLarge
+                        width: maindialog.width - totext.width
                         highlighted: iconto.highlighted
+                        property bool clicked: false
                         IconButton {
                             id: iconto
-                            visible: !maindialog.typing
                             icon.source: "image://theme/icon-m-clear"
                             anchors.centerIn: parent
                             width: fromtext.height / 2
                             onClicked: buttonto.clikked()
                         }
                         function clikked() {
+                            searchmodel.clear()
+                            clicked = true
                             toready = false
                             totext.text = ""
                             maindialog.to = ""
@@ -312,7 +345,6 @@ Dialog {
                                     value = dialog.timeText
                                 })
                             }
-
                             label: mainWindow.strtime
                             onClicked: openTimeDialog()
                             opacity: 0.8
