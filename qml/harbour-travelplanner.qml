@@ -122,6 +122,10 @@ ApplicationWindow
     property string straddfavourite: lang === stren ? "Save as favourite" : "Spara som favorit"
     property string strerr: lang === stren ? "Search failed:\n" : "Sökningen misslyckades:\n"
     property string strcovererr: lang === stren ? "Search failed" : "Sökningen\nmisslyckades"
+
+    property string strwalk: lang === stren ? "walk" : "gå"
+    property string strwalkupper: lang === stren ? "Walk" : "Gå"
+    property string strtrain: lang === stren ? "train" : "tåg"
 }
 
 

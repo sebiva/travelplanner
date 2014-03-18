@@ -317,6 +317,28 @@ function parse(response) {
                 continue;
             }
 
+            //Fix the icons and names for special legs
+            if(leginfo.name === "Gå") {
+                leginfo.name = mainWindow.strwalk
+                leginfo.color1 = "#ffffff"
+                leginfo.color2 = "#00abe5"
+                leginfo.dir = mainWindow.strwalkupper
+            } else if(leginfo.name.split(" ")[0] === "SJ") {
+                leginfo.name = "sj"
+                leginfo.color1 = "#000000"
+                leginfo.color2 = "#ffffff"
+            } else if(leginfo.name === "PENDELTÅG" || leginfo.name === "VÄSTTÅGEN" || leginfo.name === "TÅGAB REGIONTÅG") {
+                leginfo.name = mainWindow.strtrain
+                leginfo.color1 = "#ffffff"
+                leginfo.color2 = "#000000"
+            } else if(leginfo.name.split(" ")[1] === "EXPRESS") {
+                leginfo.name = leginfo.name.split(" ")[0].toString().toLowerCase();
+            } else if ((leginfo.name.split(" ")[1] === "ÄLVSNABBEN") || (leginfo.name.split(" ")[1] === "ÄLVSNABBARE")) {
+                leginfo.name = "älvs."
+            } else {
+                leginfo.name = leginfo.sname
+            }
+
 
             var leglistelem = {
                 data: leginfo,

@@ -133,35 +133,35 @@ function addicons(iconmodel, index) {
 
     for(var i=0; i<exchs.length; i++) {
         var exch = exchs[i];
-        var legname;
-        if (exch.name === "Gå") {
-            iconmodel.append({name: "walk", color1: "#ffffff", color2: "#00abe5", dir: "Walk",
-                                 origname: exch.origname.split(",")[0], destname: exch.destname.split(",")[0],
-                                 deptime: exch.deptime, depdate: exch.depdate, arivtime: exch.arivtime, arivdate: exch.arivdate,
-                                 deprttime: exch.deptime, deprtdate: exch.depdate, arivrttime: exch.arivtime, arivrtdate: exch.arivdate});
-            continue;
-        } else if (exch.name.split(" ")[0] === "SJ") {
-            iconmodel.append({name: "sj", color1: "#000000", color2: "#ffffff", dir: exch.dir,
-                                 origname: exch.origname.split(",")[0], origtrack: exch.origtrack,
-                                 destname: exch.destname.split(",")[0], desttrack: exch.desttrack,
-                                 deptime: exch.deptime, depdate: exch.depdate, arivtime: exch.arivtime, arivdate: exch.arivdate,
-                                 deprttime: exch.deptime, deprtdate: exch.depdate, arivrttime: exch.arivtime, arivrtdate: exch.arivrtdate});
-            continue;
-        } else if ((exch.name === "PENDELTÅG") || (exch.name === "VÄSTTÅGEN") || (exch.name === "TÅGAB REGIONTÅG")) {
-            iconmodel.append({name: "train", color1: "#ffffff", color2: "#000000", dir: exch.dir,
-                                 origname: exch.origname.split(",")[0], origtrack: exch.origtrack,
-                                 destname: exch.destname.split(",")[0], desttrack: exch.desttrack,
-                                 deptime: exch.deptime, depdate: exch.depdate, arivtime: exch.arivtime, arivdate: exch.arivdate,
-                                 deprttime: exch.deptime, deprtdate: exch.depdate, arivrttime: exch.arivtime, arivrtdate: exch.arivrtdate});
-            continue;
-        } else if (exch.name.split(" ")[1] === "EXPRESS") {
-            legname = exch.name.split(" ")[0].toString().toLowerCase();
-        } else if ((exch.name.split(" ")[1] === "ÄLVSNABBEN") || (exch.name.split(" ")[1] === "ÄLVSNABBARE")) {
-            legname = "älvs."
-        } else {
-            legname = exch.sname;
-        }
-        iconmodel.append({name: legname, color1: exch.color1, color2: exch.color2, dir: exch.dir,
+//        var legname;
+//        if (exch.name === "Gå") {
+//            iconmodel.append({name: "walk", color1: "#ffffff", color2: "#00abe5", dir: "Walk",
+//                                 origname: exch.origname.split(",")[0], destname: exch.destname.split(",")[0],
+//                                 deptime: exch.deptime, depdate: exch.depdate, arivtime: exch.arivtime, arivdate: exch.arivdate,
+//                                 deprttime: exch.deptime, deprtdate: exch.depdate, arivrttime: exch.arivtime, arivrtdate: exch.arivdate});
+//            continue;
+//        } else if (exch.name.split(" ")[0] === "SJ") {
+//            iconmodel.append({name: "sj", color1: "#000000", color2: "#ffffff", dir: exch.dir,
+//                                 origname: exch.origname.split(",")[0], origtrack: exch.origtrack,
+//                                 destname: exch.destname.split(",")[0], desttrack: exch.desttrack,
+//                                 deptime: exch.deptime, depdate: exch.depdate, arivtime: exch.arivtime, arivdate: exch.arivdate,
+//                                 deprttime: exch.deptime, deprtdate: exch.depdate, arivrttime: exch.arivtime, arivrtdate: exch.arivrtdate});
+//            continue;
+//        } else if ((exch.name === "PENDELTÅG") || (exch.name === "VÄSTTÅGEN") || (exch.name === "TÅGAB REGIONTÅG")) {
+//            iconmodel.append({name: "train", color1: "#ffffff", color2: "#000000", dir: exch.dir,
+//                                 origname: exch.origname.split(",")[0], origtrack: exch.origtrack,
+//                                 destname: exch.destname.split(",")[0], desttrack: exch.desttrack,
+//                                 deptime: exch.deptime, depdate: exch.depdate, arivtime: exch.arivtime, arivdate: exch.arivdate,
+//                                 deprttime: exch.deptime, deprtdate: exch.depdate, arivrttime: exch.arivtime, arivrtdate: exch.arivrtdate});
+//            continue;
+//        } else if (exch.name.split(" ")[1] === "EXPRESS") {
+//            legname = exch.name.split(" ")[0].toString().toLowerCase();
+//        } else if ((exch.name.split(" ")[1] === "ÄLVSNABBEN") || (exch.name.split(" ")[1] === "ÄLVSNABBARE")) {
+//            legname = "älvs."
+//        } else {
+//            legname = exch.sname;
+//        }
+        iconmodel.append({name: exch.name, color1: exch.color1, color2: exch.color2, dir: exch.dir,
                              origname: exch.origname.split(",")[0], origtrack: exch.origtrack,
                              destname: exch.destname.split(",")[0], desttrack: exch.desttrack,
                              deptime: exch.deptime, depdate: exch.depdate, deprttime: exch.deprttime, deprtdate: exch.deprtdate,
