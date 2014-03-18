@@ -21,6 +21,7 @@ import Sailfish.Silica 1.0
 
 import "../search.js" as Searchjs
 import "../database.js" as DBjs
+import "../time.js" as Timejs
 
 
 Page {
@@ -37,16 +38,12 @@ Page {
     property string fromid : "9021014001200000"
     property string toid : "9021014004493000" //"9021014072006000" //Gislaved
 
-    function gettrip(x) {
-        return Searchjs.gettrip(x);
-    }
-
     onVisibleChanged: search();
 
     function search() {
         //console.log("DATUM " + date)
-        mainWindow.timeofsearch = Searchjs.getcurrenttime()
-        mainWindow.dateofsearch = Searchjs.getcurrentdate()
+        mainWindow.timeofsearch = Timejs.getcurrenttime()
+        mainWindow.dateofsearch = Timejs.getcurrentdate()
         Searchjs.sendrequest(fromid, toid, date, time, listView.answerrecieved, listmodel, mainWindow.changetime)  //listView.doneloading)
     }
 
@@ -189,25 +186,25 @@ Page {
                         height: searchpage.height / 10
                         Label {
                             id: deptimelabel
-                            property string nextday : Searchjs.duration("00:00", "00:00", Searchjs.convertdate(date), depdate)
+                            property string nextday : Timejs.duration("00:00", "00:00", Timejs.convertdate(date), depdate)
                             property int daypos : nextday.indexOf("d")
-                            text: deptime + Searchjs.delay(deptime, deprttime, depdate, deprtdate) + (daypos > 0 ? " [+" + nextday.substring(daypos-1) + "]" : "")
+                            text: deptime + Timejs.delay(deptime, deprttime, depdate, deprtdate) + (daypos > 0 ? " [+" + nextday.substring(daypos-1) + "]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                         Label {
                             id: arivtimelabel
-                            property string nextday : Searchjs.duration("00:00", "00:00", Searchjs.convertdate(date), arivdate)
+                            property string nextday : Timejs.duration("00:00", "00:00", Timejs.convertdate(date), arivdate)
                             property int daypos : nextday.indexOf("d")
-                            text: arivtime + Searchjs.delay(arivtime, arivrttime, arivdate, arivrtdate) + (daypos > 0 ? " [+" + nextday.substring(daypos-1) + "]" : "")
+                            text: arivtime + Timejs.delay(arivtime, arivrttime, arivdate, arivrtdate) + (daypos > 0 ? " [+" + nextday.substring(daypos-1) + "]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                         Label {
                             id: durlabel
-                            text: Searchjs.duration(deprttime, arivrttime, deprtdate, arivrtdate)
+                            text: Timejs.duration(deprttime, arivrttime, deprtdate, arivrtdate)
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
@@ -297,7 +294,7 @@ Page {
                                         }
                                         Label {
                                             id: legdeprttime
-                                            text: Searchjs.delay(deptime, deprttime, depdate, deprtdate)
+                                            text: Timejs.delay(deptime, deprttime, depdate, deprtdate)
                                             visible: iconlist.textvis
                                             horizontalAlignment: Text.AlignRight
                                             font.pixelSize: (Theme.fontSizeTiny + Theme.fontSizeSmall) /2
@@ -336,7 +333,7 @@ Page {
                                         }
                                         Label {
                                             id: legarivrttime
-                                            text: Searchjs.delay(arivtime, arivrttime, arivdate, arivrtdate)
+                                            text: Timejs.delay(arivtime, arivrttime, arivdate, arivrtdate)
                                             visible: iconlist.textvis
                                             color: Theme.primaryColor
                                             horizontalAlignment: Text.AlignRight
@@ -420,7 +417,7 @@ Page {
                             target: iconlist
                             orientation: ListView.Vertical
                             recsize: width / 4
-                            height: (spacing + recsize) * Searchjs.gettrip(index).length - spacing
+                            height: (spacing + recsize) * mainWindow.lastresponseexchanges[index].length - spacing
                             textvis: true
                         }
                     }

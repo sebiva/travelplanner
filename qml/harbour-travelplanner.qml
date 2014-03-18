@@ -36,7 +36,8 @@ ApplicationWindow
     property string date: ""
     property string changetime: "5"
     property string errmsg: strerr
-    property string response: ""
+    property var lastresponseexchanges: [] // A list of all trips, containing tripdata and leglist
+    property var lastparsedtrips: [] // Contains the latest array of trips.
     property int database: 1
     property string timeofsearch: ""
     property string dateofsearch: ""

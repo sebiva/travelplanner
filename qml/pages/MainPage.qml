@@ -21,6 +21,7 @@ import Sailfish.Silica 1.0
 
 import "../search.js" as Searchjs
 import "../database.js" as DBjs
+import "../time.js" as Timejs
 
 Dialog {
     id: maindialog
@@ -307,7 +308,7 @@ Dialog {
 
                         ValueButton {
                             id: datepicker
-                            value : Searchjs.getcurrentdate() // new Date().getDate() + "/" + (new Date().getMonth()+1) + "/" + new Date().getFullYear()
+                            value : Timejs.getcurrentdate() // new Date().getDate() + "/" + (new Date().getMonth()+1) + "/" + new Date().getFullYear()
                             function openDateDialog() {
                                 var dialog = pageStack.push("Sailfish.Silica.DatePickerDialog", { date: new Date(value.split("-")[0],  (parseInt(value.split("-")[1])-1), value.split("-")[2] )})
 
@@ -331,7 +332,7 @@ Dialog {
 
                         ValueButton {
                             id: timepicker
-                            value : Searchjs.getcurrenttime()
+                            value : Timejs.getcurrenttime()
 
                             function openTimeDialog() {
                                 var dialog = pageStack.push("Sailfish.Silica.TimePickerDialog", {
@@ -354,8 +355,8 @@ Dialog {
                         width: parent.width / 4
                         anchors.verticalCenter: parent.verticalCenter
                         onClicked: {
-                            datepicker.value = Searchjs.getcurrentdate()//new Date().getDate() + "/" + (new Date().getMonth()+1) + "/" + new Date().getFullYear()
-                            timepicker.value = Searchjs.getcurrenttime()
+                            datepicker.value = Timejs.getcurrentdate()//new Date().getDate() + "/" + (new Date().getMonth()+1) + "/" + new Date().getFullYear()
+                            timepicker.value = Timejs.getcurrenttime()
                         }
                     }
                 }

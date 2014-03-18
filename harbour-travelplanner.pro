@@ -20,8 +20,11 @@ OTHER_FILES += qml/harbour-travelplanner.qml \
     qml/pages/MainPage.qml \
     qml/pages/SearchPage.qml \
     search.js \
-    qml/search.js \
     qml/pages/database.js \
     qml/database.js \
-    qml/pages/SettingsPage.qml
+    qml/pages/SettingsPage.qml \
+    qml/vasttrafik.js \
+    qml/time.js \
+    qml/parsehelper.js \
+    qml/search.js
 

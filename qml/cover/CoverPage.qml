@@ -20,6 +20,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../search.js" as Searchjs
+import "../time.js" as Timejs
 
 CoverBackground {
     id: coverpage
@@ -42,19 +43,19 @@ CoverBackground {
         if (mainWindow.avail) {
 
             if (now) {
-                mainWindow.time = Searchjs.getcurrenttime();
-                mainWindow.date = Searchjs.getcurrentdate();
+                mainWindow.time = Timejs.getcurrenttime();
+                mainWindow.date = Timejs.getcurrentdate();
             }
 
 
-            console.log("DURTIME " + Searchjs.duration(mainWindow.time, Searchjs.getcurrenttime(),mainWindow.date, Searchjs.getcurrentdate()));
-            if ((Searchjs.duration(mainWindow.timeofsearch, Searchjs.getcurrenttime(),mainWindow.dateofsearch, Searchjs.getcurrentdate()) === "0min")) {
-                console.log("IFFFFFFF" + mainWindow.response.substring(0,200));
-                Searchjs.setuplist(Searchjs.parse(mainWindow.response),listmodel);
+            console.log("DURTIME " + Timejs.duration(mainWindow.time, Timejs.getcurrenttime(),mainWindow.date, Timejs.getcurrentdate()));
+            if ((Timejs.duration(mainWindow.timeofsearch, Timejs.getcurrenttime(),mainWindow.dateofsearch, Timejs.getcurrentdate()) === "0min")) {
+                console.log("IFFFFFFF");
+                Searchjs.setuplist(mainWindow.lastparsedtrips,listmodel);
             } else {
                 console.log("ELSEEEEEE" + avail)
-                mainWindow.timeofsearch = Searchjs.getcurrenttime()
-                mainWindow.dateofsearch = Searchjs.getcurrentdate()
+                mainWindow.timeofsearch = Timejs.getcurrenttime()
+                mainWindow.dateofsearch = Timejs.getcurrentdate()
                 triplist.searching = true;
 
                 Searchjs.sendrequest(mainWindow.fromid, mainWindow.toid, mainWindow.date, mainWindow.time, triplist.doneloading, listmodel, mainWindow.changetime);
@@ -144,21 +145,21 @@ CoverBackground {
                         height: triplist.height / 6
                         Label {
                             id: deptimelabel
-                            text: deptime + Searchjs.delay(deptime, deprttime, depdate, deprtdate)
+                            text: deptime + Timejs.delay(deptime, deprttime, depdate, deprtdate)
                             width: coverpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: Theme.fontSizeTiny
                         }
                         Label {
                             id: arivtimelabel
-                            text: arivtime + Searchjs.delay(arivtime, arivrttime, arivdate, arivrtdate)
+                            text: arivtime + Timejs.delay(arivtime, arivrttime, arivdate, arivrtdate)
                             width: coverpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: Theme.fontSizeTiny
                         }
                         Label {
                             id: durlabel
-                            text: Searchjs.duration(deptime, arivtime, depdate, arivdate)
+                            text: Timejs.duration(deptime, arivtime, depdate, arivdate)
                             width: coverpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: Theme.fontSizeTiny
