@@ -57,7 +57,8 @@ Dialog {
         totext.text = lastsearch.to
         from = lastsearch.from
         to = lastsearch.to
-
+        fromready = true
+        toready = true
     }
     function searchfunc() {
         if (fromready && toready) { //&& (from !== "") && (to !== "")) {
@@ -195,13 +196,13 @@ Dialog {
                         placeholderText: mainWindow.strfrom
                         onClicked: {
                             column.active = true
-                            column.state = "typing"
-                            typing = true
                             if (text.length < 3) {
                                 searchmodel.clear()
-                            } else {
+                            } else if (column.state !== "typing"){
                                 column.textchang(true)
                             }
+                            column.state = "typing"
+                            typing = true
                             Qt.inputMethod.show();
                         }
                         onFocusChanged: {
@@ -252,6 +253,7 @@ Dialog {
                 Row {
                     id: torow
                     width: parent.width
+
                     visible: !maindialog.typing || totext.typing
                     TextField {
                         property bool typing: false
@@ -265,17 +267,16 @@ Dialog {
                         }
 
                         placeholderText: mainWindow.strto
-                        anchors.topMargin: Theme.paddingMedium
                         onClicked: {
                             console.log("STATE IN onClicked: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                             column.active = true
-                            column.state = "typing"
-                            typing = true
                             if(text.length < 3) {
                                 searchmodel.clear()
-                            } else {
+                            } else if (column.state !== "typing") {
                                 column.textchang(false)
                             }
+                            column.state = "typing"
+                            typing = true
                             Qt.inputMethod.show();
                         }
                         onFocusChanged: {
@@ -296,7 +297,7 @@ Dialog {
                     BackgroundItem {
                         id: buttonto
                         width: maindialog.width - totext.width
-                        height: totext.height - 2 * Theme.paddingLarge
+                        height: parent.height
                         highlighted: iconto.highlighted
                         property bool clicked: false
                         IconButton {
@@ -394,9 +395,10 @@ Dialog {
                 width: parent.width
                 anchors.top: column.bottom
                 height: maindialog.typing && (searchmodel.count > 0) ? maindialog.height - column.height : 0
-                spacing: Theme.paddingMedium
+                //spacing: Theme.paddingMedium
                 clip: true
                 currentIndex: -1
+                z: 5
                 property bool from: false
 
                 function filllist(stops) {
@@ -427,15 +429,18 @@ Dialog {
                         column.state = "chosen"
                         column.active = false
                         if (searchlist.from) {
+                            fromready = true
                             fromtext.typing = false;
                             maindialog.fromid = nmbr;
                             maindialog.from = name;
+                            fromtext.text = name
                         } else {
+                            toready = true
                             totext.typing = false;
                             maindialog.toid = nmbr;
                             maindialog.to = name
+                            totext.text = name
                         }
-
                         searchmodel.clear()
                     }
                 }
@@ -449,6 +454,7 @@ Dialog {
                 onClicked: {
                     console.log("STATE IN FILLER: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                     column.active = false
+                    column.state = ""
                     fromtext.typing = false
                 }
             }
@@ -461,6 +467,7 @@ Dialog {
                 onClicked: {
                     console.log("STATE IN FILLER: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                     column.active = false
+                    column.state = ""
                     totext.typing = false
                 }
             }
@@ -482,7 +489,6 @@ Dialog {
 
             property int database: mainWindow.database
             function updatefavs() {
-
                 var res = DBjs.getfaves();
                 favmodel.clear();
                 if (res === 0) {
@@ -517,8 +523,6 @@ Dialog {
                 onTriggered: {
                     anifromtext.state = "done"
                     anitotext.state = "done"
-                    maindialog.from = anifromtext.text
-                    maindialog.to = anitotext.text
                     fromtext.text = maindialog.from
                     totext.text = maindialog.to
                 }
@@ -537,9 +541,15 @@ Dialog {
                     onClicked: {
                         anifromtext.text = favfromtext.text;
                         anitotext.text = favtotext.text;
+                        maindialog.from = anifromtext.text
+                        maindialog.to = anitotext.text
+                        maindialog.fromid = fromid;
+                        maindialog.toid = toid;
                         if(movetimer.running) {
                             return;
                         }
+                        fromready = true
+                        toready = true
                         anifromtext.opacity = 1;
                         anitotext.opacity = 1;
 
@@ -553,8 +563,6 @@ Dialog {
                         anifromtext.state = "start";
                         anitotext.state = "start";
                         movetimer.start();
-                        maindialog.fromid = fromid;
-                        maindialog.toid = toid;
                     }
 
 
