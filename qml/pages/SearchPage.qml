@@ -387,6 +387,7 @@ Page {
                     id: addtimer
                     interval: delegate.addanimdur
                     onTriggered: {
+                        iconmodel.clear()
                         Searchjs.addicons(iconmodel, index);
                         stop();
                     }

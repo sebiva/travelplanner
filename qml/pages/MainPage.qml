@@ -168,44 +168,89 @@ Dialog {
                             toready = true;
                             searchlist.from = false;
                         }
-                        if(txt.focus && txt.text.length > 2) {
+                        if(txt.focus && txt.text.length > 2 && !autochang && typing) {
+                            console.log("Getting name " + txt.text.length)
                             getsuggestions(txt.text);
-                        }
+                        }    
                     }
+                    autochang = false
                 }
+                property bool autochang: false
+                property bool chosen: false
 
                 Row {
-                    onFocusChanged: console.log("FROMROW")
                     id: fromrow
                     width: column.width
+                    height: fromtext.height
                     visible: !maindialog.typing || fromtext.typing
                     TextField {
                         property bool typing: false
                         id: fromtext
                         width: fromrow.width - height
-                        onTextChanged: column.textchang(true);
-                        placeholderText: mainWindow.strfrom
-                        EnterKey.onClicked: totext.focus = true
-                        onClicked: {
-                            if (text.length < 3) {
-                                searchmodel.clear()
-                            } else {
+                        onTextChanged: {
+                            //console.log("changed fromtext : " + text + ":auto" + column.autochang + ":cli" + buttonfrom.clicked + ":chos" + column.chosen);
+                            if (column.state !== "cleared" && column.active) {
                                 column.textchang(true)
                             }
 
+//                            if (buttonfrom.clicked) {
+//                                buttonfrom.clicked = false
+//                                text = ""
+//                                return
+//                            }
+//                            if (column.autochang) {
+//                                column.autochang = false
+//                                return
+//                            }
+//                            if (column.chosen) {
+//                                return
+//                            }
+
+                            //if (!column.autochang && !buttonfrom.clicked) {
+                                column.textchang(true)
+                            //}
+                        }
+                        placeholderText: mainWindow.strfrom
+                        EnterKey.onClicked: ;//
+                        onClicked: {
+                            //column.chosen = false
+                            column.active = true
+                            column.state = "typing"
+                            typing = true
+                            if (text.length < 3) {
+                                searchmodel.clear()
+                            } else {
+                                //console.log("clicked fromtext :" + text)
+                                column.textchang(true)
+                            }
+                            //buttonfrom.clicked = false
                             Qt.inputMethod.show();
                         }
                         onFocusChanged: {
                             searchmodel.clear();
-                            console.log("Focus changed " + activeFocus)
-                            if (activeFocus === false && buttonfrom.clicked === true) {
-                                buttonfrom.clicked = false
+                            //console.log("Focus changed " + activeFocus + "btncli:" + buttonfrom.clicked + "chs:" + column.chosen)
+//                            if (!activeFocus && buttonfrom.clicked && !column.chosen) {
+//                                focus = true
+//                                console.log("No focus")
+//                                Qt.inputMethod.show()
+//                            }
+                            if (column.active) {
+                                column.state = "typing"
                                 focus = true
-                                console.log("No focus")
                                 Qt.inputMethod.show()
+                                typing = true
+                                return
                             }
+
                             typing = focus;
-                            text = maindialog.from;
+                            text = maindialog.from
+                            // Fix double triggerings of onTextChanged
+//                            if (maindialog.from === "") {
+//                                console.log("in if")
+//                                buttonfrom.clicked = true
+//                                column.autochang = true
+//                            }
+//                            text = maindialog.from;
                         }
                     }
                     BackgroundItem {
@@ -224,19 +269,27 @@ Dialog {
 
                         }
                         function clikked() {
+                            //console.log("Clearing : " + fromtext.text)
+                            //column.autochang = true
                             searchmodel.clear()
-                            clicked = true
-                            searchlist.currentIndex = -1
+                            //clicked = true
+                            //searchlist.currentIndex = -1
+                            column.state = "cleared"
                             fromready = false
-                            fromtext.text = ""
                             maindialog.from = ""
                             maindialog.fromid = "null"
+                            //console.log("Now Clearing : " + fromtext.text)
+                            fromtext.focus = false
+                            fromtext.text = "" //MAGI!!!!!!!!!!!!!!!!!!
+                            //console.log("Cleared : " + fromtext.text + ":")
                         }
                         onClicked: clikked()
                     }
 
                 }
-
+                property bool active: false
+                property string state: ""
+                // typing, cleared, chosen
                 Row {
                     id: torow
                     width: parent.width
@@ -245,12 +298,43 @@ Dialog {
                         property bool typing: false
                         id: totext
                         width: parent.width - height
-                        onTextChanged: column.textchang(false);
-                        EnterKey.onClicked: accept();
+                        onTextChanged: {
+                            console.log("STATE IN TEXT: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                            if (column.state === "cleared" && column.active) {
+                                if (!activeFocus) {
+                                    //focus = true
+                                }
+                                return
+                            }
+                            if (!column.active) {
+                                return
+                            }
+
+//                            if (buttonto.clicked) {
+//                                buttonto.clicked = false
+//                                text = ""
+//                                return
+//                            }
+//                            if (column.autochang) {
+//                                column.autochang = false
+//                                return
+//                            }
+//                            if (column.chosen) {
+//                                return
+//                            }
+                            column.textchang(false);
+                        }
+
                         placeholderText: mainWindow.strto
+                        EnterKey.onClicked: ; //accept();
                         anchors.topMargin: Theme.paddingMedium
                         onClicked: {
-                            console.log("To" + text.length)
+                            console.log("STATE IN onClicked: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                            column.active = true
+                            column.state = "typing"
+                            //column.chosen = false
+                            typing = true
+                            //console.log("To" + text.length)
                             if(text.length < 3) {
                                 searchmodel.clear()
                             } else {
@@ -260,19 +344,37 @@ Dialog {
                         }
                         onFocusChanged: {
                             searchmodel.clear();
-                            if (activeFocus === false && buttonto.clicked === true) {
-                                buttonto.clicked = false
+                            console.log("STATE IN FOCUS CHANGED: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                            if (column.active) {
+                                console.log("STATE IN if on FOCUS: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                                column.state = "typing"
                                 focus = true
                                 Qt.inputMethod.show()
+                                typing = true
+                                return
                             }
+
                             typing = focus;
                             text = maindialog.to;
+//                            if (!activeFocus && (buttonto.clicked || !column.autochang) && !column.chosen) {
+//                                buttonto.clicked = false
+//                                focus = true
+//                                Qt.inputMethod.show()
+//                            }
+
+//                            // Fix double triggerings of onTextChanged
+//                            if (maindialog.to === "") {
+//                                console.log("in if")
+//                                buttonto.clicked = true
+//                                column.autochang = true
+//                            }
+
                         }
                     }
                     BackgroundItem {
                         id: buttonto
-                        height: totext.height - 2 * Theme.paddingLarge
                         width: maindialog.width - totext.width
+                        height: totext.height - 2 * Theme.paddingLarge
                         highlighted: iconto.highlighted
                         property bool clicked: false
                         IconButton {
@@ -283,17 +385,21 @@ Dialog {
                             onClicked: buttonto.clikked()
                         }
                         function clikked() {
+                            console.log("STATE IN X: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                            //column.autochang = true
                             searchmodel.clear()
-                            clicked = true
+                            //clicked = true
+                            column.state = "cleared"
                             toready = false
-                            totext.text = ""
                             maindialog.to = ""
                             maindialog.toid = "null"
-
+                            totext.focus = false
+                            totext.text = ""
                         }
                         onClicked: clikked()
                     }
                 }
+
 
                 Row {
                     id: timerow
@@ -355,18 +461,19 @@ Dialog {
                         width: parent.width / 4
                         anchors.verticalCenter: parent.verticalCenter
                         onClicked: {
-                            datepicker.value = Timejs.getcurrentdate()//new Date().getDate() + "/" + (new Date().getMonth()+1) + "/" + new Date().getFullYear()
+                            datepicker.value = Timejs.getcurrentdate()
                             timepicker.value = Timejs.getcurrenttime()
                         }
                     }
                 }
 
             }
-            ListView {
+
+            SilicaListView {
                 id: searchlist
                 width: parent.width
                 anchors.top: column.bottom
-                height: maindialog.typing ? maindialog.height - column.height : 0
+                height: maindialog.typing && (searchmodel.count > 0) ? maindialog.height - column.height : 0
                 spacing: Theme.paddingMedium
                 clip: true
                 currentIndex: -1
@@ -396,7 +503,10 @@ Dialog {
                         color: searchdelegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                     }
                     onClicked: {
+                        console.log("STATE IN SELECT: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                         //console.log("clicked: " + name)
+                        column.state = "chosen"
+                        column.active = false
                         if (searchlist.from) {
                             fromtext.typing = false;
                             maindialog.fromid = nmbr;
@@ -409,6 +519,30 @@ Dialog {
 
                         searchmodel.clear()
                     }
+                }
+            }
+            BackgroundItem {
+                id: fillerfrom
+                width: fromtext.typing ? maindialog.width : 0
+                anchors.top: searchlist.bottom
+                anchors.bottom: parent.bottom
+                highlightedColor: "transparent"
+                onClicked: {
+                    console.log("STATE IN FILLER: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                    column.active = false
+                    fromtext.typing = false
+                }
+            }
+            BackgroundItem {
+                id: fillerto
+                width: totext.typing ? maindialog.width : 0
+                anchors.top: searchlist.bottom
+                anchors.bottom: parent.bottom
+                highlightedColor: "transparent"
+                onClicked: {
+                    console.log("STATE IN FILLER: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                    column.active = false
+                    totext.typing = false
                 }
             }
         }
