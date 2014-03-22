@@ -188,52 +188,24 @@ Dialog {
                         id: fromtext
                         width: fromrow.width - height
                         onTextChanged: {
-                            //console.log("changed fromtext : " + text + ":auto" + column.autochang + ":cli" + buttonfrom.clicked + ":chos" + column.chosen);
                             if (column.state !== "cleared" && column.active) {
                                 column.textchang(true)
                             }
-
-//                            if (buttonfrom.clicked) {
-//                                buttonfrom.clicked = false
-//                                text = ""
-//                                return
-//                            }
-//                            if (column.autochang) {
-//                                column.autochang = false
-//                                return
-//                            }
-//                            if (column.chosen) {
-//                                return
-//                            }
-
-                            //if (!column.autochang && !buttonfrom.clicked) {
-                                column.textchang(true)
-                            //}
                         }
                         placeholderText: mainWindow.strfrom
-                        EnterKey.onClicked: ;//
                         onClicked: {
-                            //column.chosen = false
                             column.active = true
                             column.state = "typing"
                             typing = true
                             if (text.length < 3) {
                                 searchmodel.clear()
                             } else {
-                                //console.log("clicked fromtext :" + text)
                                 column.textchang(true)
                             }
-                            //buttonfrom.clicked = false
                             Qt.inputMethod.show();
                         }
                         onFocusChanged: {
                             searchmodel.clear();
-                            //console.log("Focus changed " + activeFocus + "btncli:" + buttonfrom.clicked + "chs:" + column.chosen)
-//                            if (!activeFocus && buttonfrom.clicked && !column.chosen) {
-//                                focus = true
-//                                console.log("No focus")
-//                                Qt.inputMethod.show()
-//                            }
                             if (column.active) {
                                 column.state = "typing"
                                 focus = true
@@ -244,13 +216,6 @@ Dialog {
 
                             typing = focus;
                             text = maindialog.from
-                            // Fix double triggerings of onTextChanged
-//                            if (maindialog.from === "") {
-//                                console.log("in if")
-//                                buttonfrom.clicked = true
-//                                column.autochang = true
-//                            }
-//                            text = maindialog.from;
                         }
                     }
                     BackgroundItem {
@@ -269,19 +234,13 @@ Dialog {
 
                         }
                         function clikked() {
-                            //console.log("Clearing : " + fromtext.text)
-                            //column.autochang = true
                             searchmodel.clear()
-                            //clicked = true
-                            //searchlist.currentIndex = -1
                             column.state = "cleared"
                             fromready = false
                             maindialog.from = ""
                             maindialog.fromid = "null"
-                            //console.log("Now Clearing : " + fromtext.text)
                             fromtext.focus = false
-                            fromtext.text = "" //MAGI!!!!!!!!!!!!!!!!!!
-                            //console.log("Cleared : " + fromtext.text + ":")
+                            fromtext.text = ""
                         }
                         onClicked: clikked()
                     }
@@ -300,41 +259,18 @@ Dialog {
                         width: parent.width - height
                         onTextChanged: {
                             console.log("STATE IN TEXT: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
-                            if (column.state === "cleared" && column.active) {
-                                if (!activeFocus) {
-                                    //focus = true
-                                }
-                                return
+                            if (column.state !== "cleared" && column.active) {
+                                column.textchang(false);
                             }
-                            if (!column.active) {
-                                return
-                            }
-
-//                            if (buttonto.clicked) {
-//                                buttonto.clicked = false
-//                                text = ""
-//                                return
-//                            }
-//                            if (column.autochang) {
-//                                column.autochang = false
-//                                return
-//                            }
-//                            if (column.chosen) {
-//                                return
-//                            }
-                            column.textchang(false);
                         }
 
                         placeholderText: mainWindow.strto
-                        EnterKey.onClicked: ; //accept();
                         anchors.topMargin: Theme.paddingMedium
                         onClicked: {
                             console.log("STATE IN onClicked: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                             column.active = true
                             column.state = "typing"
-                            //column.chosen = false
                             typing = true
-                            //console.log("To" + text.length)
                             if(text.length < 3) {
                                 searchmodel.clear()
                             } else {
@@ -353,22 +289,8 @@ Dialog {
                                 typing = true
                                 return
                             }
-
                             typing = focus;
                             text = maindialog.to;
-//                            if (!activeFocus && (buttonto.clicked || !column.autochang) && !column.chosen) {
-//                                buttonto.clicked = false
-//                                focus = true
-//                                Qt.inputMethod.show()
-//                            }
-
-//                            // Fix double triggerings of onTextChanged
-//                            if (maindialog.to === "") {
-//                                console.log("in if")
-//                                buttonto.clicked = true
-//                                column.autochang = true
-//                            }
-
                         }
                     }
                     BackgroundItem {
@@ -386,9 +308,7 @@ Dialog {
                         }
                         function clikked() {
                             console.log("STATE IN X: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
-                            //column.autochang = true
                             searchmodel.clear()
-                            //clicked = true
                             column.state = "cleared"
                             toready = false
                             maindialog.to = ""
@@ -504,7 +424,6 @@ Dialog {
                     }
                     onClicked: {
                         console.log("STATE IN SELECT: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
-                        //console.log("clicked: " + name)
                         column.state = "chosen"
                         column.active = false
                         if (searchlist.from) {
