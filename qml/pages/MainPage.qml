@@ -22,6 +22,7 @@ import Sailfish.Silica 1.0
 import "../search.js" as Searchjs
 import "../database.js" as DBjs
 import "../time.js" as Timejs
+import cppParser 1.0
 
 Dialog {
     id: maindialog
@@ -59,7 +60,13 @@ Dialog {
         to = lastsearch.to
         fromready = true
         toready = true
+
+        parser.getXML(fromid, toid, Timejs.getcurrentdate(), Timejs.getcurrenttime())
     }
+    Parser {
+        id: parser
+    }
+
     function searchfunc() {
         if (fromready && toready) { //&& (from !== "") && (to !== "")) {
             DBjs.setlastsearch(fromid,toid,from,to)

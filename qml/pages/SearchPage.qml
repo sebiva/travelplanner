@@ -23,6 +23,7 @@ import "../search.js" as Searchjs
 import "../database.js" as DBjs
 import "../time.js" as Timejs
 
+import cppParser 1.0
 
 Page {
     id: searchpage
@@ -45,6 +46,12 @@ Page {
         mainWindow.timeofsearch = Timejs.getcurrenttime()
         mainWindow.dateofsearch = Timejs.getcurrentdate()
         Searchjs.sendrequest(fromid, toid, date, time, listView.answerrecieved, listmodel, mainWindow.changetime)  //listView.doneloading)
+        parser.getXML(fromid, toid, date, time);
+
+    }
+
+    Parser {
+        id: parser
     }
 
     Column {

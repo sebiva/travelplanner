@@ -20,11 +20,16 @@
 #include <QtQuick>
 #endif
 
+#include <QtQml/QQmlEngine>
+#include <qqml.h>
+#include "src/parser.h"
 #include <sailfishapp.h>
 
 
 int main(int argc, char *argv[])
 {
+    Parser *parser();
+    qmlRegisterType<Parser>("cppParser", 1,0,"Parser");
     return SailfishApp::main(argc, argv);
 }
 
