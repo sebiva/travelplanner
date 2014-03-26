@@ -22,7 +22,9 @@ import Sailfish.Silica 1.0
 import "../search.js" as Searchjs
 import "../database.js" as DBjs
 import "../time.js" as Timejs
-import cppParser 1.0
+
+import searcher 1.0
+
 
 Dialog {
     id: maindialog
@@ -40,6 +42,11 @@ Dialog {
     onAcceptPendingChanged: {
         console.log("fore searchfunc")
         searchfunc()
+    }
+
+    Search {
+        id: searcher
+        onReady: console.log("REATTYY");
     }
 
     property bool fromready: false
@@ -61,10 +68,7 @@ Dialog {
         fromready = true
         toready = true
 
-        parser.getXML(fromid, toid, Timejs.getcurrentdate(), Timejs.getcurrenttime())
-    }
-    Parser {
-        id: parser
+        searcher.getXML(from,to,fromid,toid);
     }
 
     function searchfunc() {
@@ -78,6 +82,9 @@ Dialog {
             acceptDestinationInstance.date = datepicker.value//(datepicker.value === "Select") ? Searchjs.getcurrentdate() : datepicker.value
             mainWindow.searched = mainWindow.searched + 1 % 2
         }
+        console.log("hellllllloooo")
+        console.log("HELLLLLLLOOOO" + Parser.getLeg(0,0).line)
+
     }
 
     Column {

@@ -5,7 +5,7 @@ Leg::Leg(QObject *parent) :
 {
 }
 
-Leg::Leg(const Leg &, QObject *parent) :
+Leg::Leg(Leg *, QObject *parent) :
     QObject(parent)
 {
 }

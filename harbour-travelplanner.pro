@@ -13,7 +13,8 @@ CONFIG += sailfishapp
 SOURCES += src/harbour-travelplanner.cpp \
     src/parser.cpp \
     src/trip.cpp \
-    src/leg.cpp
+    src/leg.cpp \
+    src/search.cpp
 
 OTHER_FILES += qml/harbour-travelplanner.qml \
     qml/cover/CoverPage.qml \
@@ -34,5 +35,6 @@ OTHER_FILES += qml/harbour-travelplanner.qml \
 HEADERS += \
     src/parser.h \
     src/trip.h \
-    src/leg.h
+    src/leg.h \
+    src/search.h
 

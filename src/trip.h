@@ -2,6 +2,7 @@
 
 #include "leg.h"
 #include <QList>
+#include <QDebug>
 
 #define TRIP_H
 
@@ -14,9 +15,10 @@ class Trip : public QObject
 public:
     explicit Trip(QObject *parent = 0);
     Trip(const Trip &, QObject *parent = 0);
-    void addleg(const Leg &leg);
-
-    QList<Leg> *leglist;
+    void addleg(Leg *leg);
+    Leg *getLeg(int index);
+    QList<Leg *> *leglist;
+    void print();
 signals:
 
 public slots:

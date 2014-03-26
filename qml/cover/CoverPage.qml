@@ -46,7 +46,7 @@ CoverBackground {
                 mainWindow.time = Timejs.getcurrenttime();
                 mainWindow.date = Timejs.getcurrentdate();
             }
-
+            //TODO: Update Mainpage variables.
 
             console.log("DURTIME " + Timejs.duration(mainWindow.time, Timejs.getcurrenttime(),mainWindow.date, Timejs.getcurrentdate()));
             if ((Timejs.duration(mainWindow.timeofsearch, Timejs.getcurrenttime(),mainWindow.dateofsearch, Timejs.getcurrentdate()) === "0min")) {
@@ -105,6 +105,8 @@ CoverBackground {
 
             property bool searching: false
 
+
+            //TODO: fix double text error
             function doneloading(msg) {
                 searching = false;
                 if(msg === 0) {
