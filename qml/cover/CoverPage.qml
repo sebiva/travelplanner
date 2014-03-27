@@ -22,6 +22,8 @@ import Sailfish.Silica 1.0
 import "../search.js" as Searchjs
 import "../time.js" as Timejs
 
+import searcher 1.0
+
 CoverBackground {
     id: coverpage
     property bool avail: mainWindow.avail
@@ -65,6 +67,13 @@ CoverBackground {
             placeholdertext.text = mainWindow.errmsg === mainWindow.strerr ? mainWindow.strappname : mainWindow.strappname + "\n" + mainWindow.strcovererr;
         }
     }
+
+    Search {
+        id: searcher
+        onReady: console.log("REATTYY");
+    }
+
+
     Column {
         anchors.centerIn: parent
         width: parent.width

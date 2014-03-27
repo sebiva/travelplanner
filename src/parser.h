@@ -41,6 +41,10 @@ public:
     Trip * getTrip(int index);
     Leg * getLeg(int tripindex, int legindex);
     QString hello();
+
+    int numtrips();
+
+    int numlegs(int tripindex);
 signals:
     void ready(int err);
 

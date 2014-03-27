@@ -19,6 +19,25 @@ public:
     Leg *getLeg(int index);
     QList<Leg *> *leglist;
     void print();
+
+    Q_INVOKABLE QString getdeptime() {return deptime;}
+    Q_INVOKABLE QString getdepdate() {return depdate;}
+    Q_INVOKABLE QString getdeprttime() {return deprttime;}
+    Q_INVOKABLE QString getdeprtdate() {return deprtdate;}
+    Q_INVOKABLE QString getarivtime() {return arivtime;}
+    Q_INVOKABLE QString getarivdate() {return arivdate;}
+    Q_INVOKABLE QString getarivrttime() {return arivrttime;}
+    Q_INVOKABLE QString getarivrtdate() {return arivrtdate;}
+
+
+    QString deptime;
+    QString depdate;
+    QString deprttime;
+    QString deprtdate;
+    QString arivtime;
+    QString arivdate;
+    QString arivrttime;
+    QString arivrtdate;
 signals:
 
 public slots:

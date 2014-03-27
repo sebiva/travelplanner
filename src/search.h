@@ -34,7 +34,8 @@ class Search : public QObject
 public:
     explicit Search(QObject *parent = 0);
 
-    Q_INVOKABLE bool getXML(QString fromid, QString toid, QString date, QString time);
+    Q_INVOKABLE bool search(QString fromid, QString toid, QString date, QString time);
+    Q_INVOKABLE bool search(QString fromid, QString toid, QString date, QString hour, QString minute);
 
     Q_INVOKABLE QObject * getTrip(int index);
     Q_INVOKABLE QObject * getLeg(int tripindex, int legindex);

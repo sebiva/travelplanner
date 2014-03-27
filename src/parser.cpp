@@ -7,7 +7,7 @@ Parser::Parser(QObject *parent) :
 {
     trips = new QList<Trip *>();
     address = (QString) "http://api.vasttrafik.se/bin/rest.exe/" +
-              "v1/trip?authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml";
+            "v1/trip?authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml";
     addresshardcoded = "http://api.vasttrafik.se/bin/rest.exe/v1/trip?authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml&date=2014-03-23&time=11:07&originId=9021014001200000&destId=9021014001050000";
 }
 
@@ -31,13 +31,30 @@ QString Parser::hello() {
     return "4242424242";
 }
 
+int Parser::numtrips() {
+    return trips->length();
+}
 
+int Parser::numlegs(int tripindex) {
+    if (tripindex >= trips->length()) {
+        return -1;
+    } else {
+        return trips->at(tripindex)->leglist->length();
+    }
+
+}
 
 Trip * Parser::getTrip(int index) {
+    if (index >= trips->length()) {
+        return NULL;
+    }
     return trips->at(index);
 }
 
 Leg * Parser::getLeg(int tripindex, int legindex) {
+    if (tripindex >= trips->length() || legindex >= trips->at(tripindex)->leglist->length()) {
+        return NULL;
+    }
     return getTrip(tripindex)->leglist->at(legindex);
 }
 
@@ -46,12 +63,12 @@ bool Parser::getXML(QString fromid, QString toid,  QString date, QString time) {
     qDebug() << hello();
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
-           this, SLOT(XMLready(QNetworkReply*)) );
-//    manager->get(QNetworkRequest(QUrl(address +
-//                                      "&date=" + date +
-//                                      "&time=" + time +
-//                                      "&originId=" + fromid +
-//                                      "&destId=" + toid)));
+            this, SLOT(XMLready(QNetworkReply*)) );
+    //    manager->get(QNetworkRequest(QUrl(address +
+    //                                      "&date=" + date +
+    //                                      "&time=" + time +
+    //                                      "&originId=" + fromid +
+    //                                      "&destId=" + toid)));
 
     manager->get(QNetworkRequest(QUrl(addresshardcoded)));
     return true;
@@ -67,13 +84,17 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
     QXmlStreamReader xml;
     xml.setDevice(reply);
     QXmlStreamAttributes attr;
+
     xml.readNextStartElement(); //Triplist
     xml.readNextStartElement(); //Trip
     while(!xml.isEndElement()) {
         Trip *trip = new Trip();
+        //Keep track of first leg for each trip
+        bool first = true;
         xml.readNextStartElement();//Leg
+        Leg *leg = NULL;
         while(!xml.isEndElement()) {
-            Leg *leg = new Leg();
+            leg = new Leg();
             qDebug() << "Leg: " << xml.name() << xml.attributes().value("name");
 
             attr = xml.attributes();
@@ -122,8 +143,23 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
                 leg->mdepdate = attr.value("date").toString();
                 leg->mdeptime = attr.value("time").toString();
                 leg->mdeprtdate = attr.value("rtDate").toString();
+                if(leg->mdeprtdate == "") {
+                    leg->mdeprtdate = leg->depdate();
+                }
                 leg->mdeprttime = attr.value("rtTime").toString();
+                if(leg->mdeprttime == "") {
+                    leg->mdeprttime = leg->mdeptime;
+                }
+                if(first) {
+                    first = false;
+                    trip->depdate = leg->mdepdate;
+                    trip->deptime = leg->mdeptime;
+                    trip->deprtdate = leg->mdeprtdate;
+                    trip->deprttime = leg->mdeprttime;
+                }
             }
+
+
             qDebug() << "Leginfo: " << xml.name() << xml.attributes().value("name");
 
 
@@ -138,7 +174,13 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
                 leg->marivdate = attr.value("date").toString();
                 leg->marivtime = attr.value("time").toString();
                 leg->marivrtdate = attr.value("rtDate").toString();
+                if(leg->marivrtdate == "") {
+                    leg->marivrtdate = leg->marivdate;
+                }
                 leg->marivrttime = attr.value("rtTime").toString();
+                if(leg->marivrttime == "") {
+                    leg->marivrttime = leg->marivtime;
+                }
             }
             qDebug() << "Leginfo: " << xml.name() << xml.attributes().value("name");
 
@@ -177,31 +219,37 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
 
             Leg *legadd = leg;
             trip->addleg(legadd);
-//            while(!xml.isEndElement()) {
-//                qDebug() << "Leginfo: " << xml.name() << xml.attributes().value("name");
+            //            while(!xml.isEndElement()) {
+            //                qDebug() << "Leginfo: " << xml.name() << xml.attributes().value("name");
 
-//                attr = xml.attributes();
-//                if (xml.name() == "Origin") {
-//                    leg->mfrom = attr.value("name").toString();
-//                    leg->mfromid = attr.value("name").toString();
-//                    leg->mfromtrack = attr.value("track").toString();
-//                    leg->mdepdate = attr.value("date").toString();
-//                    leg->mdeptime = attr.value("time").toString();
-//                    leg->mdeprtdate = attr.value("rtDate").toString();
-//                    leg->mdeprttime = attr.value("rtTime").toString();
-//                } else if (xml.name() == "Destination") {
-//                    leg->mto = attr.value("name").toString();
-//                    leg->mtoid = attr.value("name").toString();
-//                    leg->mtotrack = attr.value("track").toString();
-//                    leg->marivdate = attr.value("date").toString();
-//                    leg->marivtime = attr.value("time").toString();
-//                    leg->marivrtdate = attr.value("rtDate").toString();
-//                    leg->marivrttime = attr.value("rtTime").toString();
-//                }
-//                xml.skipCurrentElement();
-//                xml.readNextStartElement();
-//            }
+            //                attr = xml.attributes();
+            //                if (xml.name() == "Origin") {
+            //                    leg->mfrom = attr.value("name").toString();
+            //                    leg->mfromid = attr.value("name").toString();
+            //                    leg->mfromtrack = attr.value("track").toString();
+            //                    leg->mdepdate = attr.value("date").toString();
+            //                    leg->mdeptime = attr.value("time").toString();
+            //                    leg->mdeprtdate = attr.value("rtDate").toString();
+            //                    leg->mdeprttime = attr.value("rtTime").toString();
+            //                } else if (xml.name() == "Destination") {
+            //                    leg->mto = attr.value("name").toString();
+            //                    leg->mtoid = attr.value("name").toString();
+            //                    leg->mtotrack = attr.value("track").toString();
+            //                    leg->marivdate = attr.value("date").toString();
+            //                    leg->marivtime = attr.value("time").toString();
+            //                    leg->marivrtdate = attr.value("rtDate").toString();
+            //                    leg->marivrttime = attr.value("rtTime").toString();
+            //                }
+            //                xml.skipCurrentElement();
+            //                xml.readNextStartElement();
+            //            }
 
+        }
+        if (leg != NULL) {
+            trip->arivdate = leg->marivdate;
+            trip->arivtime = leg->marivtime;
+            trip->arivrtdate = leg->marivrtdate;
+            trip->arivrttime = leg->marivrttime;
         }
         xml.readNextStartElement();
         qDebug() << "afterlegs2" << xml.name();

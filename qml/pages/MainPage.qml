@@ -68,7 +68,7 @@ Dialog {
         fromready = true
         toready = true
 
-        searcher.getXML(from,to,fromid,toid);
+        searcher.search(fromid,toid,date,time);
     }
 
     function searchfunc() {

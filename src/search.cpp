@@ -1,5 +1,7 @@
 #include "search.h"
 
+#include "time.h"
+
 Search::Search(QObject *parent) :
     QObject(parent)
 {
@@ -8,9 +10,11 @@ Search::Search(QObject *parent) :
     connect(mparser,SIGNAL(ready(int)),this,SLOT(parseready(int)));
 }
 
-
-bool Search::getXML(QString fromid, QString toid, QString date, QString time) {
-    return mparser->getXML(fromid,toid,date,time);
+bool Search::search(QString fromid, QString toid, QString date, QString time) {
+    return mparser->getXML(fromid,toid,Time::convertdate(date),time);
+}
+bool Search::search(QString fromid, QString toid, QString date, QString hour, QString minute) {
+    return mparser->getXML(fromid,toid,Time::convertdate(date),Time::converttime(hour, minute));
 }
 
 

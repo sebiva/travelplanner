@@ -23,6 +23,8 @@ import "../search.js" as Searchjs
 import "../database.js" as DBjs
 import "../time.js" as Timejs
 
+import searcher 1.0
+
 
 Page {
     id: searchpage
@@ -44,7 +46,33 @@ Page {
         //console.log("DATUM " + date)
         mainWindow.timeofsearch = Timejs.getcurrenttime()
         mainWindow.dateofsearch = Timejs.getcurrentdate()
-        Searchjs.sendrequest(fromid, toid, date, time, listView.answerrecieved, listmodel, mainWindow.changetime)  //listView.doneloading)
+        searcher.search(fromid, toid, date, time)
+        //Searchjs.sendrequest(fromid, toid, date, time, listView.answerrecieved, listmodel, mainWindow.changetime)  //listView.doneloading)
+    }
+
+    Search {
+        id: searcher
+        onReady: {
+            console.log("Ready in Searchpage");
+            listView.setup();
+            if (err == 0) {
+                searchpage.error = false;
+                searchpage.searching = false;
+                mainWindow.avail = false;
+                mainWindow.from = searchpage.from
+                mainWindow.to = searchpage.to
+                mainWindow.fromid = searchpage.fromid
+                mainWindow.toid = searchpage.toid
+                mainWindow.time = searchpage.time
+                mainWindow.date = searchpage.date
+                mainWindow.avail = true;
+            } else {
+                mainWindow.avail = false;
+                searchpage.error = true;
+                searchpage.searching = false;
+                mainWindow.errmsg = mainWindow.strerr;
+            }
+        }
     }
 
     Column {
@@ -140,6 +168,24 @@ Page {
                 }
 
 
+            }
+
+            // The reply is available in Search
+            function setup() {
+                var tripindex = 0
+                var trip
+                while((trip = searcher.getTrip(tripindex))!==null) {
+                    listmodel.append({  deptime: trip.getdeptime(),
+                                        arivtime: trip.getarivtime(),
+                                        depdate: trip.getdepdate(),
+                                        arivdate: trip.getarivdate(),
+                                        deprttime: trip.getdeprttime(),
+                                        arivrttime: trip.getarivrttime(),
+                                        deprtdate: trip.getdeprtdate(),
+                                        arivrtdate: trip.getarivrtdate(),
+                                        exchready: true})
+                    tripindex++
+                }
             }
 
             property var allstates: ["small", "small", "small", "small", "small", "small", "small", "small"]
