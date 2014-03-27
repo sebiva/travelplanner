@@ -40,11 +40,19 @@ public:
 
     Trip * getTrip(int index);
     Leg * getLeg(int tripindex, int legindex);
-    QString hello();
 
     int numtrips();
-
     int numlegs(int tripindex);
+
+    QString fromid;
+    QString toid;
+    QString from;
+    QString to;
+    QString time;
+    QString date;
+    QString timeofsearch;
+    QString dateofsearch;
+
 signals:
     void ready(int err);
 
@@ -55,7 +63,6 @@ private:
     void parsevasttrafikreply(QNetworkReply * reply);
     QList<Trip *> *trips;
     QString address;
-    QString addresshardcoded;
     static Parser *mparser;
 
     explicit Parser(QObject *parent = 0);

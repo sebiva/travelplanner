@@ -8,7 +8,6 @@ Parser::Parser(QObject *parent) :
     trips = new QList<Trip *>();
     address = (QString) "http://api.vasttrafik.se/bin/rest.exe/" +
             "v1/trip?authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml";
-    addresshardcoded = "http://api.vasttrafik.se/bin/rest.exe/v1/trip?authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml&date=2014-03-23&time=11:07&originId=9021014001200000&destId=9021014001050000";
 }
 
 //QObject *Parser::qobject_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
@@ -27,10 +26,6 @@ Parser *Parser::getinstance() {
     return mparser;
 }
 
-QString Parser::hello() {
-    return "4242424242";
-}
-
 int Parser::numtrips() {
     return trips->length();
 }
@@ -41,7 +36,6 @@ int Parser::numlegs(int tripindex) {
     } else {
         return trips->at(tripindex)->leglist->length();
     }
-
 }
 
 Trip * Parser::getTrip(int index) {
@@ -58,23 +52,19 @@ Leg * Parser::getLeg(int tripindex, int legindex) {
     return getTrip(tripindex)->leglist->at(legindex);
 }
 
-
 bool Parser::getXML(QString fromid, QString toid,  QString date, QString time) {
-    qDebug() << hello();
+    qDebug() << "SEARCHING::" << date << time << fromid << toid;
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(XMLready(QNetworkReply*)) );
-    //    manager->get(QNetworkRequest(QUrl(address +
-    //                                      "&date=" + date +
-    //                                      "&time=" + time +
-    //                                      "&originId=" + fromid +
-    //                                      "&destId=" + toid)));
-
-    manager->get(QNetworkRequest(QUrl(addresshardcoded)));
+    manager->get(QNetworkRequest(QUrl(address +
+                                      "&date=" + date +
+                                      "&time=" + time +
+                                      "&originId=" + fromid +
+                                      "&destId=" + toid)));
+    qDebug()<<"ADDRESS::"<<(address+"&date="+date +"&time="+time+"&originId="+fromid+"&destId="+toid);
     return true;
 }
-
-
 
 void Parser::XMLready( QNetworkReply * reply){
     parsevasttrafikreply(reply);
@@ -85,6 +75,7 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
     xml.setDevice(reply);
     QXmlStreamAttributes attr;
 
+    trips->clear();
     xml.readNextStartElement(); //Triplist
     xml.readNextStartElement(); //Trip
     while(!xml.isEndElement()) {
@@ -187,18 +178,23 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
 
 
             //There is no journeydetail for walking
-            qDebug() << "Type: " << leg->mline << "Gå?" << (leg->mline=="Gå");
+            qDebug() << "Type: " << leg->mline << "Gå?";
             if (leg->mline == "walk") { //TODO: translation
 
                 //Go to next leg (or trip)
                 xml.skipCurrentElement();
+                qDebug() << "WALK1" << xml.name();
                 xml.readNextStartElement();
+                qDebug() << "WALK1" << xml.name();
                 xml.readNextStartElement();
+                qDebug() << "WALK1" << xml.name();
 
                 //Skip unneccessary walk stuff
                 if (leg->mfrom == leg->mto) {
                     qDebug() << "Walking to same stop ignored" << leg->mfrom;
                     continue;
+                } else {
+                    goto addleg;
                 }
 
             }
@@ -216,9 +212,9 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
             xml.readNextStartElement();
             qDebug() << "Journey3?: " << xml.name() << xml.attributes().value("name");
 
-
-            Leg *legadd = leg;
-            trip->addleg(legadd);
+addleg:
+            //Leg *legadd = leg;
+            trip->addleg(leg);
             //            while(!xml.isEndElement()) {
             //                qDebug() << "Leginfo: " << xml.name() << xml.attributes().value("name");
 
@@ -245,12 +241,14 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
             //            }
 
         }
+
         if (leg != NULL) {
             trip->arivdate = leg->marivdate;
             trip->arivtime = leg->marivtime;
             trip->arivrtdate = leg->marivrtdate;
             trip->arivrttime = leg->marivrttime;
         }
+
         xml.readNextStartElement();
         qDebug() << "afterlegs2" << xml.name();
         Trip *tripadd = trip;

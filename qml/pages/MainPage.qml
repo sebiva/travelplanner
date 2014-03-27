@@ -41,8 +41,22 @@ Dialog {
     acceptDestination: canAccept ? Qt.resolvedUrl("SearchPage.qml") : null
     onAcceptPendingChanged: {
         console.log("fore searchfunc")
-        searchfunc()
+        //searchfunc()
     }
+    onAccepted: {
+        console.log("Accepted" + datepicker.value + " " + timepicker.value)
+        searcher.setfromid(fromid)
+        searcher.settoid(toid)
+        searcher.setfrom(from)
+        searcher.setto(to)
+        searcher.setdate(datepicker.value)
+        searcher.settime(timepicker.value)
+        searcher.setdateofsearch(Timejs.getcurrentdate())
+        searcher.settimeofsearch(Timejs.getcurrenttime())
+
+        console.log("ACCEPTED2" + searcher.getdate())
+    }
+
 
     Search {
         id: searcher
@@ -53,9 +67,13 @@ Dialog {
     property bool toready: false
 
     Component.onCompleted: {
+        console.log("MainPage..")
         DBjs.setup();
+        console.log("Database set up")
         mainWindow.getsettings()
-        var lastsearch = DBjs.getlastsearch();
+        console.log("Settings loaded")
+        var lastsearch = DBjs.getlastsearch()
+        console.log("Last search loaded")
         if (lastsearch === 0) {
             return;
         }
@@ -67,8 +85,6 @@ Dialog {
         to = lastsearch.to
         fromready = true
         toready = true
-
-        searcher.search(fromid,toid,date,time);
     }
 
     function searchfunc() {
@@ -82,8 +98,6 @@ Dialog {
             acceptDestinationInstance.date = datepicker.value//(datepicker.value === "Select") ? Searchjs.getcurrentdate() : datepicker.value
             mainWindow.searched = mainWindow.searched + 1 % 2
         }
-        console.log("hellllllloooo")
-        console.log("HELLLLLLLOOOO" + Parser.getLeg(0,0).line)
 
     }
 

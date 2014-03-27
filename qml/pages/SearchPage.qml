@@ -28,6 +28,8 @@ import searcher 1.0
 
 Page {
     id: searchpage
+
+
     property string from
     property string to
     property string date
@@ -40,13 +42,27 @@ Page {
     property string fromid : "9021014001200000"
     property string toid : "9021014004493000" //"9021014072006000" //Gislaved
 
-    onVisibleChanged: search();
+    //onVisibleChanged: search();
+
+    onStatusChanged: {
+        if (status === PageStatus.Active) {
+            console.log("MUHAHAHAAHA" + searcher.getdate())
+            listmodel.clear()
+            searcher.search()
+            fromlabel.text = mainWindow.strfrom + " " + searcher.getfrom()
+            tolabel.text = mainWindow.strto + " " + searcher.getto()
+            datelabel.text = searcher.getdate()
+            timelabel.text = searcher.gettime()
+        }
+    }
 
     function search() {
         //console.log("DATUM " + date)
         mainWindow.timeofsearch = Timejs.getcurrenttime()
         mainWindow.dateofsearch = Timejs.getcurrentdate()
-        searcher.search(fromid, toid, date, time)
+        console.log("IN SEARCHPAGE SEARCH::" + date + time)
+        listmodel.clear()
+        //searcher.search(fromid, toid, date, time)
         //Searchjs.sendrequest(fromid, toid, date, time, listView.answerrecieved, listmodel, mainWindow.changetime)  //listView.doneloading)
     }
 
@@ -54,8 +70,12 @@ Page {
         id: searcher
         onReady: {
             console.log("Ready in Searchpage");
-            listView.setup();
+
             if (err == 0) {
+                //No error
+                listView.setup();
+
+
                 searchpage.error = false;
                 searchpage.searching = false;
                 mainWindow.avail = false;
@@ -105,14 +125,14 @@ Page {
                     width: parent.width - 2*x
                     Label {
                         id: fromlabel
-                        text: mainWindow.strfrom + " " + from
+                        text: mainWindow.strfrom + " " + searcher.getfrom()
                         truncationMode: TruncationMode.Elide
                         width: parent.width - timelabel.width
                         color: Theme.secondaryHighlightColor
                     }
                     Label {
                         id: timelabel
-                        text: time
+                        text: searcher.gettime()
                         horizontalAlignment: Text.AlignRight
                     }
                 }
@@ -123,14 +143,14 @@ Page {
                     width: parent.width - 2*x
                     Label {
                         id: tolabel
-                        text: mainWindow.strto + " " + to
+                        text: mainWindow.strto + " " + searcher.getto()
                         truncationMode: TruncationMode.Elide
                         width: parent.width - datelabel.width
                         color: Theme.highlightColor
                     }
                     Label {
                         id: datelabel
-                        text: date
+                        text: searcher.getdate()
                         horizontalAlignment: Text.AlignRight
                     }
                 }
@@ -185,6 +205,7 @@ Page {
                                         arivrtdate: trip.getarivrtdate(),
                                         exchready: true})
                     tripindex++
+                    listmodel.get(tripindex)
                 }
             }
 
@@ -214,17 +235,18 @@ Page {
             }
 
             delegate: BackgroundItem {
-                id: delegate
+                id: trip
                 z: 1
                 height: searchpage.height / 5
                 width: listView.width
                 highlighted: mouse.pressed || (state === "big")
-                state: listView.allstates[index]
+                state: listView.allstates[index] === undefined ? "small" : listView.allstates[index]
 
                 property bool exchready: false
                 property int addanimdur: 200
+                property int tripindex: index
 
-                Component.onCompleted: Searchjs.addicons(iconmodel, index)
+                Component.onCompleted: iconlist.setupicons()//Searchjs.addicons(iconmodel, index)
 
                 Column {
                     width: parent.width
@@ -237,23 +259,23 @@ Page {
                             text: deptime + Timejs.delay(deptime, deprttime, depdate, deprtdate) + (daypos > 0 ? " [+" + nextday.substring(daypos-1) + "]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
-                            color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
+                            color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                         Label {
                             id: arivtimelabel
                             property string nextday : Timejs.duration("00:00", "00:00", Timejs.convertdate(date), arivdate)
                             property int daypos : nextday.indexOf("d")
-                            text: arivtime + Timejs.delay(arivtime, arivrttime, arivdate, arivrtdate) + (daypos > 0 ? " [+" + nextday.substring(daypos-1) + "]" : "")
+                            text: arivtime + Timejs.delay(arivtime, arivrttime, arivdate, arivrtdate) + (daypos > 0 ? " [+" + nextday + "]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
-                            color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
+                            color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                         Label {
                             id: durlabel
                             text: Timejs.duration(deprttime, arivrttime, deprtdate, arivrtdate)
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
-                            color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
+                            color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                     }
                     ListView {
@@ -270,6 +292,20 @@ Page {
                         property int recsize0: (iconlist.width - 6*iconlist.spacing) / 7
                         property int recsize: recsize0
                         property bool textvis: false
+
+                        function setupicons() {
+                            var legnr = 0
+                            var leg
+                            while((leg = searcher.getLeg(index, legnr)) !== null) {
+                                iconmodel.append({name: leg.line, fgcolour: leg.fgcolour, bgcolour: leg.bgcolour, dir: leg.dir,
+                                                     fromname: leg.from.split(",")[0], fromtrack: leg.fromtrack,
+                                                     destname: leg.to.split(",")[0], totrack: leg.totrack,
+                                                     deptime: leg.deptime, depdate: leg.depdate, deprttime: leg.deprttime, deprtdate: leg.deprtdate,
+                                                     arivtime: leg.arivtime, arivdate: leg.arivdate, arivrttime: leg.arivrttime, arivrtdate: leg.arivrtdate})
+                                legnr++;
+                            }
+
+                        }
 
                         model: ListModel {
                             id: iconmodel
@@ -288,12 +324,12 @@ Page {
                                         width: iconlist.recsize0
                                         height: width
                                         anchors.centerIn: parent
-                                        color: color1
+                                        color: fgcolour
                                         opacity: 1
                                         Label {
                                             id: recttext
                                             text: name
-                                            color: color2
+                                            color: bgcolour
                                             anchors.centerIn: parent
                                         }
                                     }
@@ -321,7 +357,7 @@ Page {
                                             }
                                             Label {
                                                 id: legfrom
-                                                text: origname + ((origtrack === undefined || origtrack === "") ? "" : ", " + origtrack)
+                                                text: fromname + ((fromtrack === undefined || fromtrack === "") ? "" : ", " + fromtrack)
                                                 width: parent.width - legfromlabel.width
                                                 truncationMode: TruncationMode.Elide
                                                 visible: iconlist.textvis
@@ -361,7 +397,7 @@ Page {
                                             }
                                             Label {
                                                 id: legto
-                                                text: destname + ((desttrack === undefined || desttrack === "") ? "" : ", " + desttrack)
+                                                text: destname + ((totrack === undefined || totrack === "") ? "" : ", " + totrack)
                                                 visible: iconlist.textvis
                                                 width: parent.width - legtolabel.width
                                                 truncationMode: TruncationMode.Elide
@@ -391,16 +427,16 @@ Page {
                         }
                         remove:Transition {
                             ParallelAnimation {
-                                NumberAnimation { property: "opacity"; to: 0; duration: delegate.addanimdur }
-                                NumberAnimation { property: "x"; to: 0; duration: delegate.addanimdur }
-                                NumberAnimation { property: "y"; to: 0; duration: delegate.addanimdur }
+                                NumberAnimation { property: "opacity"; to: 0; duration: trip.addanimdur }
+                                NumberAnimation { property: "x"; to: 0; duration: trip.addanimdur }
+                                NumberAnimation { property: "y"; to: 0; duration: trip.addanimdur }
                             }
                         }
                         add: Transition {
                             ParallelAnimation {
-                                NumberAnimation { property: "opacity"; from: 0; to: 1; duration: delegate.addanimdur }
-                                NumberAnimation { property: "x"; from: 0; duration: delegate.addanimdur }
-                                NumberAnimation { property: "y"; from: 0; duration: delegate.addanimdur }
+                                NumberAnimation { property: "opacity"; from: 0; to: 1; duration: trip.addanimdur }
+                                NumberAnimation { property: "x"; from: 0; duration: trip.addanimdur }
+                                NumberAnimation { property: "y"; from: 0; duration: trip.addanimdur }
                             }
                         }
 
@@ -420,10 +456,10 @@ Page {
 
                 Timer {
                     id: statetimer
-                    interval: delegate.addanimdur
+                    interval: trip.addanimdur
                     onTriggered: {
-                        listView.allstates[index] = (delegate.state === "small") ? "big":"small"
-                        delegate.state = listView.allstates[index]
+                        listView.allstates[index] = (trip.state === "small") ? "big":"small"
+                        trip.state = listView.allstates[index]
                         addtimer.start()
                         stop();
                     }
@@ -431,10 +467,11 @@ Page {
 
                 Timer {
                     id: addtimer
-                    interval: delegate.addanimdur
+                    interval: trip.addanimdur
                     onTriggered: {
                         iconmodel.clear()
-                        Searchjs.addicons(iconmodel, index);
+                        iconlist.setupicons()
+                        //Searchjs.addicons(iconmodel, index);
                         stop();
                     }
                 }
@@ -443,7 +480,7 @@ Page {
                     State {
                         name: "small"
                         PropertyChanges {
-                            target: delegate
+                            target: trip
                             height: searchpage.height / 5
                             width: listView.width
                         }
@@ -455,7 +492,7 @@ Page {
                     State {
                         name: "big"
                         PropertyChanges {
-                            target: delegate
+                            target: trip
                             height: iconlist.height + searchpage.height / 10
                             width: listView.width
                         }
@@ -464,7 +501,7 @@ Page {
                             target: iconlist
                             orientation: ListView.Vertical
                             recsize: width / 4
-                            height: (spacing + recsize) * mainWindow.lastresponseexchanges[index].length - spacing
+                            height: (spacing + recsize) * searcher.getnumlegs(index) - spacing
                             textvis: true
                         }
                     }
@@ -472,7 +509,7 @@ Page {
 
                 transitions: [
                     Transition {
-                        NumberAnimation { target: delegate; properties: "width,height"; duration: delegate.addanimdur; easing.type: Easing.InOutQuad }
+                        NumberAnimation { target: trip; properties: "width,height"; duration: trip.addanimdur; easing.type: Easing.InOutQuad }
                     }
                 ]
             }

@@ -6,8 +6,10 @@ Search::Search(QObject *parent) :
     QObject(parent)
 {
     mparser = Parser::getinstance();
-    mparser->hello();
     connect(mparser,SIGNAL(ready(int)),this,SLOT(parseready(int)));
+}
+bool Search::search() {
+    return mparser->getXML(mparser->fromid,mparser->toid,mparser->date,mparser->time);
 }
 
 bool Search::search(QString fromid, QString toid, QString date, QString time) {
@@ -24,6 +26,10 @@ QObject * Search::getTrip(int index) {
 
 QObject * Search::getLeg(int tripindex, int legindex) {
     return mparser->getLeg(tripindex, legindex);
+}
+
+int Search::getnumlegs(int tripindex) {
+    return mparser->numlegs(tripindex);
 }
 
 void Search::parseready(int err) {

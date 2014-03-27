@@ -86,10 +86,14 @@ function duration(deptime, arivtime, depdate, arivdate ) {
         //console.log("Min:" + answermin.toString() + "min");
     }
 
-    if (extradays !== 0) {
+    if (extradays > 0) {
         console.log("Extra day" + extradays)
         answer = answer + " +" + extradays + "d";
+    } else if (extradays < 0) {
+        console.log("Extar day" + extradays)
+        answer = answer + " " + extradays + "d";
     }
+
     console.log("DURATION: \nfrom " + deptime + " , " + depdate + "\nto " + arivtime + " , " + arivdate + " : " +  answer);
     if (answer === "") {
         answer = "0min";
