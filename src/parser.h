@@ -55,7 +55,7 @@ public:
     QString dateofsearch;
 
 signals:
-    void ready(int err);
+    void ready(QString err);
 
 public slots:
     void XMLready(QNetworkReply *);

@@ -92,11 +92,11 @@ public:
         mparser->timeofsearch = timeofsearch;
     }
 signals:
-    void ready(int err);
+    void ready(QString err);
 
 
 public slots:
-    void parseready(int err);
+    void parseready(QString err);
 
 private:
     Parser * mparser;

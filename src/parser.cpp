@@ -100,6 +100,12 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
 
     trips->clear();
     xml.readNextStartElement(); //Triplist
+    QString error = xml.attributes().value("error").toString();
+    if (error != "") {
+        qDebug() << "Error!!!" << xml.attributes().value("errorText").toString();
+        emit ready(xml.attributes().value("errorText").toString());
+        return;
+    }
     xml.readNextStartElement(); //Trip
     while(!xml.isEndElement()) {
         Trip *trip = new Trip();
@@ -251,6 +257,7 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
         Trip *tripadd = trip;
         trips->append(tripadd);
     }
-    emit ready(0);
+    qDebug() << "Ready!";
+    emit ready("");
 }
 

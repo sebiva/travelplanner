@@ -71,10 +71,12 @@ Page {
         onReady: {
             console.log("Ready in Searchpage");
 
-            if (err == 0) {
+            if (err === "") {
                 //No error
                 listView.setup();
 
+                DBjs.setlastsearch(getfromid(), gettoid(),
+                                   getfrom(), getto())
 
                 searchpage.error = false;
                 searchpage.searching = false;
@@ -87,10 +89,11 @@ Page {
                 mainWindow.date = searchpage.date
                 mainWindow.avail = true;
             } else {
+                console.log("ERROR IN SEARCHPAGE: " + err);
                 mainWindow.avail = false;
                 searchpage.error = true;
                 searchpage.searching = false;
-                mainWindow.errmsg = mainWindow.strerr;
+                mainWindow.errmsg = mainWindow.strerr + err;
             }
         }
     }
@@ -167,28 +170,28 @@ Page {
 
             cacheBuffer: searchpage.height * 2
 
-            function answerrecieved(msg) {
-                console.log("ANSWER RECEIVED: " + msg)
-                if (msg === 0) {
-                    searchpage.error = false;
-                    searchpage.searching = false;
-                    mainWindow.avail = false;
-                    mainWindow.from = searchpage.from
-                    mainWindow.to = searchpage.to
-                    mainWindow.fromid = searchpage.fromid
-                    mainWindow.toid = searchpage.toid
-                    mainWindow.time = searchpage.time
-                    mainWindow.date = searchpage.date
-                    mainWindow.avail = true;
-                } else {
-                    mainWindow.avail = false;
-                    searchpage.error = true;
-                    searchpage.searching = false;
-                    mainWindow.errmsg = mainWindow.strerr + msg;
-                }
+//            function answerrecieved(msg) {
+//                console.log("ANSWER RECEIVED: " + msg)
+//                if (msg === 0) {
+//                    searchpage.error = false;
+//                    searchpage.searching = false;
+//                    mainWindow.avail = false;
+//                    mainWindow.from = searchpage.from
+//                    mainWindow.to = searchpage.to
+//                    mainWindow.fromid = searchpage.fromid
+//                    mainWindow.toid = searchpage.toid
+//                    mainWindow.time = searchpage.time
+//                    mainWindow.date = searchpage.date
+//                    mainWindow.avail = true;
+//                } else {
+//                    mainWindow.avail = false;
+//                    searchpage.error = true;
+//                    searchpage.searching = false;
+//                    mainWindow.errmsg = mainWindow.strerr + msg;
+//                }
 
 
-            }
+//            }
 
             // The reply is available in Search
             function setup() {
@@ -254,7 +257,7 @@ Page {
                         height: searchpage.height / 10
                         Label {
                             id: deptimelabel
-                            property string nextday : Timejs.duration("00:00", "00:00", Timejs.convertdate(date), depdate)
+                            property string nextday : Timejs.duration("00:00", "00:00", date, depdate)
                             property int daypos : nextday.indexOf("d")
                             text: deptime + Timejs.delay(deptime, deprttime, depdate, deprtdate) + (daypos > 0 ? " [+" + nextday.substring(daypos-1) + "]" : "")
                             width: searchpage.width / 3
@@ -263,7 +266,7 @@ Page {
                         }
                         Label {
                             id: arivtimelabel
-                            property string nextday : Timejs.duration("00:00", "00:00", Timejs.convertdate(date), arivdate)
+                            property string nextday : Timejs.duration("00:00", "00:00", date, arivdate)
                             property int daypos : nextday.indexOf("d")
                             text: arivtime + Timejs.delay(arivtime, arivrttime, arivdate, arivrtdate) + (daypos > 0 ? " [+" + nextday + "]" : "")
                             width: searchpage.width / 3

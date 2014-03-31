@@ -28,6 +28,8 @@ function convertdate(date) {
 
 function duration(deptime, arivtime, depdate, arivdate ) {
     //console.log("dur" + deptime + arivtime + depdate + arivdate);
+    depdate = convertdate(depdate)
+    arivdate = convertdate(arivdate)
 
     var dephr = deptime.split(":")[0];
     var depmin = deptime.split(":")[1];
@@ -110,6 +112,8 @@ function dateDiffInDays(a, b) {
 }
 
 function delay(time, rttime, date, rtdate) {
+    date = convertdate(date)
+    rtdate = convertdate(date)
     //console.log("DELAY" + time + "  " + rttime + "  " + date + "  " + rtdate + " " + (date === rtdate))
     if ((time === rttime) && (date === rtdate)) {
         //console.log("no delay")

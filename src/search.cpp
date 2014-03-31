@@ -6,10 +6,9 @@ Search::Search(QObject *parent) :
     QObject(parent)
 {
     mparser = Parser::getinstance();
-    connect(mparser,SIGNAL(ready(int)),this,SLOT(parseready(int)));
+    connect(mparser,SIGNAL(ready(QString)),this,SLOT(parseready(QString)));
 }
 bool Search::search() {
-    qDebug() << ".";
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
         return false;
@@ -18,7 +17,6 @@ bool Search::search() {
 }
 
 bool Search::search(QString fromid, QString toid, QString date, QString time) {
-    qDebug() << ".";
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
         return false;
@@ -26,7 +24,6 @@ bool Search::search(QString fromid, QString toid, QString date, QString time) {
     return mparser->getXML(fromid,toid,Time::convertdate(date),time);
 }
 bool Search::search(QString fromid, QString toid, QString date, QString hour, QString minute) {
-    qDebug() << ".";
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
         return false;
@@ -36,7 +33,6 @@ bool Search::search(QString fromid, QString toid, QString date, QString hour, QS
 
 
 QObject * Search::getTrip(int index) {
-    qDebug() << ".";
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
         return NULL;
@@ -45,7 +41,6 @@ QObject * Search::getTrip(int index) {
 }
 
 QObject * Search::getLeg(int tripindex, int legindex) {
-    qDebug() << ".";
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
         return NULL;
@@ -54,7 +49,6 @@ QObject * Search::getLeg(int tripindex, int legindex) {
 }
 
 int Search::getnumlegs(int tripindex) {
-    qDebug() << ".";
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
         return -1;
@@ -62,6 +56,6 @@ int Search::getnumlegs(int tripindex) {
     return mparser->numlegs(tripindex);
 }
 
-void Search::parseready(int err) {
+void Search::parseready(QString err) {
     emit ready(err);
 }

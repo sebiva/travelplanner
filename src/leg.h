@@ -9,6 +9,7 @@ class Leg : public QObject
 public:
     explicit Leg(QObject *parent = 0);
     Leg(Leg *, QObject *parent = 0);
+    ~Leg();
     QString mline;
     QString mdir;
     QString mfgcolour;
