@@ -12,4 +12,5 @@ Leg::Leg(Leg *, QObject *parent) :
 
 
 Leg::~Leg() {
+    qDebug() << "Deleting leg!";
 }

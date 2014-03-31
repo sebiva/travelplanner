@@ -22,13 +22,14 @@
 
 #include <QtQml/QQmlEngine>
 #include <qqml.h>
-//#include "src/parser.h"
+#include "src/parser.h"
 #include "src/search.h"
 #include <sailfishapp.h>
 
 
 int main(int argc, char *argv[])
 {
+    Parser::getinstance();
     qmlRegisterType<Search>("searcher", 1, 0, "Search");
     //qmlRegisterSingletonType<Parser>("cppParser", 1, 0,"Parser", Parser::qobject_singletontype_provider);
     return SailfishApp::main(argc, argv);

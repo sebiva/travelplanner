@@ -88,14 +88,14 @@ Dialog {
     }
 
     function searchfunc() {
-        if (fromready && toready) { //&& (from !== "") && (to !== "")) {
+        if (fromready && toready) {
             DBjs.setlastsearch(fromid,toid,from,to)
-            acceptDestinationInstance.from = from//text.text
-            acceptDestinationInstance.to = to//text.text
+            acceptDestinationInstance.from = from
+            acceptDestinationInstance.to = to
             acceptDestinationInstance.fromid = fromid
             acceptDestinationInstance.toid = toid
-            acceptDestinationInstance.time = timepicker.value// === "Select") ? Searchjs.getcurrenttime() : timepicker.value
-            acceptDestinationInstance.date = datepicker.value//(datepicker.value === "Select") ? Searchjs.getcurrentdate() : datepicker.value
+            acceptDestinationInstance.time = timepicker.value
+            acceptDestinationInstance.date = datepicker.value
             mainWindow.searched = mainWindow.searched + 1 % 2
         }
 

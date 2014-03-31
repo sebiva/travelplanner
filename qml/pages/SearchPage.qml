@@ -501,7 +501,7 @@ Page {
                             target: iconlist
                             orientation: ListView.Vertical
                             recsize: width / 4
-                            height: (spacing + recsize) * searcher.getnumlegs(index) - spacing
+                            height: searcher.getnumlegs(index) !== -1 ? (spacing + recsize) * searcher.getnumlegs(index) - spacing : 0
                             textvis: true
                         }
                     }

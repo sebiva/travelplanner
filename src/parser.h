@@ -36,6 +36,7 @@ public:
 
     //static QObject *qobject_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine);
     static Parser *getinstance();
+    ~Parser();
     bool getXML(QString fromid, QString toid, QString date, QString time);
 
     Trip * getTrip(int index);
@@ -61,9 +62,9 @@ public slots:
 
 private:
     void parsevasttrafikreply(QNetworkReply * reply);
-    QList<Trip *> *trips;
     QString address;
     static Parser *mparser;
+    static QList<Trip *> *trips;
 
     explicit Parser(QObject *parent = 0);
 };

@@ -10,6 +10,9 @@ Trip::Trip(const Trip &, QObject *parent) :
 {
     leglist = new QList<Leg *>();
 }
+Trip::~Trip() {
+    qDebug() << "Destroying trip";
+}
 
 
 void Trip::addleg(Leg *leg) {
@@ -21,7 +24,6 @@ Leg *Trip::getLeg(int index) {
 }
 
 void Trip::print() {
-
     qDebug() << "## Printing Trip:";
 
 }

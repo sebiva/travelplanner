@@ -1,11 +1,11 @@
 #include "parser.h"
 
 Parser *Parser::mparser = 0;
+QList<Trip *> *Parser::trips = new QList<Trip *>();
 
 Parser::Parser(QObject *parent) :
     QObject(parent)
 {
-    trips = new QList<Trip *>();
     address = (QString) "http://api.vasttrafik.se/bin/rest.exe/" +
             "v1/trip?authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml";
 }
@@ -26,11 +26,24 @@ Parser *Parser::getinstance() {
     return mparser;
 }
 
+Parser::~Parser() {
+    qDebug() << "Deleting parser!";
+}
+
 int Parser::numtrips() {
+    if (trips == NULL) {
+        qDebug() << "Trips NULL";
+        return -1;
+    }
     return trips->length();
 }
 
 int Parser::numlegs(int tripindex) {
+    if (trips == NULL) {
+        qDebug() << "Trips NULL";
+        return -1;
+    }
+
     if (tripindex >= trips->length()) {
         return -1;
     } else {
@@ -39,6 +52,12 @@ int Parser::numlegs(int tripindex) {
 }
 
 Trip * Parser::getTrip(int index) {
+
+
+    if (trips == NULL) {
+        qDebug() << "Trips NULL";
+        return NULL;
+    }
     if (index >= trips->length()) {
         return NULL;
     }
@@ -46,6 +65,10 @@ Trip * Parser::getTrip(int index) {
 }
 
 Leg * Parser::getLeg(int tripindex, int legindex) {
+    if (trips == NULL) {
+        qDebug() << "Trips NULL";
+        return NULL;
+    }
     if (tripindex >= trips->length() || legindex >= trips->at(tripindex)->leglist->length()) {
         return NULL;
     }
@@ -80,12 +103,14 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
     xml.readNextStartElement(); //Trip
     while(!xml.isEndElement()) {
         Trip *trip = new Trip();
+        trip->setParent(this);
         //Keep track of first leg for each trip
         bool first = true;
         xml.readNextStartElement();//Leg
         Leg *leg = NULL;
         while(!xml.isEndElement()) {
             leg = new Leg();
+            leg->setParent(trip);
             qDebug() << "Leg: " << xml.name() << xml.attributes().value("name");
 
             attr = xml.attributes();
@@ -192,11 +217,10 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
                 //Skip unneccessary walk stuff
                 if (leg->mfrom == leg->mto) {
                     qDebug() << "Walking to same stop ignored" << leg->mfrom;
-                    continue;
                 } else {
-                    goto addleg;
+                    trip->addleg(leg);
                 }
-
+                continue;
             }
 
             //Go to the journeydetails, and skip them
@@ -212,34 +236,7 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
             xml.readNextStartElement();
             qDebug() << "Journey3?: " << xml.name() << xml.attributes().value("name");
 
-addleg:
-            //Leg *legadd = leg;
             trip->addleg(leg);
-            //            while(!xml.isEndElement()) {
-            //                qDebug() << "Leginfo: " << xml.name() << xml.attributes().value("name");
-
-            //                attr = xml.attributes();
-            //                if (xml.name() == "Origin") {
-            //                    leg->mfrom = attr.value("name").toString();
-            //                    leg->mfromid = attr.value("name").toString();
-            //                    leg->mfromtrack = attr.value("track").toString();
-            //                    leg->mdepdate = attr.value("date").toString();
-            //                    leg->mdeptime = attr.value("time").toString();
-            //                    leg->mdeprtdate = attr.value("rtDate").toString();
-            //                    leg->mdeprttime = attr.value("rtTime").toString();
-            //                } else if (xml.name() == "Destination") {
-            //                    leg->mto = attr.value("name").toString();
-            //                    leg->mtoid = attr.value("name").toString();
-            //                    leg->mtotrack = attr.value("track").toString();
-            //                    leg->marivdate = attr.value("date").toString();
-            //                    leg->marivtime = attr.value("time").toString();
-            //                    leg->marivrtdate = attr.value("rtDate").toString();
-            //                    leg->marivrttime = attr.value("rtTime").toString();
-            //                }
-            //                xml.skipCurrentElement();
-            //                xml.readNextStartElement();
-            //            }
-
         }
 
         if (leg != NULL) {
@@ -254,8 +251,6 @@ addleg:
         Trip *tripadd = trip;
         trips->append(tripadd);
     }
-
-
     emit ready(0);
 }
 

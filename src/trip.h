@@ -15,6 +15,8 @@ class Trip : public QObject
 public:
     explicit Trip(QObject *parent = 0);
     Trip(const Trip &, QObject *parent = 0);
+    ~Trip();
+
     void addleg(Leg *leg);
     Leg *getLeg(int index);
     QList<Leg *> *leglist;
