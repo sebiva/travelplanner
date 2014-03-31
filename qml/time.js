@@ -96,7 +96,7 @@ function duration(deptime, arivtime, depdate, arivdate ) {
         answer = answer + " " + extradays + "d";
     }
 
-    console.log("DURATION: \nfrom " + deptime + " , " + depdate + "\nto " + arivtime + " , " + arivdate + " : " +  answer);
+    //console.log("DURATION: \nfrom " + deptime + " , " + depdate + "\nto " + arivtime + " , " + arivdate + " : " +  answer);
     if (answer === "") {
         answer = "0min";
     }
@@ -131,7 +131,7 @@ function delay(time, rttime, date, rtdate) {
         return "";
     }
 
-    console.log("DELAYDURATION: \nfrom " + time + " , " + date + "\nto " + rttime + " , " + rtdate + " : " +  dur);
+    //console.log("DELAYDURATION: \nfrom " + time + " , " + date + "\nto " + rttime + " , " + rtdate + " : " +  dur);
     var min, hr;
     if (dur.indexOf("h") === -1) {
         //console.log("no hour")

@@ -33,34 +33,51 @@ CoverBackground {
     property int searched: mainWindow.searched
     property string lang: mainWindow.lang
     property string err: mainWindow.errmsg
-    onErrChanged: search(false)
-    onLangChanged: search(false)
-    onSearchedChanged: search(false)
-    onAvailChanged: search(false)
-    onFromChanged: search(false)
-    onToChanged: search(false)
-    function search(now) {
+    //onErrChanged: search(false)
+    //onLangChanged: search(false)
+
+
+
+    function refresh(now) {
         console.log("SEARCHING FROM COVER " + avail)
         listmodel.clear();
         if (mainWindow.avail) {
 
+            var time = searcher.gettime()
+            var date = searcher.getdate()
+
             if (now) {
-                mainWindow.time = Timejs.getcurrenttime();
-                mainWindow.date = Timejs.getcurrentdate();
+                time = Timejs.getcurrenttime();
+                date = Timejs.getcurrentdate();
             }
             //TODO: Update Mainpage variables.
 
             console.log("DURTIME " + Timejs.duration(mainWindow.time, Timejs.getcurrenttime(),mainWindow.date, Timejs.getcurrentdate()));
             if ((Timejs.duration(mainWindow.timeofsearch, Timejs.getcurrenttime(),mainWindow.dateofsearch, Timejs.getcurrentdate()) === "0min")) {
                 console.log("IFFFFFFF");
-                Searchjs.setuplist(mainWindow.lastparsedtrips,listmodel);
+                //Searchjs.setuplist(mainWindow.lastparsedtrips,listmodel);
+                var tripindex = 0
+                var trip
+                while((trip = searcher.getTrip(tripindex))!==null) {
+                    listmodel.append({  deptime: trip.getdeptime(),
+                                        arivtime: trip.getarivtime(),
+                                        depdate: trip.getdepdate(),
+                                        arivdate: trip.getarivdate(),
+                                        deprttime: trip.getdeprttime(),
+                                        arivrttime: trip.getarivrttime(),
+                                        deprtdate: trip.getdeprtdate(),
+                                        arivrtdate: trip.getarivrtdate(),
+                                        exchready: true})
+                    tripindex++
+                }
             } else {
                 console.log("ELSEEEEEE" + avail)
                 mainWindow.timeofsearch = Timejs.getcurrenttime()
                 mainWindow.dateofsearch = Timejs.getcurrentdate()
                 triplist.searching = true;
 
-                Searchjs.sendrequest(mainWindow.fromid, mainWindow.toid, mainWindow.date, mainWindow.time, triplist.doneloading, listmodel, mainWindow.changetime);
+                searcher.search()
+                //Searchjs.sendrequest(mainWindow.fromid, mainWindow.toid, mainWindow.date, mainWindow.time, triplist.doneloading, listmodel, mainWindow.changetime);
             }
         } else {
             console.log("HELLO " + mainWindow.lang + "::" + mainWindow.errmsg + "::" + mainWindow.strcovererr + "::" + mainWindow.errmsg === mainWindow.strerr)
@@ -70,7 +87,19 @@ CoverBackground {
 
     Search {
         id: searcher
-        onReady: console.log("REATTYY");
+        onReady: {
+            console.log("Ready signal received in CoverPage")
+            if (err !== "") {
+                refresh(false)
+                from.text = searcher.getfrom()
+                to.text = searcher.getto()
+            } else {
+
+            }
+
+
+
+        }
     }
 
 
@@ -99,12 +128,12 @@ CoverBackground {
     }
 
 
-    Component.onCompleted: search()
+    Component.onCompleted: refresh()
 
     Column {
         anchors.fill: parent
-        Label {id: from; x: Theme.paddingSmall; visible: mainWindow.avail; text: mainWindow.from; font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.secondaryHighlightColor}
-        Label {id: to; x: Theme.paddingSmall; visible: mainWindow.avail; text: mainWindow.to; font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.highlightColor}
+        Label {id: from; x: Theme.paddingSmall; visible: mainWindow.avail; font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.secondaryHighlightColor}
+        Label {id: to; x: Theme.paddingSmall; visible: mainWindow.avail; font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.highlightColor}
 
         ListView {
             id: triplist
@@ -148,7 +177,18 @@ CoverBackground {
                 height: triplist.height / 3
                 width: triplist.width
 
-                Component.onCompleted: Searchjs.addicons(iconmodel, index)
+                Component.onCompleted: {
+                    var legnr = 0
+                    var leg
+                    while((leg = searcher.getLeg(index, legnr)) !== null) {
+                        iconmodel.append({name: leg.line, fgcolour: leg.fgcolour, bgcolour: leg.bgcolour, dir: leg.dir,
+                                         fromname: leg.from.split(",")[0], fromtrack: leg.fromtrack,
+                                         destname: leg.to.split(",")[0], totrack: leg.totrack,
+                                         deptime: leg.deptime, depdate: leg.depdate, deprttime: leg.deprttime, deprtdate: leg.deprtdate,
+                                         arivtime: leg.arivtime, arivdate: leg.arivdate, arivrttime: leg.arivrttime, arivrtdate: leg.arivrtdate})
+                        legnr++;
+                    }
+                }
 
                 Column {
                     width: parent.width
@@ -202,12 +242,12 @@ CoverBackground {
                                         width: iconlist.recsize0
                                         height: width
                                         anchors.centerIn: parent
-                                        color: color1
+                                        color: fgcolour
                                         opacity: 1
                                         Label {
                                             id: recttext
                                             text: name
-                                            color: color2
+                                            color: bgcolour
                                             anchors.centerIn: parent
                                             font.pixelSize: Theme.fontSizeTiny
                                         }
@@ -226,12 +266,12 @@ CoverBackground {
         CoverAction {
             //Update the search for the current time
             iconSource: "image://theme/icon-cover-timer"
-            onTriggered: coverpage.search(true);
+            onTriggered: coverpage.refresh(true);
         }
         CoverAction {
             //Update the search for the original or last used time
             iconSource: "image://theme/icon-cover-refresh"
-            onTriggered: coverpage.search(false);
+            onTriggered: coverpage.refresh(false);
         }
     }
 }

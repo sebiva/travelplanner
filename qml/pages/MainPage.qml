@@ -60,7 +60,7 @@ Dialog {
 
     Search {
         id: searcher
-        onReady: console.log("REATTYY");
+        onReady: console.log("Ready signal received in MainPage");
     }
 
     property bool fromready: false

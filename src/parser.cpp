@@ -94,6 +94,7 @@ void Parser::XMLready( QNetworkReply * reply){
 }
 
 void Parser::parsevasttrafikreply(QNetworkReply *reply) {
+    qDebug() << "Parsing";
     QXmlStreamReader xml;
     xml.setDevice(reply);
     QXmlStreamAttributes attr;
@@ -117,7 +118,7 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
         while(!xml.isEndElement()) {
             leg = new Leg();
             leg->setParent(trip);
-            qDebug() << "Leg: " << xml.name() << xml.attributes().value("name");
+            //qDebug() << "Leg: " << xml.name() << xml.attributes().value("name");
 
             attr = xml.attributes();
             leg->mline = attr.value("name").toString();
@@ -129,31 +130,25 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
 
             //TODO: translation
             if (leg->mline == "Gå") {
-                qDebug() << "Hellog";
                 leg->mline = "walk";
                 leg->mfgcolour = "#00abe5";
                 leg->mbgcolour = "#ffffff";
                 leg->mdir = "Walk";
             } else if (leg->mline.split(" ").at(0) == "SJ") {
-                qDebug() << "Hellos";
                 leg->mline = "sj";
                 leg->mfgcolour = "#ffffff";
                 leg->mbgcolour = "#000000";
             } else if (leg->mline == "PENDELTÅG" || leg->mline == "VÄSTTÅGEN" || leg->mline == "TÅGAB REGIONTÅG") {
-                qDebug() << "Hellot";
                 leg->mline = "train";
                 leg->mfgcolour = "#000000";
                 leg->mbgcolour = "#ffffff";
             } else if (leg->mline.split(" ").at(1) == "EXPRESS") {
-                qDebug() << "Helloe";
                 leg->mline = (leg->mline.split(" ").at(0)).toLower();
             } else if (leg->mline.split(" ").at(1) == "ÄLVSNABBEN" || leg->mline.split(" ").at(1) == "ÄLVSNABBARE" ) {
-                qDebug() << "Helloä";
                 leg->mline = "älvs.";
             } else {
                 leg->mline = sname;
             }
-            qDebug() << "Hello";
 
             //Read the origin info
             xml.readNextStartElement(); //Leginfo
@@ -182,7 +177,7 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
             }
 
 
-            qDebug() << "Leginfo: " << xml.name() << xml.attributes().value("name");
+            //qDebug() << "Leginfo: " << xml.name() << xml.attributes().value("name");
 
 
             //Read the destination info
@@ -204,21 +199,21 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
                     leg->marivrttime = leg->marivtime;
                 }
             }
-            qDebug() << "Leginfo: " << xml.name() << xml.attributes().value("name");
+            //qDebug() << "Leginfo: " << xml.name() << xml.attributes().value("name");
 
 
 
             //There is no journeydetail for walking
-            qDebug() << "Type: " << leg->mline << "Gå?";
+            //qDebug() << "Type: " << leg->mline << "Gå?";
             if (leg->mline == "walk") { //TODO: translation
 
                 //Go to next leg (or trip)
                 xml.skipCurrentElement();
-                qDebug() << "WALK1" << xml.name();
+                //qDebug() << "WALK1" << xml.name();
                 xml.readNextStartElement();
-                qDebug() << "WALK1" << xml.name();
+                //qDebug() << "WALK1" << xml.name();
                 xml.readNextStartElement();
-                qDebug() << "WALK1" << xml.name();
+                //qDebug() << "WALK1" << xml.name();
 
                 //Skip unneccessary walk stuff
                 if (leg->mfrom == leg->mto) {
@@ -232,15 +227,15 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
             //Go to the journeydetails, and skip them
             xml.skipCurrentElement();
             xml.readNextStartElement();
-            qDebug() << "Journey?: " << xml.name() << xml.attributes().value("name");
+            //qDebug() << "Journey?: " << xml.name() << xml.attributes().value("name");
             //Skip journeydetails
             xml.skipCurrentElement();
             xml.readNextStartElement();
-            qDebug() << "Journey2?: " << xml.name() << xml.attributes().value("name");
+            //qDebug() << "Journey2?: " << xml.name() << xml.attributes().value("name");
 
             //Read the next Leg(or trip)
             xml.readNextStartElement();
-            qDebug() << "Journey3?: " << xml.name() << xml.attributes().value("name");
+            //qDebug() << "Journey3?: " << xml.name() << xml.attributes().value("name");
 
             trip->addleg(leg);
         }
@@ -253,11 +248,11 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
         }
 
         xml.readNextStartElement();
-        qDebug() << "afterlegs2" << xml.name();
+        //qDebug() << "afterlegs2" << xml.name();
         Trip *tripadd = trip;
         trips->append(tripadd);
     }
-    qDebug() << "Ready!";
+    qDebug() << "Parsing done, no errors!";
     emit ready("");
 }
 

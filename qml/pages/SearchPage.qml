@@ -46,7 +46,7 @@ Page {
 
     onStatusChanged: {
         if (status === PageStatus.Active) {
-            console.log("MUHAHAHAAHA" + searcher.getdate())
+            console.log("SEARCHING from SearchPage")
             listmodel.clear()
             searcher.search()
             fromlabel.text = mainWindow.strfrom + " " + searcher.getfrom()
@@ -69,7 +69,7 @@ Page {
     Search {
         id: searcher
         onReady: {
-            console.log("Ready in Searchpage");
+            console.log("Ready signal received in SearchPage");
 
             if (err === "") {
                 //No error
@@ -208,7 +208,6 @@ Page {
                                         arivrtdate: trip.getarivrtdate(),
                                         exchready: true})
                     tripindex++
-                    listmodel.get(tripindex)
                 }
             }
 
