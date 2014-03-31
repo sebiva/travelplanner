@@ -79,7 +79,6 @@ ApplicationWindow
 
     }
     function setsetting(setting, value) {
-        console.log("Setting " + setting + " : " + value)
         if (setting === "language") {
             lang = value;
         } else if (setting === "changetime") {

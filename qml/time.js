@@ -52,7 +52,7 @@ function duration(deptime, arivtime, depdate, arivdate ) {
     hours = parseInt(arivhr) - parseInt(dephr);
     minutes = parseInt(arivmin) - parseInt(depmin);
     if(hours * 60 + minutes < 0 && extradays <=0) {
-        console.log(hours, "hr", minutes, "min", extradays, "d");
+        //console.log(hours, "hr", minutes, "min", extradays, "d");
         return "error";
     }
 
@@ -90,10 +90,10 @@ function duration(deptime, arivtime, depdate, arivdate ) {
 
     if (extradays > 0) {
         console.log("Extra day" + extradays)
-        answer = answer + " +" + extradays + "d";
+        answer = answer + "+" + extradays + "d";
     } else if (extradays < 0) {
         console.log("Extar day" + extradays)
-        answer = answer + " " + extradays + "d";
+        answer = answer + extradays + "d";
     }
 
     //console.log("DURATION: \nfrom " + deptime + " , " + depdate + "\nto " + arivtime + " , " + arivdate + " : " +  answer);

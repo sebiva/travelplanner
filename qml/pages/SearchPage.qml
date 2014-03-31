@@ -35,7 +35,6 @@ Page {
     property string date
     property string time
 
-
     property bool searching : true
     property bool error : false
 
@@ -49,6 +48,8 @@ Page {
             console.log("SEARCHING from SearchPage")
             listmodel.clear()
             searcher.search()
+            searcher.setdateofsearch(Timejs.getcurrentdate()) //TODO: Move into c++
+            searcher.settimeofsearch(Timejs.getcurrenttime())
             fromlabel.text = mainWindow.strfrom + " " + searcher.getfrom()
             tolabel.text = mainWindow.strto + " " + searcher.getto()
             datelabel.text = searcher.getdate()
@@ -70,7 +71,11 @@ Page {
         id: searcher
         onReady: {
             console.log("Ready signal received in SearchPage");
-
+            listmodel.clear()
+            fromlabel.text = mainWindow.strfrom + " " + searcher.getfrom()
+            tolabel.text = mainWindow.strto + " " + searcher.getto()
+            datelabel.text = searcher.getdate()
+            timelabel.text = searcher.gettime()
             if (err === "") {
                 //No error
                 listView.setup();
@@ -248,26 +253,27 @@ Page {
                 property int addanimdur: 200
                 property int tripindex: index
 
-                Component.onCompleted: iconlist.setupicons()//Searchjs.addicons(iconmodel, index)
-
+                Component.onCompleted: {
+                    iconlist.setupicons()//Searchjs.addicons(iconmodel, index)
+                }
                 Column {
                     width: parent.width
                     Row {
                         height: searchpage.height / 10
                         Label {
                             id: deptimelabel
-                            property string nextday : Timejs.duration("00:00", "00:00", date, depdate)
+                            property string nextday : Timejs.duration("00:00", "00:00", Timejs.getcurrentdate(), depdate)
                             property int daypos : nextday.indexOf("d")
-                            text: deptime + Timejs.delay(deptime, deprttime, depdate, deprtdate) + (daypos > 0 ? " [+" + nextday.substring(daypos-1) + "]" : "")
+                            text: deptime + Timejs.delay(deptime, deprttime, depdate, deprtdate) + (daypos > 0 ? " [" + nextday + "]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                         Label {
                             id: arivtimelabel
-                            property string nextday : Timejs.duration("00:00", "00:00", date, arivdate)
+                            property string nextday : Timejs.duration("00:00", "00:00", Timejs.getcurrentdate(), arivdate)
                             property int daypos : nextday.indexOf("d")
-                            text: arivtime + Timejs.delay(arivtime, arivrttime, arivdate, arivrtdate) + (daypos > 0 ? " [+" + nextday + "]" : "")
+                            text: arivtime + Timejs.delay(arivtime, arivrttime, arivdate, arivrtdate) + (daypos > 0 ? " [" + nextday + "]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor

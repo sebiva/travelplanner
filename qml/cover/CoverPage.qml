@@ -26,6 +26,7 @@ import searcher 1.0
 
 CoverBackground {
     id: coverpage
+    property string coverstatus: "started"
     property bool avail: mainWindow.avail
     property bool error: false
     property string from: mainWindow.from
@@ -34,71 +35,63 @@ CoverBackground {
     property string lang: mainWindow.lang
     property string err: mainWindow.errmsg
     //onErrChanged: search(false)
-    //onLangChanged: search(false)
-
+    onLangChanged: {
+        if (coverstatus === "error") {
+            placeholdertext.text = mainWindow.strappname + "\n" + mainWindow.strcovererr;
+        }
+    }
 
 
     function refresh(now) {
-        console.log("SEARCHING FROM COVER " + avail)
-        listmodel.clear();
-        if (mainWindow.avail) {
-
-            var time = searcher.gettime()
-            var date = searcher.getdate()
-
-            if (now) {
-                time = Timejs.getcurrenttime();
-                date = Timejs.getcurrentdate();
-            }
-            //TODO: Update Mainpage variables.
-
-            console.log("DURTIME " + Timejs.duration(mainWindow.time, Timejs.getcurrenttime(),mainWindow.date, Timejs.getcurrentdate()));
-            if ((Timejs.duration(mainWindow.timeofsearch, Timejs.getcurrenttime(),mainWindow.dateofsearch, Timejs.getcurrentdate()) === "0min")) {
-                console.log("IFFFFFFF");
-                //Searchjs.setuplist(mainWindow.lastparsedtrips,listmodel);
-                var tripindex = 0
-                var trip
-                while((trip = searcher.getTrip(tripindex))!==null) {
-                    listmodel.append({  deptime: trip.getdeptime(),
-                                        arivtime: trip.getarivtime(),
-                                        depdate: trip.getdepdate(),
-                                        arivdate: trip.getarivdate(),
-                                        deprttime: trip.getdeprttime(),
-                                        arivrttime: trip.getarivrttime(),
-                                        deprtdate: trip.getdeprtdate(),
-                                        arivrtdate: trip.getarivrtdate(),
-                                        exchready: true})
-                    tripindex++
-                }
-            } else {
-                console.log("ELSEEEEEE" + avail)
-                mainWindow.timeofsearch = Timejs.getcurrenttime()
-                mainWindow.dateofsearch = Timejs.getcurrentdate()
-                triplist.searching = true;
-
-                searcher.search()
-                //Searchjs.sendrequest(mainWindow.fromid, mainWindow.toid, mainWindow.date, mainWindow.time, triplist.doneloading, listmodel, mainWindow.changetime);
-            }
-        } else {
-            console.log("HELLO " + mainWindow.lang + "::" + mainWindow.errmsg + "::" + mainWindow.strcovererr + "::" + mainWindow.errmsg === mainWindow.strerr)
-            placeholdertext.text = mainWindow.errmsg === mainWindow.strerr ? mainWindow.strappname : mainWindow.strappname + "\n" + mainWindow.strcovererr;
+        console.log("REFRESHING COVER " + coverstatus)
+        listmodel.clear()
+        if (coverstatus === "error") {
+            console.log("Coverpage in errorstate");
+            placeholdertext.text = mainWindow.strappname + "\n" + mainWindow.strcovererr;
+            return;
         }
+        console.log("Refreshing Cover")
+        var time = searcher.gettime()
+        var date = searcher.getdate()
+        if (now) {
+            time = Timejs.getcurrenttime();
+            date = Timejs.getcurrentdate();
+        }
+        searcher.search(searcher.getfromid(),searcher.gettoid(),date,time)
+        searcher.setdateofsearch(Timejs.getcurrentdate()) //TODO: Move into c++
+        searcher.settimeofsearch(Timejs.getcurrenttime())
+        coverstatus = "searching"
     }
+
 
     Search {
         id: searcher
         onReady: {
             console.log("Ready signal received in CoverPage")
-            if (err !== "") {
-                refresh(false)
+            listmodel.clear();
+            if (err === "") {
+                //No error
+                var tripindex = 0
+                var trip
+                while((trip = searcher.getTrip(tripindex))!==null) {
+                    listmodel.append({  deptime: trip.getdeptime(),
+                                         arivtime: trip.getarivtime(),
+                                         depdate: trip.getdepdate(),
+                                         arivdate: trip.getarivdate(),
+                                         deprttime: trip.getdeprttime(),
+                                         arivrttime: trip.getarivrttime(),
+                                         deprtdate: trip.getdeprtdate(),
+                                         arivrtdate: trip.getarivrtdate(),
+                                         exchready: true})
+                    tripindex++
+                }
                 from.text = searcher.getfrom()
                 to.text = searcher.getto()
+                coverstatus = "avail"
             } else {
-
+                coverstatus = "error"
+                placeholdertext.text = mainWindow.strappname + "\n" + mainWindow.strcovererr;
             }
-
-
-
         }
     }
 
@@ -109,7 +102,7 @@ CoverBackground {
         Item {
             height: coverpage.height/3
             width: parent.width
-            opacity: !mainWindow.avail || error ? 1 : 0.3
+            opacity: coverstatus === "error" || coverstatus === "started" ? 1 : 0.3
 
             Image {
                 id: logo
@@ -122,18 +115,15 @@ CoverBackground {
         Label {
             id: placeholdertext
             text: mainWindow.strappname
-            visible: !mainWindow.avail || error
+            visible: coverstatus === "error" || coverstatus === "started"
             anchors.horizontalCenter: parent.horizontalCenter
         }
     }
 
-
-    Component.onCompleted: refresh()
-
     Column {
         anchors.fill: parent
-        Label {id: from; x: Theme.paddingSmall; visible: mainWindow.avail; font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.secondaryHighlightColor}
-        Label {id: to; x: Theme.paddingSmall; visible: mainWindow.avail; font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.highlightColor}
+        Label {id: from; x: Theme.paddingSmall; visible: (coverstatus === "avail"); font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.secondaryHighlightColor}
+        Label {id: to; x: Theme.paddingSmall; visible: (coverstatus === "avail"); font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.highlightColor}
 
         ListView {
             id: triplist
@@ -158,7 +148,7 @@ CoverBackground {
 
             BusyIndicator {
                 id: busy
-                visible: mainWindow.avail && !error
+                visible: coverstatus === "searching"
                 running: triplist.searching
                 width: parent.width / 3
                 height: width
@@ -182,10 +172,10 @@ CoverBackground {
                     var leg
                     while((leg = searcher.getLeg(index, legnr)) !== null) {
                         iconmodel.append({name: leg.line, fgcolour: leg.fgcolour, bgcolour: leg.bgcolour, dir: leg.dir,
-                                         fromname: leg.from.split(",")[0], fromtrack: leg.fromtrack,
-                                         destname: leg.to.split(",")[0], totrack: leg.totrack,
-                                         deptime: leg.deptime, depdate: leg.depdate, deprttime: leg.deprttime, deprtdate: leg.deprtdate,
-                                         arivtime: leg.arivtime, arivdate: leg.arivdate, arivrttime: leg.arivrttime, arivrtdate: leg.arivrtdate})
+                                             fromname: leg.from.split(",")[0], fromtrack: leg.fromtrack,
+                                             destname: leg.to.split(",")[0], totrack: leg.totrack,
+                                             deptime: leg.deptime, depdate: leg.depdate, deprttime: leg.deprttime, deprtdate: leg.deprtdate,
+                                             arivtime: leg.arivtime, arivdate: leg.arivdate, arivrttime: leg.arivrttime, arivrtdate: leg.arivrtdate})
                         legnr++;
                     }
                 }
@@ -262,7 +252,7 @@ CoverBackground {
     }
     CoverActionList {
         id: coverAction
-        enabled: mainWindow.avail
+        enabled: (coverstatus === "avail")
         CoverAction {
             //Update the search for the current time
             iconSource: "image://theme/icon-cover-timer"

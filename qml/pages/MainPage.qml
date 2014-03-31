@@ -67,13 +67,9 @@ Dialog {
     property bool toready: false
 
     Component.onCompleted: {
-        console.log("MainPage..")
         DBjs.setup();
-        console.log("Database set up")
         mainWindow.getsettings()
-        console.log("Settings loaded")
         var lastsearch = DBjs.getlastsearch()
-        console.log("Last search loaded")
         if (lastsearch === 0) {
             return;
         }
@@ -85,6 +81,7 @@ Dialog {
         to = lastsearch.to
         fromready = true
         toready = true
+        console.log("Loaded MainPage\n")
     }
 
     function searchfunc() {
@@ -288,7 +285,7 @@ Dialog {
                         id: totext
                         width: parent.width - height
                         onTextChanged: {
-                            console.log("STATE IN TEXT: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                            //console.log("STATE IN TEXT: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                             if (column.state !== "cleared" && column.active) {
                                 column.textchang(false);
                             }
@@ -296,7 +293,7 @@ Dialog {
 
                         placeholderText: mainWindow.strto
                         onClicked: {
-                            console.log("STATE IN onClicked: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                            //console.log("STATE IN onClicked: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                             column.active = true
                             if(text.length < 3) {
                                 searchmodel.clear()
@@ -309,9 +306,9 @@ Dialog {
                         }
                         onFocusChanged: {
                             searchmodel.clear();
-                            console.log("STATE IN FOCUS CHANGED: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                            //console.log("STATE IN FOCUS CHANGED: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                             if (column.active) {
-                                console.log("STATE IN if on FOCUS: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                                //console.log("STATE IN if on FOCUS: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                                 column.state = "typing"
                                 focus = true
                                 Qt.inputMethod.show()
@@ -336,7 +333,7 @@ Dialog {
                             onClicked: buttonto.clikked()
                         }
                         function clikked() {
-                            console.log("STATE IN X: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                            //console.log("STATE IN X: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                             searchmodel.clear()
                             column.state = "cleared"
                             toready = false

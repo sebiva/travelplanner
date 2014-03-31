@@ -21,6 +21,10 @@ bool Search::search(QString fromid, QString toid, QString date, QString time) {
         qDebug() << "mparser NULL";
         return false;
     }
+    mparser->fromid = fromid;
+    mparser->toid = toid;
+    mparser->date = date;
+    mparser->time = time;
     return mparser->getXML(fromid,toid,Time::convertdate(date),time);
 }
 bool Search::search(QString fromid, QString toid, QString date, QString hour, QString minute) {
@@ -28,6 +32,10 @@ bool Search::search(QString fromid, QString toid, QString date, QString hour, QS
         qDebug() << "mparser NULL";
         return false;
     }
+    mparser->fromid = fromid;
+    mparser->toid = toid;
+    mparser->date = date;
+    mparser->time = Time::converttime(hour,minute);
     return mparser->getXML(fromid,toid,Time::convertdate(date),Time::converttime(hour, minute));
 }
 

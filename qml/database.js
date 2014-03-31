@@ -18,27 +18,6 @@
 
 .import QtQuick.LocalStorage 2.0 as LS
 
-function test() {
-    console.log("IN DATABASE TEST")
-
-
-    var db = getDatabase();
-//    db.transaction(function (trans) {
-//        trans.executeSql('DROP TABLE IF EXISTS favourites');
-//    });
-    setup();
-    console.log("SET1: " + setfav("42", "52", "hej", "då"));
-    console.log("SET2: " + setfav("42", "53", "hej", "då"));
-    console.log("SET3: " + setfav("43", "52", "hej", "då"));
-    console.log("SET4: " + setfav("42", "52", "hej", "då"));
-    console.log("SET5: " + setfav("2", "5", "hej", "då"));
-
-
-    getfaves();
-}
-
-
-
 function getDatabase() {
     return LS.LocalStorage.openDatabaseSync("Travelplanner", "1.0", "StorageDatabase", 100);
 }
@@ -82,7 +61,7 @@ function getsetting(setting) {
         }
         result = x.rows.item(0)['val'];
     });
-    console.log("Getting val: " + result + ", " + setting)
+    console.log("Getting setting: " + result + ", " + setting)
     return result;
 }
 
@@ -163,7 +142,7 @@ function getlastsearch() {
             from: row['fromstop'],
             to: row['tostop']
         }
-        console.log("Getting: " + result.fromid + result.toid + result.from + result.to)
+        console.log("Getting Last search: " + result.fromid + result.toid + result.from + result.to)
     });
     return result;
 }
