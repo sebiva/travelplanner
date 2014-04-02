@@ -122,6 +122,7 @@ Dialog {
             property real height0: topheader.height + fromrow.height + torow.height + timerow.height
             height: maindialog.typing ? maindialog.height : height0
             clip: true
+            y: 0
 
             contentHeight: height
             PullDownMenu {
@@ -210,25 +211,27 @@ Dialog {
                             toready = true;
                             searchlist.from = false;
                         }
-                        if(txt.focus && txt.text.length > 2 && !autochang && typing) {
+                        if(txt.focus && txt.text.length > 2 && typing) {
                             console.log("Getting name " + txt.text.length)
                             getsuggestions(txt.text);
                         }    
                     }
-                    autochang = false
                 }
-                property bool autochang: false
-                property bool chosen: false
+
+                property bool active: false
+                property string state: ""
+                // typing, cleared, chosen
+
 
                 Row {
                     id: fromrow
                     width: column.width
-                    height: fromtext.height
                     visible: !maindialog.typing || fromtext.typing
                     TextField {
                         property bool typing: false
                         id: fromtext
                         width: fromrow.width - height
+                        y: Theme.paddingLarge
                         onTextChanged: {
                             if (column.state !== "cleared" && column.active) {
                                 column.textchang(true)
@@ -255,7 +258,6 @@ Dialog {
                                 typing = true
                                 return
                             }
-
                             typing = focus;
                             text = maindialog.from
                         }
@@ -263,17 +265,15 @@ Dialog {
                     BackgroundItem {
                         id: buttonfrom
                         width: maindialog.width - fromtext.width
-                        height: fromtext.height - 2 * Theme.paddingLarge
+                        height: parent.height
                         highlighted: iconfrom.highlighted
                         property  bool clicked: false
                         IconButton {
                             id: iconfrom
-                            z: 0
                             icon.source: "image://theme/icon-m-clear"
                             anchors.centerIn: parent
                             width: fromtext.height / 2
                             onClicked: buttonfrom.clikked()
-
                         }
                         function clikked() {
                             searchmodel.clear()
@@ -288,28 +288,23 @@ Dialog {
                     }
 
                 }
-                property bool active: false
-                property string state: ""
-                // typing, cleared, chosen
+
                 Row {
                     id: torow
                     width: parent.width
-
                     visible: !maindialog.typing || totext.typing
                     TextField {
                         property bool typing: false
                         id: totext
                         width: parent.width - height
+                        y: Theme.paddingLarge
                         onTextChanged: {
-                            //console.log("STATE IN TEXT: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                             if (column.state !== "cleared" && column.active) {
                                 column.textchang(false);
                             }
                         }
-
                         placeholderText: mainWindow.strto
                         onClicked: {
-                            //console.log("STATE IN onClicked: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                             column.active = true
                             if(text.length < 3) {
                                 searchmodel.clear()
@@ -322,9 +317,7 @@ Dialog {
                         }
                         onFocusChanged: {
                             searchmodel.clear();
-                            //console.log("STATE IN FOCUS CHANGED: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                             if (column.active) {
-                                //console.log("STATE IN if on FOCUS: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                                 column.state = "typing"
                                 focus = true
                                 Qt.inputMethod.show()
@@ -349,7 +342,6 @@ Dialog {
                             onClicked: buttonto.clikked()
                         }
                         function clikked() {
-                            //console.log("STATE IN X: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                             searchmodel.clear()
                             column.state = "cleared"
                             toready = false

@@ -69,15 +69,11 @@ Page {
     Search {
         id: searcher
         onReady: {
-            console.log("Ready signal received in SearchPage");
+            console.log("Ready signal received in SearchPage")
             listmodel.clear()
-            fromlabel.text = mainWindow.strfrom + " " + searcher.getfrom()
-            tolabel.text = mainWindow.strto + " " + searcher.getto()
-            datelabel.text = searcher.getdate()
-            timelabel.text = searcher.gettime()
             if (err === "") {
                 //No error
-                listView.setup();
+                listView.setup()
 
                 DBjs.setlastsearch(getfromid(), gettoid(),
                                    getfrom(), getto())
@@ -104,7 +100,10 @@ Page {
         //TODO: TEST
         onSearching: {
             console.log("SearchPage, onSearchnig")
-            listmodel.clear()
+            fromlabel.text = mainWindow.strfrom + " " + searcher.getfrom()
+            tolabel.text = mainWindow.strto + " " + searcher.getto()
+            datelabel.text = searcher.getdate()
+            timelabel.text = searcher.gettime()
         }
     }
 

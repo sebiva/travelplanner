@@ -67,7 +67,7 @@ CoverBackground {
         id: searcher
         onReady: {
             console.log("Ready signal received in CoverPage")
-            listmodel.clear();
+            listmodel.clear()
             if (err === "") {
                 //No error
                 var tripindex = 0
