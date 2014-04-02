@@ -75,6 +75,15 @@ Leg * Parser::getLeg(int tripindex, int legindex) {
     return getTrip(tripindex)->leglist->at(legindex);
 }
 
+//TODO: TEST
+void Parser::cleartrips() {
+    for (int i = 0; i < trips->length(); i++) {
+        delete trips->at(i);
+
+    }
+    trips->clear();
+}
+
 bool Parser::getXML(QString fromid, QString toid,  QString date, QString time) {
     qDebug() << "SEARCHING::" << date << time << fromid << toid;
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
@@ -90,6 +99,13 @@ bool Parser::getXML(QString fromid, QString toid,  QString date, QString time) {
 }
 
 void Parser::XMLready( QNetworkReply * reply){
+    //TODO: TEST this
+    if (reply->error() != QNetworkReply::NoError) {
+        qDebug() << "An error occured";
+        emit ready("No connection");
+        return;
+    }
+
     parsevasttrafikreply(reply);
 }
 

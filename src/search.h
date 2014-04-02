@@ -42,6 +42,8 @@ public:
     Q_INVOKABLE QObject * getLeg(int tripindex, int legindex);
     Q_INVOKABLE int getnumlegs(int tripindex);
 
+    Q_INVOKABLE void cleartrips();
+
     Q_INVOKABLE QString getfromid() {
         return mparser->fromid;
     }
@@ -93,7 +95,7 @@ public:
     }
 signals:
     void ready(QString err);
-
+    void searching();
 
 public slots:
     void parseready(QString err);

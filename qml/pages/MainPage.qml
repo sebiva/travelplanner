@@ -21,9 +21,9 @@ import Sailfish.Silica 1.0
 
 import "../search.js" as Searchjs
 import "../database.js" as DBjs
-import "../time.js" as Timejs
 
 import searcher 1.0
+import timehelp 1.0
 
 
 Dialog {
@@ -51,8 +51,8 @@ Dialog {
         searcher.setto(to)
         searcher.setdate(datepicker.value)
         searcher.settime(timepicker.value)
-        searcher.setdateofsearch(Timejs.getcurrentdate())
-        searcher.settimeofsearch(Timejs.getcurrenttime())
+        searcher.setdateofsearch(timehelp.getcurrentdate())
+        searcher.settimeofsearch(timehelp.getcurrenttime())
 
         console.log("ACCEPTED2" + searcher.getdate())
     }
@@ -61,13 +61,29 @@ Dialog {
     Search {
         id: searcher
         onReady: console.log("Ready signal received in MainPage");
+        //TODO: TEST
+        onSearching: {
+            console.log("MainPage, onSearchnig")
+        }
     }
+    Timehelp {
+        id: timehelp
+    }
+
 
     property bool fromready: false
     property bool toready: false
 
     Component.onCompleted: {
-        DBjs.setup();
+
+        console.log("hel" + timehelp.duration("2014-04-02", "17:55", "2014-04-03", "19:05"))
+        console.log("hel" + timehelp.duration("2014-04-02", "22:40", "2014-04-03", "11:01"))
+        console.log("hel" + timehelp.duration("2014-04-04", "12:34", "2014-04-03", "18:03"))
+        console.log("hel" + timehelp.duration("2014-04-03", "17:22", "2014-04-03", "13:00"))
+        console.log("hel" + timehelp.delay("2014-04-03", "17:22", "2014-04-03", "13:00"))
+        console.log(timehelp.getcurrentdatestr())
+
+        DBjs.setup()
         mainWindow.getsettings()
         var lastsearch = DBjs.getlastsearch()
         if (lastsearch === 0) {
@@ -360,7 +376,7 @@ Dialog {
 
                         ValueButton {
                             id: datepicker
-                            value : Timejs.getcurrentdate() // new Date().getDate() + "/" + (new Date().getMonth()+1) + "/" + new Date().getFullYear()
+                            value : timehelp.getcurrentdatestr()
                             function openDateDialog() {
                                 var dialog = pageStack.push("Sailfish.Silica.DatePickerDialog", { date: new Date(value.split("-")[0],  (parseInt(value.split("-")[1])-1), value.split("-")[2] )})
 
@@ -384,7 +400,7 @@ Dialog {
 
                         ValueButton {
                             id: timepicker
-                            value : Timejs.getcurrenttime()
+                            value : timehelp.getcurrenttimestr()
 
                             function openTimeDialog() {
                                 var dialog = pageStack.push("Sailfish.Silica.TimePickerDialog", {
@@ -407,8 +423,8 @@ Dialog {
                         width: parent.width / 4
                         anchors.verticalCenter: parent.verticalCenter
                         onClicked: {
-                            datepicker.value = Timejs.getcurrentdate()
-                            timepicker.value = Timejs.getcurrenttime()
+                            datepicker.value = timehelp.getcurrentdatestr()
+                            timepicker.value = timehelp.getcurrenttimestr()
                         }
                     }
                 }

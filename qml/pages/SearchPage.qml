@@ -21,10 +21,9 @@ import Sailfish.Silica 1.0
 
 import "../search.js" as Searchjs
 import "../database.js" as DBjs
-import "../time.js" as Timejs
 
 import searcher 1.0
-
+import timehelp 1.0
 
 Page {
     id: searchpage
@@ -48,8 +47,8 @@ Page {
             console.log("SEARCHING from SearchPage")
             listmodel.clear()
             searcher.search()
-            searcher.setdateofsearch(Timejs.getcurrentdate()) //TODO: Move into c++
-            searcher.settimeofsearch(Timejs.getcurrenttime())
+            searcher.setdateofsearch(timehelp.getcurrentdatestr())
+            searcher.settimeofsearch(timehelp.getcurrenttimestr())
             fromlabel.text = mainWindow.strfrom + " " + searcher.getfrom()
             tolabel.text = mainWindow.strto + " " + searcher.getto()
             datelabel.text = searcher.getdate()
@@ -59,8 +58,8 @@ Page {
 
     function search() {
         //console.log("DATUM " + date)
-        mainWindow.timeofsearch = Timejs.getcurrenttime()
-        mainWindow.dateofsearch = Timejs.getcurrentdate()
+        mainWindow.timeofsearch = timehelp.getcurrenttimestr()
+        mainWindow.dateofsearch = timehelp.getcurrentdatestr()
         console.log("IN SEARCHPAGE SEARCH::" + date + time)
         listmodel.clear()
         //searcher.search(fromid, toid, date, time)
@@ -101,6 +100,16 @@ Page {
                 mainWindow.errmsg = mainWindow.strerr + err;
             }
         }
+
+        //TODO: TEST
+        onSearching: {
+            console.log("SearchPage, onSearchnig")
+            listmodel.clear()
+        }
+    }
+
+    Timehelp {
+        id: timehelp
     }
 
     Column {
@@ -262,25 +271,25 @@ Page {
                         height: searchpage.height / 10
                         Label {
                             id: deptimelabel
-                            property string nextday : Timejs.duration("00:00", "00:00", Timejs.getcurrentdate(), depdate)
+                            property string nextday : timehelp.duration(timehelp.getcurrentdatestr(), "00:00", depdate, "00:00")
                             property int daypos : nextday.indexOf("d")
-                            text: deptime + Timejs.delay(deptime, deprttime, depdate, deprtdate) + (daypos > 0 ? " [" + nextday + "]" : "")
+                            text: deptime + timehelp.delay(depdate, deptime, deprtdate, deprttime) + (daypos > 0 ? " [+" + nextday + "]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                         Label {
                             id: arivtimelabel
-                            property string nextday : Timejs.duration("00:00", "00:00", Timejs.getcurrentdate(), arivdate)
+                            property string nextday : timehelp.duration(timehelp.getcurrentdatestr(), "00:00", arivdate, "00:00")
                             property int daypos : nextday.indexOf("d")
-                            text: arivtime + Timejs.delay(arivtime, arivrttime, arivdate, arivrtdate) + (daypos > 0 ? " [" + nextday + "]" : "")
+                            text: arivtime + timehelp.delay(arivdate, arivtime, arivrtdate, arivrttime) + (daypos > 0 ? " [+" + nextday + "]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                         Label {
                             id: durlabel
-                            text: Timejs.duration(deprttime, arivrttime, deprtdate, arivrtdate)
+                            text: timehelp.duration(deprtdate, deprttime, arivrtdate, arivrttime)
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
@@ -384,7 +393,7 @@ Page {
                                         }
                                         Label {
                                             id: legdeprttime
-                                            text: Timejs.delay(deptime, deprttime, depdate, deprtdate)
+                                            text: timehelp.delay(depdate, deptime, deprtdate, deprttime)
                                             visible: iconlist.textvis
                                             horizontalAlignment: Text.AlignRight
                                             font.pixelSize: (Theme.fontSizeTiny + Theme.fontSizeSmall) /2
@@ -423,7 +432,7 @@ Page {
                                         }
                                         Label {
                                             id: legarivrttime
-                                            text: Timejs.delay(arivtime, arivrttime, arivdate, arivrtdate)
+                                            text: timehelp.delay(arivdate, arivtime, arivrtdate, arivrttime)
                                             visible: iconlist.textvis
                                             color: Theme.primaryColor
                                             horizontalAlignment: Text.AlignRight

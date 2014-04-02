@@ -44,6 +44,7 @@ public:
 
     int numtrips();
     int numlegs(int tripindex);
+    void cleartrips();
 
     QString fromid;
     QString toid;

@@ -15,7 +15,7 @@ SOURCES += src/harbour-travelplanner.cpp \
     src/trip.cpp \
     src/leg.cpp \
     src/search.cpp \
-    src/time.cpp
+    src/timehelper.cpp
 
 OTHER_FILES += qml/harbour-travelplanner.qml \
     qml/cover/CoverPage.qml \
@@ -38,5 +38,5 @@ HEADERS += \
     src/trip.h \
     src/leg.h \
     src/search.h \
-    src/time.h
+    src/timehelper.h
 

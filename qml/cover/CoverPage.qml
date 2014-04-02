@@ -19,10 +19,9 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "../search.js" as Searchjs
-import "../time.js" as Timejs
 
 import searcher 1.0
+import timehelp 1.0
 
 CoverBackground {
     id: coverpage
@@ -54,12 +53,12 @@ CoverBackground {
         var time = searcher.gettime()
         var date = searcher.getdate()
         if (now) {
-            time = Timejs.getcurrenttime();
-            date = Timejs.getcurrentdate();
+            time = timehelp.getcurrenttimestr();
+            date = timehelp.getcurrentdatestr();
         }
         searcher.search(searcher.getfromid(),searcher.gettoid(),date,time)
-        searcher.setdateofsearch(Timejs.getcurrentdate()) //TODO: Move into c++
-        searcher.settimeofsearch(Timejs.getcurrenttime())
+        searcher.setdateofsearch(timehelp.getcurrentdatestr())
+        searcher.settimeofsearch(timehelp.getcurrenttimestr())
         coverstatus = "searching"
     }
 
@@ -93,6 +92,14 @@ CoverBackground {
                 placeholdertext.text = mainWindow.strappname + "\n" + mainWindow.strcovererr;
             }
         }
+        //TODO: TEST
+        onSearching: {
+            console.log("CoverPage, onSearchnig")
+            listmodel.clear()
+        }
+    }
+    Timehelp {
+        id: timehelp
     }
 
 
@@ -186,21 +193,21 @@ CoverBackground {
                         height: triplist.height / 6
                         Label {
                             id: deptimelabel
-                            text: deptime + Timejs.delay(deptime, deprttime, depdate, deprtdate)
+                            text: deptime + timehelp.delay(depdate, deptime, deprtdate, deprttime)
                             width: coverpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: Theme.fontSizeTiny
                         }
                         Label {
                             id: arivtimelabel
-                            text: arivtime + Timejs.delay(arivtime, arivrttime, arivdate, arivrtdate)
+                            text: arivtime + timehelp.delay(arivdate, arivtime, arivrtdate, arivrttime)
                             width: coverpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: Theme.fontSizeTiny
                         }
                         Label {
                             id: durlabel
-                            text: Timejs.duration(deptime, arivtime, depdate, arivdate)
+                            text: timehelp.duration(deprtdate, deprttime, arivrtdate, arivrttime)
                             width: coverpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: Theme.fontSizeTiny

@@ -13,6 +13,7 @@ bool Search::search() {
         qDebug() << "mparser NULL";
         return false;
     }
+    emit searching();
     return mparser->getXML(mparser->fromid,mparser->toid,mparser->date,mparser->time);
 }
 
@@ -23,9 +24,9 @@ bool Search::search(QString fromid, QString toid, QString date, QString time) {
     }
     mparser->fromid = fromid;
     mparser->toid = toid;
-    mparser->date = date;
+    mparser->date = Time::convertdate(date);
     mparser->time = time;
-    return mparser->getXML(fromid,toid,Time::convertdate(date),time);
+    return search();
 }
 bool Search::search(QString fromid, QString toid, QString date, QString hour, QString minute) {
     if (mparser == NULL) {
@@ -36,9 +37,17 @@ bool Search::search(QString fromid, QString toid, QString date, QString hour, QS
     mparser->toid = toid;
     mparser->date = date;
     mparser->time = Time::converttime(hour,minute);
-    return mparser->getXML(fromid,toid,Time::convertdate(date),Time::converttime(hour, minute));
+    return search();
 }
 
+//TODO: TEST
+void Search::cleartrips() {
+    if (mparser == NULL) {
+        qDebug() << "mparser NULL";
+        return;
+    }
+    mparser->cleartrips();
+}
 
 QObject * Search::getTrip(int index) {
     if (mparser == NULL) {
