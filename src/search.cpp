@@ -1,13 +1,42 @@
 #include "search.h"
 
-#include "time.h"
-
 Search::Search(QObject *parent) :
     QObject(parent)
 {
     mparser = Parser::getinstance();
     connect(mparser,SIGNAL(ready(QString)),this,SLOT(parseready(QString)));
+    connect(mparser,SIGNAL(stopsparsed(QString)),this,SLOT(stopsreceived(QString)));
 }
+
+QString Search::getstop(int i) {
+    if (mparser == NULL) {
+        qDebug() << "mparser NULL";
+        return NULL;
+    }
+    return mparser->getstop(i);
+}
+
+int Search::getnumstops() {
+    if (mparser == NULL) {
+        qDebug() << "mparser NULL";
+        return -1;
+    }
+    return mparser->numstops();
+}
+
+bool Search::getstops(QString str) {
+    if (mparser == NULL) {
+        qDebug() << "mparser NULL";
+        return false;
+    }
+    return mparser->getstops(str);
+}
+
+void Search::stopsreceived(QString err) {
+    emit stopsready(err);
+}
+
+
 bool Search::search() {
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
@@ -24,7 +53,7 @@ bool Search::search(QString fromid, QString toid, QString date, QString time) {
     }
     mparser->fromid = fromid;
     mparser->toid = toid;
-    mparser->date = Time::convertdate(date);
+    mparser->date = Timehelper::convertdate(date);
     mparser->time = time;
     return search();
 }
@@ -36,7 +65,7 @@ bool Search::search(QString fromid, QString toid, QString date, QString hour, QS
     mparser->fromid = fromid;
     mparser->toid = toid;
     mparser->date = date;
-    mparser->time = Time::converttime(hour,minute);
+    mparser->time = Timehelper::converttime(hour,minute);
     return search();
 }
 

@@ -2,12 +2,15 @@
 
 Parser *Parser::mparser = 0;
 QList<Trip *> *Parser::trips = new QList<Trip *>();
+QList<QString> *Parser::stops = new QList<QString>();
 
 Parser::Parser(QObject *parent) :
     QObject(parent)
 {
     address = (QString) "http://api.vasttrafik.se/bin/rest.exe/" +
             "v1/trip?authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml";
+    nameaddress = (QString) "http://api.vasttrafik.se/bin/rest.exe/v1/location.name?" +
+            "authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml&input=";
 }
 
 //QObject *Parser::qobject_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
@@ -28,6 +31,17 @@ Parser *Parser::getinstance() {
 
 Parser::~Parser() {
     qDebug() << "Deleting parser!";
+    cleartrips();
+    delete trips;
+    delete stops;
+}
+
+QString Parser::getstop(int i) {
+    if ((stops == NULL) || i >= stops->length()) {
+        qDebug() << "Stops NULL, or index out of bounds";
+        return NULL;
+    }
+    return stops->at(i);
 }
 
 int Parser::numtrips() {
@@ -84,9 +98,61 @@ void Parser::cleartrips() {
     trips->clear();
 }
 
+bool Parser::getstops(QString str) {
+    qDebug() << "SEARCHING STOPS::" << str;
+    QNetworkAccessManager * manager = new QNetworkAccessManager(this);  //TODO: Kolla minnet (new)
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(stopsreply(QNetworkReply*)) );
+    manager->get(QNetworkRequest(QUrl(nameaddress + str)));
+    qDebug()<<"NAMEADDRESS::"<<(nameaddress+str);
+    return true;
+}
+
+void Parser::stopsreply(QNetworkReply *reply) {
+    vasttrafikstops(reply);
+}
+
+void Parser::vasttrafikstops(QNetworkReply *reply) {
+    qDebug() << "Stops";
+    QXmlStreamReader xml;
+    xml.setDevice(reply);
+    QXmlStreamAttributes attr;
+    stops->clear();
+    xml.readNextStartElement(); //Locationlist
+    QString error = xml.attributes().value("error").toString();
+    if (error != "") {
+        qDebug() << "Error!!!" << xml.attributes().value("errorText").toString();
+        emit stopsparsed(xml.attributes().value("errorText").toString());
+        return;
+    }
+    int count = 0;
+    xml.readNextStartElement(); //First stop element
+    while(!xml.isEndElement() && count < 10) {
+        qDebug() << xml.name() << xml.attributes().value("name");
+
+        QString type = xml.name().toString();
+        if (type == "StopLocation") {
+            count++;
+            QString name = xml.attributes().value("name").toString();
+            QString id = xml.attributes().value("id").toString();
+            stops->append(name + "#" + id);
+        }
+        qDebug() << xml.name() << xml.attributes().value("name");
+        xml.skipCurrentElement();
+        qDebug() << xml.name() << xml.isEndElement();
+        xml.readNextStartElement();
+        qDebug() << xml.name() << xml.isEndElement();
+    }
+    emit stopsparsed("");
+}
+
+int Parser::numstops() {
+    return stops->length();
+}
+
 bool Parser::getXML(QString fromid, QString toid,  QString date, QString time) {
     qDebug() << "SEARCHING::" << date << time << fromid << toid;
-    QNetworkAccessManager * manager = new QNetworkAccessManager(this);
+    QNetworkAccessManager * manager = new QNetworkAccessManager(this);   //TODO: Kolla minnet (new)
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(XMLready(QNetworkReply*)) );
     manager->get(QNetworkRequest(QUrl(address +
@@ -98,7 +164,7 @@ bool Parser::getXML(QString fromid, QString toid,  QString date, QString time) {
     return true;
 }
 
-void Parser::XMLready( QNetworkReply * reply){
+void Parser::XMLready( QNetworkReply *reply){
     //TODO: TEST this
     if (reply->error() != QNetworkReply::NoError) {
         qDebug() << "An error occured";

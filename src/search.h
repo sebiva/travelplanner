@@ -17,6 +17,7 @@
 #include "trip.h"
 #include "leg.h"
 #include "parser.h"
+#include "timehelper.h"
 
 #include <QQmlEngine>
 #include <QJSEngine>
@@ -34,6 +35,8 @@ class Search : public QObject
 public:
     explicit Search(QObject *parent = 0);
 
+    Q_INVOKABLE QString getstop(int i);
+    Q_INVOKABLE bool getstops(QString str);
     Q_INVOKABLE bool search();
     Q_INVOKABLE bool search(QString fromid, QString toid, QString date, QString time);
     Q_INVOKABLE bool search(QString fromid, QString toid, QString date, QString hour, QString minute);
@@ -41,6 +44,7 @@ public:
     Q_INVOKABLE QObject * getTrip(int index);
     Q_INVOKABLE QObject * getLeg(int tripindex, int legindex);
     Q_INVOKABLE int getnumlegs(int tripindex);
+    Q_INVOKABLE int getnumstops();
 
     Q_INVOKABLE void cleartrips();
 
@@ -96,9 +100,11 @@ public:
 signals:
     void ready(QString err);
     void searching();
+    void stopsready(QString err);
 
 public slots:
     void parseready(QString err);
+    void stopsreceived(QString err);
 
 private:
     Parser * mparser;

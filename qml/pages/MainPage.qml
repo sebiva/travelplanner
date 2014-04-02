@@ -65,6 +65,16 @@ Dialog {
         onSearching: {
             console.log("MainPage, onSearchnig")
         }
+        onStopsready: {
+            console.log("Mainpage, stops ready")
+            searchmodel.clear()
+            var i = 0
+            while(i < searcher.getnumstops()) {
+                var data = searcher.getstop(i).split("#")
+                searchmodel.append({name: data[0], nmbr: data[1] } )
+                i++
+            }
+        }
     }
     Timehelp {
         id: timehelp
@@ -197,7 +207,8 @@ Dialog {
                 }
 
                 function getsuggestions(text) {
-                    Searchjs.sendnamerequest(text,searchlist.filllist);
+                    //Searchjs.sendnamerequest(text,searchlist.filllist);
+                    searcher.getstops(text)
                 }
 
                 function textchang(from) {
