@@ -2,6 +2,7 @@
 #define LEG_H
 
 #include <QObject>
+#include "timehelper.h"
 
 class Leg : public QObject
 {
@@ -10,6 +11,8 @@ public:
     explicit Leg(QObject *parent = 0);
     Leg(Leg *, QObject *parent = 0);
     ~Leg();
+    void calculatetimes();
+
     QString mline;
     QString mdir;
     QString mfgcolour;
@@ -28,6 +31,10 @@ public:
     QString marivrttime;
     QString marivdate;
     QString marivrtdate;
+    QString mdepdelay;
+    QString marivdelay;
+
+    QString merrstatus;
 
     Q_PROPERTY (QString line READ line)
     Q_PROPERTY (QString dir READ dir)
@@ -47,6 +54,10 @@ public:
     Q_PROPERTY (QString arivrttime READ arivrttime)
     Q_PROPERTY (QString arivdate READ arivdate)
     Q_PROPERTY (QString arivrtdate READ arivrtdate)
+    Q_PROPERTY (QString depdelay READ depdelay)
+    Q_PROPERTY (QString arivdelay READ arivdelay)
+
+    Q_PROPERTY (QString errstatus READ errstatus)
 
     QString line() {return mline;}
     QString dir() {return mdir;}
@@ -66,6 +77,10 @@ public:
     QString arivrttime() {return marivrttime;}
     QString arivdate() {return marivdate;}
     QString arivrtdate() {return marivrtdate;}
+    QString depdelay() {return mdepdelay;}
+    QString arivdelay() {return marivdelay;}
+
+    QString errstatus() {return merrstatus;}
 
 
 signals:

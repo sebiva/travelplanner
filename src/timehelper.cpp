@@ -41,15 +41,15 @@ QString Timehelper::duration(QString depdate, QString deptime, QString arivdate,
 
     }
     qint64 diff2 = minus ? (dep - ariv) : (ariv - dep);
-    qDebug() << diff2;
+    //qDebug() << diff2;
     epoch = epoch.addMSecs(diff2);
 
     int days = epoch.toString("d").toInt() - 1;
     int hour = epoch.toString("h").toInt();
     int min = epoch.toString("m").toInt();
 
-    qDebug() << minus << days << "d" << hour << "h" << min << "min";
-    qDebug() << epoch.toString();
+    //qDebug() << minus << days << "d" << hour << "h" << min << "min";
+    //qDebug() << epoch.toString();
 
     QString answer = "";
 

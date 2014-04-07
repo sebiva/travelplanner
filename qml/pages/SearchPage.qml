@@ -219,7 +219,9 @@ Page {
                                         arivrttime: trip.getarivrttime(),
                                         deprtdate: trip.getdeprtdate(),
                                         arivrtdate: trip.getarivrtdate(),
-                                        exchready: true})
+                                        depdelay: trip.getdepdelay(),
+                                        arivdelay: trip.getarivdelay(),
+                                        duration: trip.getduration()  })
                     tripindex++
                 }
             }
@@ -257,7 +259,6 @@ Page {
                 highlighted: mouse.pressed || (state === "big")
                 state: listView.allstates[index] === undefined ? "small" : listView.allstates[index]
 
-                property bool exchready: false
                 property int addanimdur: 200
                 property int tripindex: index
 
@@ -272,7 +273,7 @@ Page {
                             id: deptimelabel
                             property string nextday : timehelp.duration(timehelp.getcurrentdatestr(), "00:00", depdate, "00:00")
                             property int daypos : nextday.indexOf("d")
-                            text: deptime + timehelp.delay(depdate, deptime, deprtdate, deprttime) + (daypos > 0 ? " [+" + nextday + "]" : "")
+                            text: deptime + depdelay + (daypos > 0 ? " [+" + nextday + "]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
@@ -281,14 +282,14 @@ Page {
                             id: arivtimelabel
                             property string nextday : timehelp.duration(timehelp.getcurrentdatestr(), "00:00", arivdate, "00:00")
                             property int daypos : nextday.indexOf("d")
-                            text: arivtime + timehelp.delay(arivdate, arivtime, arivrtdate, arivrttime) + (daypos > 0 ? " [+" + nextday + "]" : "")
+                            text: arivtime + arivdelay + (daypos > 0 ? " [+" + nextday + "]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                         Label {
                             id: durlabel
-                            text: timehelp.duration(deprtdate, deprttime, arivrtdate, arivrttime)
+                            text: duration
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
@@ -317,7 +318,8 @@ Page {
                                                      fromname: leg.from.split(",")[0], fromtrack: leg.fromtrack,
                                                      destname: leg.to.split(",")[0], totrack: leg.totrack,
                                                      deptime: leg.deptime, depdate: leg.depdate, deprttime: leg.deprttime, deprtdate: leg.deprtdate,
-                                                     arivtime: leg.arivtime, arivdate: leg.arivdate, arivrttime: leg.arivrttime, arivrtdate: leg.arivrtdate})
+                                                     arivtime: leg.arivtime, arivdate: leg.arivdate, arivrttime: leg.arivrttime, arivrtdate: leg.arivrtdate,
+                                                     depdelay: leg.depdelay, arivdelay: leg.arivdelay})
                                 legnr++;
                             }
 
@@ -392,7 +394,7 @@ Page {
                                         }
                                         Label {
                                             id: legdeprttime
-                                            text: timehelp.delay(depdate, deptime, deprtdate, deprttime)
+                                            text: depdelay
                                             visible: iconlist.textvis
                                             horizontalAlignment: Text.AlignRight
                                             font.pixelSize: (Theme.fontSizeTiny + Theme.fontSizeSmall) /2
@@ -431,7 +433,7 @@ Page {
                                         }
                                         Label {
                                             id: legarivrttime
-                                            text: timehelp.delay(arivdate, arivtime, arivrtdate, arivrttime)
+                                            text: arivdelay
                                             visible: iconlist.textvis
                                             color: Theme.primaryColor
                                             horizontalAlignment: Text.AlignRight

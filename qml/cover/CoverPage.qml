@@ -74,14 +74,16 @@ CoverBackground {
                 var trip
                 while((trip = searcher.getTrip(tripindex))!==null) {
                     listmodel.append({  deptime: trip.getdeptime(),
-                                         arivtime: trip.getarivtime(),
-                                         depdate: trip.getdepdate(),
-                                         arivdate: trip.getarivdate(),
-                                         deprttime: trip.getdeprttime(),
-                                         arivrttime: trip.getarivrttime(),
-                                         deprtdate: trip.getdeprtdate(),
-                                         arivrtdate: trip.getarivrtdate(),
-                                         exchready: true})
+                                        arivtime: trip.getarivtime(),
+                                        depdate: trip.getdepdate(),
+                                        arivdate: trip.getarivdate(),
+                                        deprttime: trip.getdeprttime(),
+                                        arivrttime: trip.getarivrttime(),
+                                        deprtdate: trip.getdeprtdate(),
+                                        arivrtdate: trip.getarivrtdate(),
+                                        depdelay: trip.getdepdelay(),
+                                        arivdelay: trip.getarivdelay(),
+                                        duration: trip.getduration()  })
                     tripindex++
                 }
                 from.text = searcher.getfrom()
@@ -145,6 +147,7 @@ CoverBackground {
             function doneloading(msg) {
                 searching = false;
                 if(msg === 0) {
+                    error = false
                 } else {
                     error = true;
                     placeholdertext.text = mainWindow.errmsg;
@@ -193,21 +196,21 @@ CoverBackground {
                         height: triplist.height / 6
                         Label {
                             id: deptimelabel
-                            text: deptime + timehelp.delay(depdate, deptime, deprtdate, deprttime)
+                            text: deptime + depdelay
                             width: coverpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: Theme.fontSizeTiny
                         }
                         Label {
                             id: arivtimelabel
-                            text: arivtime + timehelp.delay(arivdate, arivtime, arivrtdate, arivrttime)
+                            text: arivtime + arivdelay
                             width: coverpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: Theme.fontSizeTiny
                         }
                         Label {
                             id: durlabel
-                            text: timehelp.duration(deprtdate, deprttime, arivrtdate, arivrttime)
+                            text: duration
                             width: coverpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: Theme.fontSizeTiny

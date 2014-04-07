@@ -70,7 +70,7 @@ public slots:
 
 private:
     void vasttrafikstops(QNetworkReply *reply);
-    void parsevasttrafikreply(QNetworkReply * reply);
+    void parsevasttrafikreply(QNetworkReply *reply);
     QString address;
     QString nameaddress;
     static Parser *mparser;

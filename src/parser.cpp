@@ -89,7 +89,6 @@ Leg * Parser::getLeg(int tripindex, int legindex) {
     return getTrip(tripindex)->leglist->at(legindex);
 }
 
-//TODO: TEST
 void Parser::cleartrips() {
     for (int i = 0; i < trips->length(); i++) {
         delete trips->at(i);
@@ -100,7 +99,7 @@ void Parser::cleartrips() {
 
 bool Parser::getstops(QString str) {
     qDebug() << "SEARCHING STOPS::" << str;
-    QNetworkAccessManager * manager = new QNetworkAccessManager(this);  //TODO: Kolla minnet (new)
+    QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(stopsreply(QNetworkReply*)) );
     manager->get(QNetworkRequest(QUrl(nameaddress + str)));
@@ -109,7 +108,13 @@ bool Parser::getstops(QString str) {
 }
 
 void Parser::stopsreply(QNetworkReply *reply) {
+    if (reply->error() != QNetworkReply::NoError) {
+        qDebug() << "No connection in stoplist search";
+        sender()->deleteLater();
+        return;
+    }
     vasttrafikstops(reply);
+    sender()->deleteLater();
 }
 
 void Parser::vasttrafikstops(QNetworkReply *reply) {
@@ -152,7 +157,7 @@ int Parser::numstops() {
 
 bool Parser::getXML(QString fromid, QString toid,  QString date, QString time) {
     qDebug() << "SEARCHING::" << date << time << fromid << toid;
-    QNetworkAccessManager * manager = new QNetworkAccessManager(this);   //TODO: Kolla minnet (new)
+    QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(XMLready(QNetworkReply*)) );
     manager->get(QNetworkRequest(QUrl(address +
@@ -165,14 +170,15 @@ bool Parser::getXML(QString fromid, QString toid,  QString date, QString time) {
 }
 
 void Parser::XMLready( QNetworkReply *reply){
-    //TODO: TEST this
     if (reply->error() != QNetworkReply::NoError) {
         qDebug() << "An error occured";
         emit ready("No connection");
+        sender()->deleteLater();
         return;
     }
 
     parsevasttrafikreply(reply);
+    sender()->deleteLater();
 }
 
 void Parser::parsevasttrafikreply(QNetworkReply *reply) {
@@ -193,10 +199,19 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
     while(!xml.isEndElement()) {
         Trip *trip = new Trip();
         trip->setParent(this);
+        if (xml.attributes().value("valid") == "false") {
+            qDebug() << "Invalid trip!";
+            trip->valid = false;
+        } else {
+            trip->valid = true;
+        }
         //Keep track of first leg for each trip
         bool first = true;
         xml.readNextStartElement();//Leg
         Leg *leg = NULL;
+        bool canceled = false;
+        bool risktomiss = false;
+
         while(!xml.isEndElement()) {
             leg = new Leg();
             leg->setParent(trip);
@@ -224,12 +239,25 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
                 leg->mline = "train";
                 leg->mfgcolour = "#000000";
                 leg->mbgcolour = "#ffffff";
-            } else if (leg->mline.split(" ").at(1) == "EXPRESS") {
+            } else if (leg->mline.split(" ").length() > 1 && leg->mline.split(" ").at(0) == "STENUNGSUND") {
+                leg->mline = "sten.";
+            } else if (leg->mline.split(" ").length() > 1 && leg->mline.split(" ").at(1) == "EXPRESS") {
                 leg->mline = (leg->mline.split(" ").at(0)).toLower();
             } else if (leg->mline.split(" ").at(1) == "ÄLVSNABBEN" || leg->mline.split(" ").at(1) == "ÄLVSNABBARE" ) {
                 leg->mline = "älvs.";
             } else {
                 leg->mline = sname;
+            }
+
+            //TODO: Test
+            if(attr.value("canceled").toString() != "") {
+                qDebug() << "Canceled";
+                leg->merrstatus = "Canceled";
+                canceled = true;
+            } else if (attr.value("reachable").toString() != "") {
+                qDebug() << "Risk to miss";
+                leg->merrstatus = "Risk to miss";
+                risktomiss = true;
             }
 
             //Read the origin info
@@ -249,6 +277,7 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
                 if(leg->mdeprttime == "") {
                     leg->mdeprttime = leg->mdeptime;
                 }
+
                 if(first) {
                     first = false;
                     trip->depdate = leg->mdepdate;
@@ -258,9 +287,7 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
                 }
             }
 
-
             //qDebug() << "Leginfo: " << xml.name() << xml.attributes().value("name");
-
 
             //Read the destination info
             xml.skipCurrentElement();
@@ -319,6 +346,7 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
             xml.readNextStartElement();
             //qDebug() << "Journey3?: " << xml.name() << xml.attributes().value("name");
 
+            leg->calculatetimes();
             trip->addleg(leg);
         }
 
@@ -331,8 +359,30 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
 
         xml.readNextStartElement();
         //qDebug() << "afterlegs2" << xml.name();
-        Trip *tripadd = trip;
-        trips->append(tripadd);
+
+
+        if (!trip->valid) {
+            qDebug() << "Invalid trip";
+            if (canceled) {
+                qDebug() << "Setting canceled";
+                trip->deptime = "Canceled"; //TODO: Translation
+                trip->deprttime = "Canceled";
+                trip->arivtime = "";
+                trip->arivrttime = "";
+            } else if (risktomiss) {
+                qDebug() << "Setting risk";
+                trip->deptime = "Risk to miss"; //TODO: Translation
+                trip->deprttime = "Risk to miss";
+                trip->arivtime = "";
+                trip->arivrttime = "";
+            }
+
+
+
+        }
+
+        trip->calculatetimes();
+        trips->append(trip);
     }
     qDebug() << "Parsing done, no errors!";
     emit ready("");

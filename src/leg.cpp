@@ -15,3 +15,8 @@ Leg::Leg(Leg *, QObject *parent) :
 Leg::~Leg() {
     qDebug() << "Deleting leg!";
 }
+
+void Leg::calculatetimes() {
+    mdepdelay = Timehelper::delay(mdepdate,mdeptime,mdeprtdate,mdeprttime);
+    marivdelay = Timehelper::delay(marivdate,marivtime,marivrtdate,marivrttime);
+}

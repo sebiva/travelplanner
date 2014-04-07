@@ -69,7 +69,6 @@ bool Search::search(QString fromid, QString toid, QString date, QString hour, QS
     return search();
 }
 
-//TODO: TEST
 void Search::cleartrips() {
     if (mparser == NULL) {
         qDebug() << "mparser NULL";

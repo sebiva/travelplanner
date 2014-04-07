@@ -3,6 +3,7 @@
 #include "leg.h"
 #include <QList>
 #include <QDebug>
+#include "timehelper.h"
 
 #define TRIP_H
 
@@ -16,6 +17,7 @@ public:
     explicit Trip(QObject *parent = 0);
     Trip(const Trip &, QObject *parent = 0);
     ~Trip();
+    void calculatetimes();
 
     void addleg(Leg *leg);
     Leg *getLeg(int index);
@@ -30,7 +32,9 @@ public:
     Q_INVOKABLE QString getarivdate() {return arivdate;}
     Q_INVOKABLE QString getarivrttime() {return arivrttime;}
     Q_INVOKABLE QString getarivrtdate() {return arivrtdate;}
-
+    Q_INVOKABLE QString getdepdelay() {return depdelay;}
+    Q_INVOKABLE QString getarivdelay() {return arivdelay;}
+    Q_INVOKABLE QString getduration() {return duration;}
 
     QString deptime;
     QString depdate;
@@ -40,6 +44,12 @@ public:
     QString arivdate;
     QString arivrttime;
     QString arivrtdate;
+
+    QString depdelay;
+    QString arivdelay;
+    QString duration;
+    bool valid;
+    bool passed;
 signals:
 
 public slots:
