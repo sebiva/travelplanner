@@ -15,7 +15,9 @@
 #include "trip.h"
 #include "leg.h"
 
-
+#include <QDateTime>
+#include <QDate>
+#include <QTime>
 
 #include <QQmlEngine>
 #include <QJSEngine>
@@ -37,7 +39,7 @@ public:
     //static QObject *qobject_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine);
     static Parser *getinstance();
     ~Parser();
-    QString getstop(int i);
+    static QString getstop(int i);
     bool getstops(QString str);
     int numstops();
     bool getXML(QString fromid, QString toid, QString date, QString time);
@@ -48,6 +50,8 @@ public:
     int numtrips();
     int numlegs(int tripindex);
     void cleartrips();
+
+    QString removespecials(QString str);
 
     QString fromid;
     QString toid;

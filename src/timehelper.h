@@ -22,6 +22,8 @@ public:
     Q_INVOKABLE static QString getcurrenttimestr();
     Q_INVOKABLE static QDate getcurrentdate();
     Q_INVOKABLE static QTime getcurrenttime();
+    Q_INVOKABLE static qint64 daysfromtoday(QString date);
+    Q_INVOKABLE static bool beforenow(QString date, QString time);
 signals:
 
 public slots:

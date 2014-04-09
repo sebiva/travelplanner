@@ -97,4 +97,14 @@ QDate Timehelper::getcurrentdate() {
 QTime Timehelper::getcurrenttime() {
     return QTime::currentTime();
 }
+qint64 Timehelper::daysfromtoday(QString date) {
+    QDate qdate(date.mid(0,4).toInt(),date.mid(5,2).toInt(),date.mid(8,2).toInt());
+    qDebug() << qdate << QDate::currentDate().daysTo(qdate);
+    return QDate::currentDate().daysTo(qdate);
+}
 
+bool Timehelper::beforenow(QString date, QString time) {
+    QDate qdate(date.mid(0,4).toInt(),date.mid(5,2).toInt(),date.mid(8,2).toInt());
+    QTime qtime(time.mid(0,2).toInt(),time.mid(3,2).toInt());
+    return QDateTime::currentDateTime().secsTo(QDateTime(qdate,qtime)) < 0;
+}

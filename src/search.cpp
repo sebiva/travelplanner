@@ -29,7 +29,7 @@ bool Search::getstops(QString str) {
         qDebug() << "mparser NULL";
         return false;
     }
-    return mparser->getstops(str);
+    return mparser->getstops(str.toHtmlEscaped());
 }
 
 void Search::stopsreceived(QString err) {

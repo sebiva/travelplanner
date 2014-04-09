@@ -30,5 +30,9 @@ void Trip::print() {
 void Trip::calculatetimes() {
     depdelay = Timehelper::delay(depdate, deptime, deprtdate, deprttime);
     arivdelay = Timehelper::delay(arivdate,arivtime,arivrtdate,arivrttime);
-    duration = Timehelper::duration(deprtdate,deprttime,arivrtdate,arivrttime);
+    if (!valid || passed) {
+        duration = errmsg;
+    } else {
+        duration = Timehelper::duration(deprtdate,deprttime,arivrtdate,arivrttime);
+    }
 }

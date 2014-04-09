@@ -194,6 +194,7 @@ CoverBackground {
                         Label {
                             id: deptimelabel
                             text: deptime + depdelay
+                            truncationMode: TruncationMode.Fade
                             width: coverpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: Theme.fontSizeTiny
@@ -201,6 +202,7 @@ CoverBackground {
                         Label {
                             id: arivtimelabel
                             text: arivtime + arivdelay
+                            truncationMode: TruncationMode.Fade
                             width: coverpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: Theme.fontSizeTiny
@@ -208,6 +210,7 @@ CoverBackground {
                         Label {
                             id: durlabel
                             text: duration
+                            truncationMode: TruncationMode.Fade
                             width: coverpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: Theme.fontSizeTiny

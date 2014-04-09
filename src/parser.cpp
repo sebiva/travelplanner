@@ -98,6 +98,7 @@ void Parser::cleartrips() {
 }
 
 bool Parser::getstops(QString str) {
+    str = removespecials(str);
     qDebug() << "SEARCHING STOPS::" << str;
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
@@ -133,7 +134,7 @@ void Parser::vasttrafikstops(QNetworkReply *reply) {
     int count = 0;
     xml.readNextStartElement(); //First stop element
     while(!xml.isEndElement() && count < 10) {
-        qDebug() << xml.name() << xml.attributes().value("name");
+        //qDebug() << xml.name() << xml.attributes().value("name");
 
         QString type = xml.name().toString();
         if (type == "StopLocation") {
@@ -142,11 +143,11 @@ void Parser::vasttrafikstops(QNetworkReply *reply) {
             QString id = xml.attributes().value("id").toString();
             stops->append(name + "#" + id);
         }
-        qDebug() << xml.name() << xml.attributes().value("name");
+        //qDebug() << xml.name() << xml.attributes().value("name");
         xml.skipCurrentElement();
-        qDebug() << xml.name() << xml.isEndElement();
+        //qDebug() << xml.name() << xml.isEndElement();
         xml.readNextStartElement();
-        qDebug() << xml.name() << xml.isEndElement();
+        //qDebug() << xml.name() << xml.isEndElement();
     }
     emit stopsparsed("");
 }
@@ -358,31 +359,45 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
         xml.readNextStartElement();
         //qDebug() << "afterlegs2" << xml.name();
 
+        if (Timehelper::beforenow(trip->deprtdate, trip->deprttime)) {
+            trip->passed = true;
+            trip->errmsg = tr("Departed");
+        } else {
+            trip->passed = false;
+        }
 
         if (!trip->valid) {
             qDebug() << "Invalid trip";
             if (canceled) {
                 qDebug() << "Setting canceled";
-                trip->deptime = tr("Canceled");
-                trip->deprttime = tr("Canceled");
-                trip->arivtime = "";
-                trip->arivrttime = "";
+                trip->errmsg = tr("Canceled");
             } else if (risktomiss) {
                 qDebug() << "Setting risk";
-                trip->deptime = tr("Risk to miss");
-                trip->deprttime = tr("Risk to miss");
-                trip->arivtime = "";
-                trip->arivrttime = "";
+                trip->errmsg = tr("Risk to miss");
             }
-
-
-
         }
-
         trip->calculatetimes();
+
         trips->append(trip);
     }
     qDebug() << "Parsing done, no errors!";
     emit ready("");
+}
+
+QString Parser::removespecials(QString str) {
+    QString res = str;
+
+    for(int i = 0; i < res.length();i++) {
+        qDebug() << res;
+        QString letter = res.mid(i,1);
+        if (letter=="å" || letter=="Å") {
+            res = res.left(i) + "%C5" + res.right(res.length()-i-1);
+        } else if (letter=="ä" || letter=="Ä") {
+            res = res.left(i) + "%C4" + res.right(res.length()-i-1);
+        } else if (letter=="ö" || letter=="Ö") {
+            res = res.left(i) + "%D6" + res.right(res.length()-i-1);
+        }
+    }
+    return res;
 }
 

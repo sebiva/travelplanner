@@ -35,6 +35,7 @@ public:
     Q_INVOKABLE QString getdepdelay() {return depdelay;}
     Q_INVOKABLE QString getarivdelay() {return arivdelay;}
     Q_INVOKABLE QString getduration() {return duration;}
+    Q_INVOKABLE QString geterrmsg() {return errmsg;}
 
     QString deptime;
     QString depdate;
@@ -49,6 +50,7 @@ public:
     QString arivdelay;
     QString duration;
     bool valid;
+    QString errmsg;
     bool passed;
 signals:
 

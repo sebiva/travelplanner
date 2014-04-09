@@ -263,7 +263,7 @@ Page {
                 property int tripindex: index
 
                 Component.onCompleted: {
-                    iconlist.setupicons()//Searchjs.addicons(iconmodel, index)
+                    iconlist.setupicons()
                 }
                 Column {
                     width: parent.width
@@ -271,18 +271,18 @@ Page {
                         height: searchpage.height / 10
                         Label {
                             id: deptimelabel
-                            property string nextday : timehelp.duration(timehelp.getcurrentdatestr(), "00:00", depdate, "00:00")
-                            property int daypos : nextday.indexOf("d")
-                            text: deptime + depdelay + (daypos > 0 ? " [+" + nextday + "]" : "")
+                            property int numdays : timehelp.daysfromtoday(depdate,deptime)
+                            property string nextday : numdays > 0 ? "+" + numdays : numdays
+                            text: deptime + depdelay + (numdays != 0 ? " [" + nextday + "d]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                         Label {
                             id: arivtimelabel
-                            property string nextday : timehelp.duration(timehelp.getcurrentdatestr(), "00:00", arivdate, "00:00")
-                            property int daypos : nextday.indexOf("d")
-                            text: arivtime + arivdelay + (daypos > 0 ? " [+" + nextday + "]" : "")
+                            property int numdays : timehelp.daysfromtoday(arivdate,arivtime)
+                            property string nextday : numdays > 0 ? "+" + numdays : numdays
+                            text: arivtime + arivdelay + (numdays != 0 ? " [" + nextday + "d]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor

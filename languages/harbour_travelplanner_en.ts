@@ -90,30 +90,37 @@
 <context>
     <name>Parser</name>
     <message>
-        <location filename="../src/parser.cpp" line="228"/>
-        <location filename="../src/parser.cpp" line="318"/>
+        <location filename="../src/parser.cpp" line="229"/>
+        <location filename="../src/parser.cpp" line="319"/>
         <source>walk</source>
         <translation>walk</translation>
     </message>
     <message>
-        <location filename="../src/parser.cpp" line="231"/>
+        <location filename="../src/parser.cpp" line="232"/>
         <source>Walk</source>
         <translation>Walk</translation>
     </message>
     <message>
-        <location filename="../src/parser.cpp" line="240"/>
+        <location filename="../src/parser.cpp" line="241"/>
         <source>train</source>
         <translation>train</translation>
     </message>
     <message>
-        <location filename="../src/parser.cpp" line="366"/>
-        <location filename="../src/parser.cpp" line="367"/>
+        <location filename="../src/parser.cpp" line="373"/>
+        <source>Departed</source>
+        <translation>Departed</translation>
+    </message>
+    <message>
+        <location filename="../src/parser.cpp" line="382"/>
         <source>Canceled</source>
         <translation>Canceled</translation>
     </message>
     <message>
-        <location filename="../src/parser.cpp" line="372"/>
-        <location filename="../src/parser.cpp" line="373"/>
+        <source>May miss</source>
+        <translation type="obsolete">May miss</translation>
+    </message>
+    <message>
+        <location filename="../src/parser.cpp" line="385"/>
         <source>Risk to miss</source>
         <translation>Risk to miss</translation>
     </message>
@@ -124,7 +131,7 @@
         <location filename="../qml/pages/SearchPage.qml" line="52"/>
         <location filename="../qml/pages/SearchPage.qml" line="103"/>
         <location filename="../qml/pages/SearchPage.qml" line="144"/>
-        <location filename="../qml/pages/SearchPage.qml" line="371"/>
+        <location filename="../qml/pages/SearchPage.qml" line="372"/>
         <source>From</source>
         <translation>From</translation>
     </message>
@@ -132,15 +139,19 @@
         <location filename="../qml/pages/SearchPage.qml" line="53"/>
         <location filename="../qml/pages/SearchPage.qml" line="104"/>
         <location filename="../qml/pages/SearchPage.qml" line="162"/>
-        <location filename="../qml/pages/SearchPage.qml" line="409"/>
+        <location filename="../qml/pages/SearchPage.qml" line="410"/>
         <source>To</source>
         <translation>To</translation>
     </message>
     <message>
         <location filename="../qml/pages/SearchPage.qml" line="96"/>
+        <source>Search failed:</source>
+        <translation>Search failed:</translation>
+    </message>
+    <message>
         <source>Search failed:
 </source>
-        <translation type="unfinished">Search failed:</translation>
+        <translation type="obsolete">Search failed:</translation>
     </message>
     <message>
         <location filename="../qml/pages/SearchPage.qml" line="124"/>
