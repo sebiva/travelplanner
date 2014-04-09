@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>languages/harbour_travelplanner_en.qm</file>
+        <file>languages/harbour_travelplanner_sv.qm</file>
+    </qresource>
+</RCC>

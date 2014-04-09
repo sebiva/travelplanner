@@ -20,6 +20,10 @@
 #include <QtQuick>
 #endif
 
+#include <QTranslator>
+#include <QTextCodec>
+#include <QLocale>
+
 #include <QtQml/QQmlEngine>
 #include <qqml.h>
 #include "src/parser.h"
@@ -34,6 +38,32 @@ int main(int argc, char *argv[])
     qmlRegisterType<Search>("searcher", 1, 0, "Search");
     qmlRegisterType<Timehelper>("timehelp", 1,0, "Timehelp");
     //qmlRegisterSingletonType<Parser>("cppParser", 1, 0,"Parser", Parser::qobject_singletontype_provider);
+
+    QGuiApplication * app = SailfishApp::application(argc, argv);
+
+
+    //Translations
+
+
+
+    QString langCode(getenv("LANG"));
+    qDebug() << "Code" << langCode;
+    if (langCode.isEmpty() || langCode == "C" || !langCode.contains("_"))
+        langCode = QLocale::system().name();
+    if (langCode.contains('.'))
+        langCode = langCode.mid(0, langCode.lastIndexOf('.'));
+    QString filename = QString("languages/harbour_travelplanner_") + langCode;
+
+    qDebug() << "Language Code:" << langCode;
+    static QTranslator translator;
+    if( translator.load(filename, ":/") ){
+        app->installTranslator(&translator);
+        //QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
+        qDebug() << "Translation file loaded" << filename;
+    } else
+        qDebug() << "Translation file not loaded:" << filename;
+
+
     return SailfishApp::main(argc, argv);
 }
 

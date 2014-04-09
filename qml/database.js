@@ -42,7 +42,7 @@ function setsetting(setting, value) {
         trans.executeSql('DELETE FROM settings WHERE keyattr=?',[setting])
         var x = trans.executeSql('INSERT INTO settings VALUES(?, ?)', [setting, value]);
         if(x.rowsAffected > 0) {
-            console.log("Setting saved: " + setting + ":" + value)
+            //console.log("Setting saved: " + setting + ":" + value)
             result= 1;
         } else {
             result = 0;
@@ -61,7 +61,7 @@ function getsetting(setting) {
         }
         result = x.rows.item(0)['val'];
     });
-    console.log("Getting setting: " + result + ", " + setting)
+    //console.log("Getting setting: " + result + ", " + setting)
     return result;
 }
 
@@ -71,7 +71,7 @@ function setfav(fromid, toid, from, to) {
     var result;
     db.transaction(function (trans) {
         var x = trans.executeSql('INSERT OR REPLACE INTO favourites VALUES(?, ?, ?, ?, datetime(?))', [fromid, toid, from, to, 'now']);
-        console.log("ADDED: " + from + to)
+        //console.log("ADDED: " + from + to)
         if(x.rowsAffected > 0) {
             result= 1;
         } else {

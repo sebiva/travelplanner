@@ -224,21 +224,22 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
             leg->mbgcolour = attr.value("bgColor").toString();
             QString sname = attr.value("sname").toString();
 
-
-            //TODO: translation
             if (leg->mline == "Gå") {
-                leg->mline = "walk";
+                leg->mline = tr("walk");
                 leg->mfgcolour = "#00abe5";
                 leg->mbgcolour = "#ffffff";
-                leg->mdir = "Walk";
-            } else if (leg->mline.split(" ").at(0) == "SJ") {
+                leg->mdir = tr("Walk");
+            } else if (leg->mline.split(" ").length() > 0 && leg->mline.split(" ").at(0) == "SJ") {
+                leg->mdir.append("; ").append(leg->mline.toLower());
                 leg->mline = "sj";
-                leg->mfgcolour = "#ffffff";
-                leg->mbgcolour = "#000000";
-            } else if (leg->mline == "PENDELTÅG" || leg->mline == "VÄSTTÅGEN" || leg->mline == "TÅGAB REGIONTÅG") {
-                leg->mline = "train";
                 leg->mfgcolour = "#000000";
                 leg->mbgcolour = "#ffffff";
+            } else if (leg->mline == "PENDELTÅG" || leg->mline == "VÄSTTÅGEN" || leg->mline == "NSB REGIONTÅG" ||
+                       leg->mline == "TÅGAB REGIONTÅG" || leg->mline == "ÖRESUNDSTÅG") {
+                leg->mdir.append("; ").append(leg->mline.toLower());
+                leg->mline = tr("train");
+                leg->mfgcolour = "#ffffff";
+                leg->mbgcolour = "#000000";
             } else if (leg->mline.split(" ").length() > 1 && leg->mline.split(" ").at(0) == "STENUNGSUND") {
                 leg->mline = "sten.";
             } else if (leg->mline.split(" ").length() > 1 && leg->mline.split(" ").at(1) == "EXPRESS") {
@@ -314,15 +315,12 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
 
             //There is no journeydetail for walking
             //qDebug() << "Type: " << leg->mline << "Gå?";
-            if (leg->mline == "walk") { //TODO: translation
+            if (leg->mline == tr("walk")) {
 
                 //Go to next leg (or trip)
                 xml.skipCurrentElement();
-                //qDebug() << "WALK1" << xml.name();
                 xml.readNextStartElement();
-                //qDebug() << "WALK1" << xml.name();
                 xml.readNextStartElement();
-                //qDebug() << "WALK1" << xml.name();
 
                 //Skip unneccessary walk stuff
                 if (leg->mfrom == leg->mto) {
@@ -365,14 +363,14 @@ void Parser::parsevasttrafikreply(QNetworkReply *reply) {
             qDebug() << "Invalid trip";
             if (canceled) {
                 qDebug() << "Setting canceled";
-                trip->deptime = "Canceled"; //TODO: Translation
-                trip->deprttime = "Canceled";
+                trip->deptime = tr("Canceled");
+                trip->deprttime = tr("Canceled");
                 trip->arivtime = "";
                 trip->arivrttime = "";
             } else if (risktomiss) {
                 qDebug() << "Setting risk";
-                trip->deptime = "Risk to miss"; //TODO: Translation
-                trip->deprttime = "Risk to miss";
+                trip->deptime = tr("Risk to miss");
+                trip->deprttime = tr("Risk to miss");
                 trip->arivtime = "";
                 trip->arivrttime = "";
             }

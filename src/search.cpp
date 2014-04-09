@@ -104,3 +104,12 @@ int Search::getnumlegs(int tripindex) {
 void Search::parseready(QString err) {
     emit ready(err);
 }
+
+QString Search::getlanguage() {
+    qDebug() << getenv("LANG");
+    QString LANG = getenv("LANG");
+    if (LANG == "sv_SE") {
+        return "Svenska";
+    }
+    return "English";
+}

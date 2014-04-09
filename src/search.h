@@ -97,6 +97,9 @@ public:
     Q_INVOKABLE void settimeofsearch(QString timeofsearch) {
         mparser->timeofsearch = timeofsearch;
     }
+
+
+    Q_INVOKABLE QString getlanguage();
 signals:
     void ready(QString err);
     void searching();

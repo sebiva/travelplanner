@@ -22,7 +22,7 @@ import Sailfish.Silica 1.0
 Page {
     id: settingspage
     PageHeader {
-        title: mainWindow.strsettings
+        title: qsTr("Settings")
     }
 
     Item {
@@ -42,26 +42,28 @@ Page {
                 }
             }
 
-            ComboBox {
-                id: languagepicker
-                label: mainWindow.strlanguage
-                width: parent.width
-                Component.onCompleted: {
-                    var lang = mainWindow.getsetting("language")
-                    var i = 0;
-                    while(languagepicker.currentItem !== null) {
-                        if (languagepicker.currentItem.text === lang) {
-                            return;
-                        }
-                        currentIndex = ++i;
-                    }
-                }
+            //Now uses LANG variable instead
 
-                menu: ContextMenu {
-                    MenuItem {text: mainWindow.stren; onClicked: mainWindow.setsetting("language", text)}
-                    MenuItem {text: mainWindow.strsv; onClicked: mainWindow.setsetting("language", text)}
-                }
-            }
+//            ComboBox {
+//                id: languagepicker
+//                label: mainWindow.strlanguage
+//                width: parent.width
+//                Component.onCompleted: {
+//                    var lang = mainWindow.getsetting("language")
+//                    var i = 0;
+//                    while(languagepicker.currentItem !== null) {
+//                        if (languagepicker.currentItem.text === lang) {
+//                            return;
+//                        }
+//                        currentIndex = ++i;
+//                    }
+//                }
+
+//                menu: ContextMenu {
+//                    MenuItem {text: mainWindow.stren; onClicked: mainWindow.setsetting("language", text)}
+//                    MenuItem {text: mainWindow.strsv; onClicked: mainWindow.setsetting("language", text)}
+//                }
+//            }
 
 
             //Doesn't work properly with Västtrafik...
@@ -100,7 +102,7 @@ Page {
                 width: parent.width
                 Label {
                     color: Theme.highlightColor;
-                    text: mainWindow.strabout
+                    text: qsTr("About")
                     anchors.right: parent.right
                     anchors.rightMargin: Theme.paddingLarge
                     opacity: 0.5
@@ -108,13 +110,13 @@ Page {
 
                 Text {
                     color: Theme.primaryColor;
-                    text: mainWindow.strcreated
+                    text: qsTr("Created by Sebastian Ivarsson")
                     x: Theme.paddingLarge
                     width: parent.width
                 }
                 Text {
                     color: Theme.primaryColor;
-                    text: mainWindow.strapi + ' <html><style type="text/css"></style><a href="http://labs.vasttrafik.se">' + mainWindow.strvasttrafik + '</a></html>'
+                    text: qsTr("Uses the") + ' <html><style type="text/css"></style><a href="http://labs.vasttrafik.se">' + qsTr("Västtrafik API") + '</a></html>'
                     onLinkActivated: Qt.openUrlExternally(link)
                     linkColor: Theme.highlightColor
                     x: Theme.paddingLarge
@@ -122,7 +124,7 @@ Page {
                 }
                 Text {
                     color: Theme.primaryColor;
-                    text: mainWindow.strgit + ' <html><style type="text/css"></style><a href="http://github.com/sebiva/travelplanner">github</a></html>'
+                    text: qsTr("The source code is available on") + ' <html><style type="text/css"></style><a href="http://github.com/sebiva/travelplanner">github</a></html>'
                     onLinkActivated: Qt.openUrlExternally(link)
                     linkColor: Theme.highlightColor
                     x: Theme.paddingLarge
@@ -130,7 +132,7 @@ Page {
                 }
                 Text {
                     color: Theme.primaryColor;
-                    text: mainWindow.strgpl + ' <html><style type="text/css"></style><a href="http://gnu.org/licenses/licenses.html">GPL v3</a></html>'
+                    text: qsTr("Licensed under") + ' <html><style type="text/css"></style><a href="http://gnu.org/licenses/licenses.html">GPL v3</a></html>'
                     onLinkActivated: Qt.openUrlExternally(link)
                     linkColor: Theme.highlightColor
                     x: Theme.paddingLarge

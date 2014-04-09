@@ -40,3 +40,15 @@ HEADERS += \
     src/search.h \
     src/timehelper.h
 
+TRANSLATIONS += languages/harbour_travelplanner_en.ts \
+                languages/harbour_travelplanner_sv.ts
+
+RESOURCES += \
+    languages.qrc
+
+lupdate_only {
+    SOURCES = qml/*.qml \
+                qml/pages/*.qml
+    TRANSLATIONS = languages/harbour_travelplanner_en.ts \
+                languages/harbour_travelplanner_sv.ts
+}

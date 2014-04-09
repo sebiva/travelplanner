@@ -20,6 +20,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "pages"
 import "database.js" as DBjs
+import searcher 1.0
 
 ApplicationWindow
 {
@@ -35,7 +36,7 @@ ApplicationWindow
     property string time: ""
     property string date: ""
     property string changetime: "5"
-    property string errmsg: strerr
+    property string errmsg: lang === stren ? "Search failed:\n" : "Sökningen misslyckades:\n"
     property var lastresponseexchanges: [] // A list of all trips, containing tripdata and leglist
     property var lastparsedtrips: [] // Contains the latest array of trips.
     property int database: 1
@@ -44,8 +45,13 @@ ApplicationWindow
 
     property int searched: 1
 
+    Search {
+        id: searcher
+    }
+
     function getsettings() {
-        var language = DBjs.getsetting("language")
+        //var language = DBjs.getsetting("language")
+        var language = searcher.getlanguage()
         if (language !== null) {
             lang = language
         } else {
@@ -60,23 +66,25 @@ ApplicationWindow
     }
 
     function getsetting(setting) {
-        var value = DBjs.getsetting(setting)
+        var value = ""
         if (setting === "language") {
+            value = searcher.getlanguage()
             if (value === null) {
                 setsetting(setting, stren)
                 value = stren
                 lang = stren
             }
-            return value
+            console.log("language " + value)
+
         } else if (setting === "changetime") {
+            var value = DBjs.getsetting(setting)
             if (value === null) {
                 setsetting(setting, "5")
                 value = "5"
                 changetime = "5"
             }
-            return value
         }
-
+        return value
     }
     function setsetting(setting, value) {
         if (setting === "language") {
@@ -93,38 +101,38 @@ ApplicationWindow
     property string stren: "English"
 
     //All strings
-    property string strappname: lang === stren ? "Travelplanner" : "Reseplaneraren"
-    property string strsearch: lang === stren ? "Search" : "Sök"
-    property string strfrom: lang === stren ? "From" : "Från"
-    property string strto: lang === stren ? "To" : "Till"
-    property string strdate: lang === stren ? "Date" : "Datum"
-    property string strtime: lang === stren ? "Time" : "Tid"
-    property string strnow: lang === stren ? "Now" : "Nu"
-    property string strfavourites: lang === stren ? "Favourites" : "Favoriter"
-    property string strnofavourites: lang === stren ? "No favourites" : "Inga favoriter"
-    property string strmovetotop: lang === stren ? "Move to top" : "Flytta överst"
-    property string strdelete: lang === stren ? "Delete" : "Ta bort"
+//    property string strappname: lang === stren ? "Travelplanner" : "Reseplaneraren"
+//    property string strsearch: lang === stren ? "Search" : "Sök"
+//    property string strfrom: lang === stren ? "From" : "Från"
+//    property string strto: lang === stren ? "To" : "Till"
+//    property string strdate: lang === stren ? "Date" : "Datum"
+//    property string strtime: lang === stren ? "Time" : "Tid"
+//    property string strnow: lang === stren ? "Now" : "Nu"
+//    property string strfavourites: lang === stren ? "Favourites" : "Favoriter"
+//    property string strnofavourites: lang === stren ? "No favourites" : "Inga favoriter"
+//    property string strmovetotop: lang === stren ? "Move to top" : "Flytta överst"
+//    property string strdelete: lang === stren ? "Delete" : "Ta bort"
 
-    property string strchangedir: lang === stren ? "Change direction" : "Byt riktning"
-    property string strsettings: lang === stren ? "Settings" : "Inställningar"
-    property string strlanguage: lang === stren ? "Language" : "Språk"
-    property string strchangetime: lang === stren ? "Exchange time" : "Bytestid"
-    property string strminute: lang === stren ? "minute" : "minut"
-    property string strminutes: lang === stren ? "minutes" : "minuter"
-    property string strabout: lang === stren ? "About" : "Info"
-    property string strcreated: lang === stren ? "Created by Sebastian Ivarsson" : "Skapad av Sebastian Ivarsson"
-    property string strapi: lang === stren ? "Uses the" : "Använder"
-    property string strvasttrafik: lang === stren ? "Västtrafik API" : "Västtrafiks API"
-    property string strgit: lang === stren ? "The source code is available on" : "Källkoden finns tillgänglig på"
-    property string strgpl: lang === stren ? "Licensed under" : "Licensierat under"
-    property string strsearchres: lang === stren ? "Search Results" : "Sökresultat"
-    property string straddfavourite: lang === stren ? "Save as favourite" : "Spara som favorit"
-    property string strerr: lang === stren ? "Search failed:\n" : "Sökningen misslyckades:\n"
-    property string strcovererr: lang === stren ? "Search failed" : "Sökningen\nmisslyckades"
+//    property string strchangedir: lang === stren ? "Change direction" : "Byt riktning"
+//    property string strsettings: lang === stren ? "Settings" : "Inställningar"
+//    property string strlanguage: lang === stren ? "Language" : "Språk"
+//    property string strchangetime: lang === stren ? "Exchange time" : "Bytestid"
+//    property string strminute: lang === stren ? "minute" : "minut"
+//    property string strminutes: lang === stren ? "minutes" : "minuter"
+//    property string strabout: lang === stren ? "About" : "Info"
+//    property string strcreated: lang === stren ? "Created by Sebastian Ivarsson" : "Skapad av Sebastian Ivarsson"
+//    property string strapi: lang === stren ? "Uses the" : "Använder"
+//    property string strvasttrafik: lang === stren ? "Västtrafik API" : "Västtrafiks API"
+//    property string strgit: lang === stren ? "The source code is available on" : "Källkoden finns tillgänglig på"
+//    property string strgpl: lang === stren ? "Licensed under" : "Licensierat under"
+//    property string strsearchres: lang === stren ? "Search Results" : "Sökresultat"
+//    property string straddfavourite: lang === stren ? "Save as favourite" : "Spara som favorit"
+//    property string strerr: lang === stren ? "Search failed:\n" : "Sökningen misslyckades:\n"
+//    property string strcovererr: lang === stren ? "Search failed" : "Sökningen\nmisslyckades"
 
-    property string strwalk: lang === stren ? "walk" : "gå"
-    property string strwalkupper: lang === stren ? "Walk" : "Gå"
-    property string strtrain: lang === stren ? "train" : "tåg"
+//    property string strwalk: lang === stren ? "walk" : "gå"
+//    property string strwalkupper: lang === stren ? "Walk" : "Gå"
+//    property string strtrain: lang === stren ? "train" : "tåg"
 }
 
 

@@ -26,19 +26,19 @@ import timehelp 1.0
 CoverBackground {
     id: coverpage
     property string coverstatus: "started"
-    property bool avail: mainWindow.avail
-    property bool error: false
-    property string from: mainWindow.from
-    property string to: mainWindow.to
-    property int searched: mainWindow.searched
-    property string lang: mainWindow.lang
-    property string err: mainWindow.errmsg
-    //onErrChanged: search(false)
-    onLangChanged: {
-        if (coverstatus === "error") {
-            placeholdertext.text = mainWindow.strappname + "\n" + mainWindow.strcovererr;
-        }
-    }
+//    property bool avail: mainWindow.avail
+//    property bool error: false
+//    property string from: mainWindow.from
+//    property string to: mainWindow.to
+//    property int searched: mainWindow.searched
+//    property string lang: mainWindow.lang
+//    property string err: mainWindow.errmsg
+//    //onErrChanged: search(false)
+//    onLangChanged: {
+//        if (coverstatus === "error") {
+//            placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed") //mainWindow.strappname + "\n" + mainWindow.strcovererr;
+//        }
+//    }
 
 
     function refresh(now) {
@@ -46,8 +46,7 @@ CoverBackground {
         listmodel.clear()
         if (coverstatus === "error") {
             console.log("Coverpage in errorstate");
-            placeholdertext.text = mainWindow.strappname + "\n" + mainWindow.strcovererr;
-            return;
+            placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed")
         }
         console.log("Refreshing Cover")
         var time = searcher.gettime()
@@ -91,7 +90,7 @@ CoverBackground {
                 coverstatus = "avail"
             } else {
                 coverstatus = "error"
-                placeholdertext.text = mainWindow.strappname + "\n" + mainWindow.strcovererr;
+                placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed") // mainWindow.strappname + "\n" + mainWindow.strcovererr;
             }
         }
         //TODO: TEST
@@ -123,7 +122,7 @@ CoverBackground {
         }
         Label {
             id: placeholdertext
-            text: mainWindow.strappname
+            text: qsTr("Travelplanner")
             visible: coverstatus === "error" || coverstatus === "started"
             anchors.horizontalCenter: parent.horizontalCenter
         }
@@ -143,18 +142,16 @@ CoverBackground {
             property bool searching: false
 
 
-            //TODO: fix double text error
-            function doneloading(msg) {
-                searching = false;
-                if(msg === 0) {
-                    error = false
-                } else {
-                    error = true;
-                    placeholdertext.text = mainWindow.errmsg;
-                }
-
-
-            }
+            //TODO: test double text error
+//            function doneloading(msg) {
+//                searching = false;
+//                if(msg === 0) {
+//                    error = false
+//                } else {
+//                    error = true;
+//                    placeholdertext.text = msg//mainWindow.errmsg;
+//                }
+//            }
 
             BusyIndicator {
                 id: busy

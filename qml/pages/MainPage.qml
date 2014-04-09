@@ -86,13 +86,6 @@ Dialog {
 
     Component.onCompleted: {
 
-        console.log("hel" + timehelp.duration("2014-04-02", "17:55", "2014-04-03", "19:05"))
-        console.log("hel" + timehelp.duration("2014-04-02", "22:40", "2014-04-03", "11:01"))
-        console.log("hel" + timehelp.duration("2014-04-04", "12:34", "2014-04-03", "18:03"))
-        console.log("hel" + timehelp.duration("2014-04-03", "17:22", "2014-04-03", "13:00"))
-        console.log("hel" + timehelp.delay("2014-04-03", "17:22", "2014-04-03", "13:00"))
-        console.log(timehelp.getcurrentdatestr())
-
         DBjs.setup()
         mainWindow.getsettings()
         var lastsearch = DBjs.getlastsearch()
@@ -139,7 +132,7 @@ Dialog {
                 visible: !fromtext.typing && !totext.typing
 
                 MenuItem {
-                    text: mainWindow.strsettings
+                    text: qsTr("Settings")
                     onClicked: {
                         pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
                     }
@@ -147,7 +140,7 @@ Dialog {
 
                 MenuItem {
                     enabled: fromready || toready
-                    text: mainWindow.strchangedir
+                    text: qsTr("Change direction")
                     IconButton {
                         visible: parent.enabled
                         anchors.right: parent.right
@@ -194,7 +187,7 @@ Dialog {
 
                 DialogHeader {
                     id: topheader
-                    acceptText: canAccept ? mainWindow.strsearch : mainWindow.strappname
+                    acceptText: canAccept ? qsTr("Search") : qsTr("Travelplanner")
                     opacity: canAccept ? 1 : 0.8
                     visible: !maindialog.typing
                 }
@@ -248,7 +241,7 @@ Dialog {
                                 column.textchang(true)
                             }
                         }
-                        placeholderText: mainWindow.strfrom
+                        placeholderText: qsTr("From")
                         onClicked: {
                             column.active = true
                             if (text.length < 3) {
@@ -314,7 +307,7 @@ Dialog {
                                 column.textchang(false);
                             }
                         }
-                        placeholderText: mainWindow.strto
+                        placeholderText: qsTr("To")
                         onClicked: {
                             column.active = true
                             if(text.length < 3) {
@@ -396,7 +389,7 @@ Dialog {
                                 })
                             }
 
-                            label: mainWindow.strdate
+                            label: qsTr("Date")
                             onClicked: openDateDialog()
                             opacity: 0.8
                         }
@@ -416,13 +409,13 @@ Dialog {
                                     value = dialog.timeText
                                 })
                             }
-                            label: mainWindow.strtime
+                            label: qsTr("Time")
                             onClicked: openTimeDialog()
                             opacity: 0.8
                         }
                     }
                     Button {
-                        text: mainWindow.strnow
+                        text: qsTr("Now")
                         width: parent.width / 4
                         anchors.verticalCenter: parent.verticalCenter
                         onClicked: {
@@ -522,7 +515,7 @@ Dialog {
             visible: favlist.empty && !maindialog.typing;
             Label{
                 anchors.centerIn: parent;
-                text: mainWindow.strnofavourites
+                text: qsTr("No favourites")
                 color: Theme.highlightColor;
                 Component.onCompleted: favlist.updatefavs()
             }
@@ -554,7 +547,7 @@ Dialog {
 
             visible: !maindialog.typing && !empty
             header: Label {
-                text: mainWindow.strfavourites
+                text: qsTr("Favourites")
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.paddingLarge
                 font.pixelSize: Theme.fontSizeMedium
@@ -612,7 +605,7 @@ Dialog {
 
                     menu: ContextMenu {
                         MenuItem {
-                            text: mainWindow.strdelete
+                            text: qsTr("Delete")
                             onClicked: {
                                 console.log(favmodel.count + " " + index + " uahoeutna hej");
                                 DBjs.remfav(fid, tid);
@@ -624,7 +617,7 @@ Dialog {
                             }
                         }
                         MenuItem {
-                            text: mainWindow.strmovetotop
+                            text: qsTr("Move to top")
                             onClicked: {
                                 favmodel.move(index, 0, 1);
                                 DBjs.movetotop(fid, tid, favfromtext.text, favtotext.text);
@@ -639,7 +632,7 @@ Dialog {
                             Label {
                                 id: favfromheadtext
                                 x: Theme.paddingMedium
-                                text: mainWindow.strfrom + ": "
+                                text: qsTr("From") + ": "
                                 color: Theme.secondaryHighlightColor
                             }
 
@@ -657,7 +650,7 @@ Dialog {
                             Label {
                                 id: favtoheadtext
                                 x: Theme.paddingMedium
-                                text: mainWindow.strto + ":"
+                                text: qsTr("To") + ":"
                                 color: Theme.highlightColor
                                 width: favfromheadtext.width
                                 opacity: 0.6

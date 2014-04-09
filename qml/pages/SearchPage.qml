@@ -49,8 +49,8 @@ Page {
             searcher.search()
             searcher.setdateofsearch(timehelp.getcurrentdatestr())
             searcher.settimeofsearch(timehelp.getcurrenttimestr())
-            fromlabel.text = mainWindow.strfrom + " " + searcher.getfrom()
-            tolabel.text = mainWindow.strto + " " + searcher.getto()
+            fromlabel.text = qsTr("From") + " " + searcher.getfrom()
+            tolabel.text = qsTr("To") + " " + searcher.getto()
             datelabel.text = searcher.getdate()
             timelabel.text = searcher.gettime()
         }
@@ -93,15 +93,15 @@ Page {
                 mainWindow.avail = false;
                 searchpage.error = true;
                 searchpage.searching = false;
-                mainWindow.errmsg = mainWindow.strerr + err;
+                mainWindow.errmsg = qsTr("Search failed:") + "\n" + err;
             }
         }
 
         //TODO: TEST
         onSearching: {
             console.log("SearchPage, onSearchnig")
-            fromlabel.text = mainWindow.strfrom + " " + searcher.getfrom()
-            tolabel.text = mainWindow.strto + " " + searcher.getto()
+            fromlabel.text = qsTr("From") + " " + searcher.getfrom()
+            tolabel.text = qsTr("To") + " " + searcher.getto()
             datelabel.text = searcher.getdate()
             timelabel.text = searcher.gettime()
         }
@@ -121,7 +121,7 @@ Page {
             contentHeight: column.height
             PullDownMenu {
                 MenuItem {
-                    text: mainWindow.straddfavourite
+                    text: qsTr("Save as favourite")
                     onClicked: {
                         DBjs.setfav(searchpage.fromid, searchpage.toid, searchpage.from, searchpage.to);
                         mainWindow.database = (mainWindow.database + 2) % 4
@@ -133,7 +133,7 @@ Page {
                 width: parent.width
                 PageHeader {
                     id: head
-                    title: mainWindow.strsearchres
+                    title: qsTr("Search results")
                 }
                 Row {
                     id: row1
@@ -141,7 +141,7 @@ Page {
                     width: parent.width - 2*x
                     Label {
                         id: fromlabel
-                        text: mainWindow.strfrom + " " + searcher.getfrom()
+                        text: qsTr("From") + " " + searcher.getfrom()
                         truncationMode: TruncationMode.Elide
                         width: parent.width - timelabel.width
                         color: Theme.secondaryHighlightColor
@@ -159,7 +159,7 @@ Page {
                     width: parent.width - 2*x
                     Label {
                         id: tolabel
-                        text: mainWindow.strto + " " + searcher.getto()
+                        text: qsTr("To") + " " + searcher.getto()
                         truncationMode: TruncationMode.Elide
                         width: parent.width - datelabel.width
                         color: Theme.highlightColor
@@ -368,7 +368,7 @@ Page {
                                             width: searchpage.width - iconlist.recsize0 - legdeptime.width - legdeprttime.width - 2 * parent.x
                                             Label {
                                                 id: legfromlabel
-                                                text: mainWindow.strfrom + ": "
+                                                text: qsTr("From") + ": "
                                                 visible: iconlist.textvis
                                                 font.pixelSize: (Theme.fontSizeTiny + Theme.fontSizeSmall) /2
                                                 color: Theme.secondaryHighlightColor
@@ -406,7 +406,7 @@ Page {
                                             width: searchpage.width - iconlist.recsize0 - legarivtime.width - legarivrttime.width - 2 * parent.x
                                             Label {
                                                 id: legtolabel
-                                                text: mainWindow.strto + ": "
+                                                text: qsTr("To") + ": "
                                                 width: legfromlabel.width
                                                 visible: iconlist.textvis
                                                 font.pixelSize: (Theme.fontSizeTiny + Theme.fontSizeSmall) /2
