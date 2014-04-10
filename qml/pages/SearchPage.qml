@@ -28,17 +28,9 @@ import timehelp 1.0
 Page {
     id: searchpage
 
-
-    property string from
-    property string to
-    property string date
-    property string time
-
     property bool searching : true
     property bool error : false
 
-    property string fromid : "9021014001200000"
-    property string toid : "9021014004493000" //"9021014072006000" //Gislaved
 
     //onVisibleChanged: search();
 
@@ -57,13 +49,10 @@ Page {
     }
 
     function search() {
-        //console.log("DATUM " + date)
         mainWindow.timeofsearch = timehelp.getcurrenttimestr()
         mainWindow.dateofsearch = timehelp.getcurrentdatestr()
         console.log("IN SEARCHPAGE SEARCH::" + date + time)
         listmodel.clear()
-        //searcher.search(fromid, toid, date, time)
-        //Searchjs.sendrequest(fromid, toid, date, time, listView.answerrecieved, listmodel, mainWindow.changetime)  //listView.doneloading)
     }
 
     Search {
@@ -78,20 +67,18 @@ Page {
                 DBjs.setlastsearch(getfromid(), gettoid(),
                                    getfrom(), getto())
 
-                searchpage.error = false;
                 searchpage.searching = false;
                 mainWindow.avail = false;
-                mainWindow.from = searchpage.from
-                mainWindow.to = searchpage.to
-                mainWindow.fromid = searchpage.fromid
-                mainWindow.toid = searchpage.toid
-                mainWindow.time = searchpage.time
-                mainWindow.date = searchpage.date
+                mainWindow.from = searcher.getfrom()
+                mainWindow.to = searcher.getto()
+                mainWindow.fromid = searcher.getfromid()
+                mainWindow.toid = searcher.gettoid()
+                mainWindow.time = searcher.gettime()
+                mainWindow.date = searcher.getdate()
                 mainWindow.avail = true;
             } else {
                 console.log("ERROR IN SEARCHPAGE: " + err);
                 mainWindow.avail = false;
-                searchpage.error = true;
                 searchpage.searching = false;
                 mainWindow.errmsg = qsTr("Search failed:") + "\n" + err;
             }
@@ -115,7 +102,6 @@ Page {
         anchors.fill: parent
         SilicaFlickable {
             id: flick
-            //anchors.fill: parent
             height: column.height
             width: parent.width
             contentHeight: column.height
@@ -123,7 +109,7 @@ Page {
                 MenuItem {
                     text: qsTr("Save as favourite")
                     onClicked: {
-                        DBjs.setfav(searchpage.fromid, searchpage.toid, searchpage.from, searchpage.to);
+                        DBjs.setfav(searcher.getfromid(), searcher.gettoid(), searcher.getfrom(), searcher.getto());
                         mainWindow.database = (mainWindow.database + 2) % 4
                     }
                 }
@@ -182,29 +168,6 @@ Page {
             clip: true
 
             cacheBuffer: searchpage.height * 2
-
-//            function answerrecieved(msg) {
-//                console.log("ANSWER RECEIVED: " + msg)
-//                if (msg === 0) {
-//                    searchpage.error = false;
-//                    searchpage.searching = false;
-//                    mainWindow.avail = false;
-//                    mainWindow.from = searchpage.from
-//                    mainWindow.to = searchpage.to
-//                    mainWindow.fromid = searchpage.fromid
-//                    mainWindow.toid = searchpage.toid
-//                    mainWindow.time = searchpage.time
-//                    mainWindow.date = searchpage.date
-//                    mainWindow.avail = true;
-//                } else {
-//                    mainWindow.avail = false;
-//                    searchpage.error = true;
-//                    searchpage.searching = false;
-//                    mainWindow.errmsg = mainWindow.strerr + msg;
-//                }
-
-
-//            }
 
             // The reply is available in Search
             function setup() {
@@ -489,7 +452,6 @@ Page {
                     onTriggered: {
                         iconmodel.clear()
                         iconlist.setupicons()
-                        //Searchjs.addicons(iconmodel, index);
                         stop();
                     }
                 }

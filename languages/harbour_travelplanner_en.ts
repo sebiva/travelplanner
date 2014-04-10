@@ -20,69 +20,69 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="135"/>
+        <location filename="../qml/pages/MainPage.qml" line="126"/>
         <source>Settings</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="143"/>
+        <location filename="../qml/pages/MainPage.qml" line="134"/>
         <source>Change direction</source>
         <translation>Change direction</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="190"/>
+        <location filename="../qml/pages/MainPage.qml" line="181"/>
         <source>Search</source>
         <translation>Search</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="190"/>
+        <location filename="../qml/pages/MainPage.qml" line="181"/>
         <source>Travelplanner</source>
         <translation>Travelplanner</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="244"/>
-        <location filename="../qml/pages/MainPage.qml" line="635"/>
+        <location filename="../qml/pages/MainPage.qml" line="234"/>
+        <location filename="../qml/pages/MainPage.qml" line="624"/>
         <source>From</source>
         <translation>From</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="310"/>
-        <location filename="../qml/pages/MainPage.qml" line="653"/>
+        <location filename="../qml/pages/MainPage.qml" line="300"/>
+        <location filename="../qml/pages/MainPage.qml" line="642"/>
         <source>To</source>
         <translation>To</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="392"/>
+        <location filename="../qml/pages/MainPage.qml" line="382"/>
         <source>Date</source>
         <translation>Date</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="412"/>
+        <location filename="../qml/pages/MainPage.qml" line="402"/>
         <source>Time</source>
         <translation>Time</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="418"/>
+        <location filename="../qml/pages/MainPage.qml" line="408"/>
         <source>Now</source>
         <translation>Now</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="518"/>
+        <location filename="../qml/pages/MainPage.qml" line="508"/>
         <source>No favourites</source>
         <translation>No favourites</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="550"/>
+        <location filename="../qml/pages/MainPage.qml" line="539"/>
         <source>Favourites</source>
         <translation>Favourites</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="608"/>
+        <location filename="../qml/pages/MainPage.qml" line="597"/>
         <source>Delete</source>
         <translation>Delete</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="620"/>
+        <location filename="../qml/pages/MainPage.qml" line="609"/>
         <source>Move to top</source>
         <translation>Move to top</translation>
     </message>
@@ -90,18 +90,18 @@
 <context>
     <name>Parser</name>
     <message>
-        <location filename="../src/parser.cpp" line="229"/>
-        <location filename="../src/parser.cpp" line="319"/>
+        <location filename="../src/parser.cpp" line="238"/>
+        <location filename="../src/parser.cpp" line="328"/>
         <source>walk</source>
         <translation>walk</translation>
     </message>
     <message>
-        <location filename="../src/parser.cpp" line="232"/>
+        <location filename="../src/parser.cpp" line="241"/>
         <source>Walk</source>
         <translation>Walk</translation>
     </message>
     <message>
-        <location filename="../src/parser.cpp" line="241"/>
+        <location filename="../src/parser.cpp" line="250"/>
         <source>train</source>
         <translation>train</translation>
     </message>
@@ -128,23 +128,23 @@
 <context>
     <name>SearchPage</name>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="52"/>
-        <location filename="../qml/pages/SearchPage.qml" line="103"/>
-        <location filename="../qml/pages/SearchPage.qml" line="144"/>
-        <location filename="../qml/pages/SearchPage.qml" line="372"/>
+        <location filename="../qml/pages/SearchPage.qml" line="44"/>
+        <location filename="../qml/pages/SearchPage.qml" line="90"/>
+        <location filename="../qml/pages/SearchPage.qml" line="130"/>
+        <location filename="../qml/pages/SearchPage.qml" line="334"/>
         <source>From</source>
         <translation>From</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="53"/>
-        <location filename="../qml/pages/SearchPage.qml" line="104"/>
-        <location filename="../qml/pages/SearchPage.qml" line="162"/>
-        <location filename="../qml/pages/SearchPage.qml" line="410"/>
+        <location filename="../qml/pages/SearchPage.qml" line="45"/>
+        <location filename="../qml/pages/SearchPage.qml" line="91"/>
+        <location filename="../qml/pages/SearchPage.qml" line="148"/>
+        <location filename="../qml/pages/SearchPage.qml" line="372"/>
         <source>To</source>
         <translation>To</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="96"/>
+        <location filename="../qml/pages/SearchPage.qml" line="83"/>
         <source>Search failed:</source>
         <translation>Search failed:</translation>
     </message>
@@ -154,12 +154,12 @@
         <translation type="obsolete">Search failed:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="124"/>
+        <location filename="../qml/pages/SearchPage.qml" line="110"/>
         <source>Save as favourite</source>
         <translation>Save as favourite</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="136"/>
+        <location filename="../qml/pages/SearchPage.qml" line="122"/>
         <source>Search results</source>
         <translation>Search results</translation>
     </message>
@@ -170,6 +170,11 @@
         <location filename="../qml/pages/SettingsPage.qml" line="25"/>
         <source>Settings</source>
         <translation>Settings</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SettingsPage.qml" line="49"/>
+        <source>Backend</source>
+        <translation>Backend</translation>
     </message>
     <message>
         <location filename="../qml/pages/SettingsPage.qml" line="105"/>
@@ -200,6 +205,14 @@
         <location filename="../qml/pages/SettingsPage.qml" line="135"/>
         <source>Licensed under</source>
         <translation>Licensed under</translation>
+    </message>
+</context>
+<context>
+    <name>harbour-travelplanner</name>
+    <message>
+        <location filename="../qml/harbour-travelplanner.qml" line="39"/>
+        <source>Search failed:</source>
+        <translation>Search failed:</translation>
     </message>
 </context>
 </TS>

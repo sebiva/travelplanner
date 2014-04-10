@@ -19,7 +19,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-import "../search.js" as Searchjs
 import "../database.js" as DBjs
 
 import searcher 1.0
@@ -28,23 +27,19 @@ import timehelp 1.0
 
 Dialog {
     id: maindialog
-    property string time
-    property string date
     property string from
     property string to
     property string fromid:"null"
     property string toid: "null"
+    property bool fromready: false
+    property bool toready: false
     property bool typing: fromtext.typing || totext.typing
     property int animtime: 500
 
-    canAccept: (fromid !== "null") && (toid !== "null") && !typing; // && (from !== "") && (to !== "");
+    canAccept: (fromid !== "null") && (toid !== "null") && !typing;
     acceptDestination: canAccept ? Qt.resolvedUrl("SearchPage.qml") : null
-    onAcceptPendingChanged: {
-        console.log("fore searchfunc")
-        //searchfunc()
-    }
+
     onAccepted: {
-        console.log("Accepted" + datepicker.value + " " + timepicker.value)
         searcher.setfromid(fromid)
         searcher.settoid(toid)
         searcher.setfrom(from)
@@ -53,8 +48,6 @@ Dialog {
         searcher.settime(timepicker.value)
         searcher.setdateofsearch(timehelp.getcurrentdate())
         searcher.settimeofsearch(timehelp.getcurrenttime())
-
-        console.log("ACCEPTED2" + searcher.getdate())
     }
 
 
@@ -81,8 +74,6 @@ Dialog {
     }
 
 
-    property bool fromready: false
-    property bool toready: false
 
     Component.onCompleted: {
 
@@ -200,7 +191,6 @@ Dialog {
                 }
 
                 function getsuggestions(text) {
-                    //Searchjs.sendnamerequest(text,searchlist.filllist);
                     searcher.getstops(text)
                 }
 
@@ -537,7 +527,6 @@ Dialog {
                 console.log("Updating favourites " + empty)
 
                 for(var i=0;i<res.length;i++) {
-                    //console.log("UPDATING: " + res[i].fromid + res[i].to + favlist.count);
                     favmodel.append(res[i]);
                 }
             }
@@ -691,7 +680,7 @@ Dialog {
                 PropertyChanges {
                     target: anifromtext
                     x: fromtext.x + Theme.paddingLarge + Theme.paddingSmall
-                    y: topheader.height//fromtext.y + Theme.paddingSmall
+                    y: topheader.height
 
                 }
             }, State {
@@ -721,7 +710,7 @@ Dialog {
                 PropertyChanges {
                     target: anitotext
                     x: totext.x + Theme.paddingLarge + Theme.paddingSmall
-                    y: topheader.height + fromtext.height//totext.y + Theme.paddingSmall
+                    y: topheader.height + fromtext.height
                 }
             }, State {
                 name: "done"

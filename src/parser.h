@@ -53,13 +53,12 @@ class Parser : public QObject
     Q_OBJECT
 public:
 
-    //static QObject *qobject_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine);
     static Parser *getinstance();
     ~Parser();
     static QString getstop(int i);
-    bool getstops(QString str);
+    bool getstops(QString backend, QString str);
     int numstops();
-    bool getXML(QString fromid, QString toid, QString date, QString time);
+    bool getXML(QString backend, QString fromid, QString toid, QString date, QString time);
 
     Trip * getTrip(int index);
     Leg * getLeg(int tripindex, int legindex);
@@ -78,6 +77,7 @@ public:
     QString date;
     QString timeofsearch;
     QString dateofsearch;
+    QString backend;
 
 signals:
     void ready(QString err);

@@ -41,12 +41,12 @@ int Search::getnumstops() {
     return mparser->numstops();
 }
 
-bool Search::getstops(QString str) {
+bool Search::getstops(QString backend, QString str) {
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
         return false;
     }
-    return mparser->getstops(str.toHtmlEscaped());
+    return mparser->getstops(backend, str.toHtmlEscaped());
 }
 
 void Search::stopsreceived(QString err) {
@@ -60,25 +60,27 @@ bool Search::search() {
         return false;
     }
     emit searching();
-    return mparser->getXML(mparser->fromid,mparser->toid,mparser->date,mparser->time);
+    return mparser->getXML(mparser->backend,mparser->fromid,mparser->toid,mparser->date,mparser->time);
 }
 
-bool Search::search(QString fromid, QString toid, QString date, QString time) {
+bool Search::search(QString backend, QString fromid, QString toid, QString date, QString time) {
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
         return false;
     }
+    mparser->backend = backend;
     mparser->fromid = fromid;
     mparser->toid = toid;
     mparser->date = Timehelper::convertdate(date);
     mparser->time = time;
     return search();
 }
-bool Search::search(QString fromid, QString toid, QString date, QString hour, QString minute) {
+bool Search::search(QString backend, QString fromid, QString toid, QString date, QString hour, QString minute) {
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
         return false;
     }
+    mparser->backend = backend;
     mparser->fromid = fromid;
     mparser->toid = toid;
     mparser->date = date;

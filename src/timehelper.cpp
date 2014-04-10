@@ -116,7 +116,6 @@ QTime Timehelper::getcurrenttime() {
 }
 qint64 Timehelper::daysfromtoday(QString date) {
     QDate qdate(date.mid(0,4).toInt(),date.mid(5,2).toInt(),date.mid(8,2).toInt());
-    qDebug() << qdate << QDate::currentDate().daysTo(qdate);
     return QDate::currentDate().daysTo(qdate);
 }
 

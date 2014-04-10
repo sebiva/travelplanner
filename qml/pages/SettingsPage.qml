@@ -44,26 +44,26 @@ Page {
 
             //Now uses LANG variable instead
 
-//            ComboBox {
-//                id: languagepicker
-//                label: mainWindow.strlanguage
-//                width: parent.width
-//                Component.onCompleted: {
-//                    var lang = mainWindow.getsetting("language")
-//                    var i = 0;
-//                    while(languagepicker.currentItem !== null) {
-//                        if (languagepicker.currentItem.text === lang) {
-//                            return;
-//                        }
-//                        currentIndex = ++i;
-//                    }
-//                }
+            ComboBox {
+                id: backendpicker
+                label: qsTr("Backend")
+                width: parent.width
+                Component.onCompleted: {
+                    var back = mainWindow.getsetting("backend")
+                    var i = 0;
+                    while(backendpicker.currentItem !== null) {
+                        if (backendpicker.currentItem.text === back) {
+                            return;
+                        }
+                        currentIndex = ++i;
+                    }
+                }
 
-//                menu: ContextMenu {
-//                    MenuItem {text: mainWindow.stren; onClicked: mainWindow.setsetting("language", text)}
-//                    MenuItem {text: mainWindow.strsv; onClicked: mainWindow.setsetting("language", text)}
-//                }
-//            }
+                menu: ContextMenu {
+                    MenuItem {text: "Västtrafik"; onClicked: mainWindow.setsetting("backend", text)}
+                    MenuItem {text: "SL"; onClicked: mainWindow.setsetting("backend", text)}
+                }
+            }
 
 
             //Doesn't work properly with Västtrafik...

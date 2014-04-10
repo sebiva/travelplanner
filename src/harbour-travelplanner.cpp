@@ -37,7 +37,6 @@ int main(int argc, char *argv[])
     Parser::getinstance();
     qmlRegisterType<Search>("searcher", 1, 0, "Search");
     qmlRegisterType<Timehelper>("timehelp", 1,0, "Timehelp");
-    //qmlRegisterSingletonType<Parser>("cppParser", 1, 0,"Parser", Parser::qobject_singletontype_provider);
 
     QGuiApplication * app = SailfishApp::application(argc, argv);
 

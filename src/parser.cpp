@@ -30,14 +30,6 @@ Parser::Parser(QObject *parent) :
             "authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml&input=";
 }
 
-//QObject *Parser::qobject_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
-//{
-//    Q_UNUSED(engine)
-//    Q_UNUSED(scriptEngine)
-
-//    Parser *p = new Parser();
-//    return p;
-//}
 
 Parser *Parser::getinstance() {
     if (mparser == 0) {
@@ -114,7 +106,7 @@ void Parser::cleartrips() {
     trips->clear();
 }
 
-bool Parser::getstops(QString str) {
+bool Parser::getstops(QString backend, QString str) {
     str = removespecials(str);
     qDebug() << "SEARCHING STOPS::" << str;
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
@@ -173,7 +165,7 @@ int Parser::numstops() {
     return stops->length();
 }
 
-bool Parser::getXML(QString fromid, QString toid,  QString date, QString time) {
+bool Parser::getXML(QString backend, QString fromid, QString toid,  QString date, QString time) {
     qDebug() << "SEARCHING::" << date << time << fromid << toid;
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
