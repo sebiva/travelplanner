@@ -31,9 +31,6 @@ Page {
     property bool searching : true
     property bool error : false
 
-
-    //onVisibleChanged: search();
-
     onStatusChanged: {
         if (status === PageStatus.Active) {
             console.log("SEARCHING from SearchPage")
@@ -67,8 +64,9 @@ Page {
                 DBjs.setlastsearch(getfromid(), gettoid(),
                                    getfrom(), getto())
 
-                searchpage.searching = false;
-                mainWindow.avail = false;
+                searchpage.searching = false
+                searchpage.error = false
+                mainWindow.avail = false
                 mainWindow.from = searcher.getfrom()
                 mainWindow.to = searcher.getto()
                 mainWindow.fromid = searcher.getfromid()
@@ -80,7 +78,8 @@ Page {
                 console.log("ERROR IN SEARCHPAGE: " + err);
                 mainWindow.avail = false;
                 searchpage.searching = false;
-                mainWindow.errmsg = qsTr("Search failed:") + "\n" + err;
+                searchpage.error = true
+                mainWindow.errmsg = qsTr("Search failed:") + "\n" + err; //TODO: formating on long messages
             }
         }
 

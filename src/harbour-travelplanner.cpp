@@ -26,7 +26,7 @@
 
 #include <QtQml/QQmlEngine>
 #include <qqml.h>
-#include "src/parser.h"
+#include "src/vasttrafik.h"
 #include "src/search.h"
 #include <sailfishapp.h>
 #include "timehelper.h"
@@ -34,7 +34,7 @@
 
 int main(int argc, char *argv[])
 {
-    Parser::getinstance();
+    Vasttrafik::getinstance();
     qmlRegisterType<Search>("searcher", 1, 0, "Search");
     qmlRegisterType<Timehelper>("timehelp", 1,0, "Timehelp");
 

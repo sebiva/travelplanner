@@ -74,7 +74,6 @@ Dialog {
     }
 
 
-
     Component.onCompleted: {
 
         DBjs.setup()
@@ -92,20 +91,6 @@ Dialog {
         fromready = true
         toready = true
         console.log("Loaded MainPage\n")
-    }
-
-    function searchfunc() {
-        if (fromready && toready) {
-            DBjs.setlastsearch(fromid,toid,from,to)
-            acceptDestinationInstance.from = from
-            acceptDestinationInstance.to = to
-            acceptDestinationInstance.fromid = fromid
-            acceptDestinationInstance.toid = toid
-            acceptDestinationInstance.time = timepicker.value
-            acceptDestinationInstance.date = datepicker.value
-            mainWindow.searched = mainWindow.searched + 1 % 2
-        }
-
     }
 
     Column {

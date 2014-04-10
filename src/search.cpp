@@ -20,9 +20,17 @@
 Search::Search(QObject *parent) :
     QObject(parent)
 {
-    mparser = Parser::getinstance();
-    connect(mparser,SIGNAL(ready(QString)),this,SLOT(parseready(QString)));
-    connect(mparser,SIGNAL(stopsparsed(QString)),this,SLOT(stopsreceived(QString)));
+    setbackend("Västtrafik");
+}
+
+void Search::setbackend(QString backend) {
+    if (backend == "Västtrafik") {
+        mparser = Vasttrafik::getinstance();
+    } else {
+        return;
+    }
+    connect(mparser,SIGNAL(replyready(QString)),this,SLOT(parseready(QString)));
+    connect(mparser,SIGNAL(stopsready(QString)),this,SLOT(stopsreceived(QString)));
 }
 
 QString Search::getstop(int i) {
@@ -41,12 +49,12 @@ int Search::getnumstops() {
     return mparser->numstops();
 }
 
-bool Search::getstops(QString backend, QString str) {
+bool Search::getstops(QString str) {
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
         return false;
     }
-    return mparser->getstops(backend, str.toHtmlEscaped());
+    return mparser->getstops(str.toHtmlEscaped());
 }
 
 void Search::stopsreceived(QString err) {
@@ -60,27 +68,25 @@ bool Search::search() {
         return false;
     }
     emit searching();
-    return mparser->getXML(mparser->backend,mparser->fromid,mparser->toid,mparser->date,mparser->time);
+    return mparser->getXML(mparser->fromid,mparser->toid,mparser->date,mparser->time);
 }
 
-bool Search::search(QString backend, QString fromid, QString toid, QString date, QString time) {
+bool Search::search(QString fromid, QString toid, QString date, QString time) {
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
         return false;
     }
-    mparser->backend = backend;
     mparser->fromid = fromid;
     mparser->toid = toid;
     mparser->date = Timehelper::convertdate(date);
     mparser->time = time;
     return search();
 }
-bool Search::search(QString backend, QString fromid, QString toid, QString date, QString hour, QString minute) {
+bool Search::search(QString fromid, QString toid, QString date, QString hour, QString minute) {
     if (mparser == NULL) {
         qDebug() << "mparser NULL";
         return false;
     }
-    mparser->backend = backend;
     mparser->fromid = fromid;
     mparser->toid = toid;
     mparser->date = date;

@@ -66,6 +66,7 @@ ApplicationWindow
             backend = back
         } else {
             backend = "Västtrafik"
+            searcher.setbackend(backend);
         }
     }
 
@@ -85,7 +86,7 @@ ApplicationWindow
                 setsetting(setting, "5")
                 value = "5"
             }
-        } else if (settting === "backend") {
+        } else if (setting === "backend") {
             value = DBjs.getsetting(setting)
             if (value === null) {
                 setsetting(setting, "Västtrafik")
@@ -101,6 +102,7 @@ ApplicationWindow
             changetime = value
         } else if (setting === "backend") {
             backend = "Västtrafik"
+            searcher.setbackend(backend);
         }
 
         DBjs.setsetting(setting, value)

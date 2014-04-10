@@ -90,39 +90,32 @@
 <context>
     <name>Parser</name>
     <message>
-        <location filename="../src/parser.cpp" line="238"/>
-        <location filename="../src/parser.cpp" line="328"/>
         <source>walk</source>
-        <translation>gå</translation>
+        <translation type="obsolete">gå</translation>
     </message>
     <message>
-        <location filename="../src/parser.cpp" line="241"/>
         <source>Walk</source>
-        <translation>Gå</translation>
+        <translation type="obsolete">Gå</translation>
     </message>
     <message>
-        <location filename="../src/parser.cpp" line="250"/>
         <source>train</source>
-        <translation>tåg</translation>
+        <translation type="obsolete">tåg</translation>
     </message>
     <message>
-        <location filename="../src/parser.cpp" line="373"/>
         <source>Departed</source>
-        <translation>Avgången</translation>
+        <translation type="obsolete">Avgången</translation>
     </message>
     <message>
-        <location filename="../src/parser.cpp" line="382"/>
         <source>Canceled</source>
-        <translation>Inställd</translation>
+        <translation type="obsolete">Inställd</translation>
     </message>
     <message>
         <source>May miss</source>
         <translation type="obsolete">Kan missa</translation>
     </message>
     <message>
-        <location filename="../src/parser.cpp" line="385"/>
         <source>Risk to miss</source>
-        <translation>Risk att missa</translation>
+        <translation type="obsolete">Risk att missa</translation>
     </message>
 </context>
 <context>
@@ -205,6 +198,40 @@
         <location filename="../qml/pages/SettingsPage.qml" line="135"/>
         <source>Licensed under</source>
         <translation>Licensierat under</translation>
+    </message>
+</context>
+<context>
+    <name>Vasttrafik</name>
+    <message>
+        <location filename="../src/vasttrafik.cpp" line="92"/>
+        <location filename="../src/vasttrafik.cpp" line="182"/>
+        <source>walk</source>
+        <translation>gå</translation>
+    </message>
+    <message>
+        <location filename="../src/vasttrafik.cpp" line="95"/>
+        <source>Walk</source>
+        <translation>Gå</translation>
+    </message>
+    <message>
+        <location filename="../src/vasttrafik.cpp" line="104"/>
+        <source>train</source>
+        <translation>tåg</translation>
+    </message>
+    <message>
+        <location filename="../src/vasttrafik.cpp" line="227"/>
+        <source>Departed</source>
+        <translation>Avgången</translation>
+    </message>
+    <message>
+        <location filename="../src/vasttrafik.cpp" line="236"/>
+        <source>Canceled</source>
+        <translation>Inställd</translation>
+    </message>
+    <message>
+        <location filename="../src/vasttrafik.cpp" line="239"/>
+        <source>Risk to miss</source>
+        <translation>Risk att missa</translation>
     </message>
 </context>
 <context>

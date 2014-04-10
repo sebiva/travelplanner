@@ -31,6 +31,7 @@
 #include <QStringList>
 #include "trip.h"
 #include "leg.h"
+//#include "vasttrafik.h"
 
 #include <QDateTime>
 #include <QDate>
@@ -45,20 +46,19 @@
 
 #include <QObject>
 
-
-
+class Vasttrafik;
 
 class Parser : public QObject
 {
     Q_OBJECT
 public:
 
-    static Parser *getinstance();
     ~Parser();
     static QString getstop(int i);
-    bool getstops(QString backend, QString str);
+    virtual bool getstops(QString str) = 0;
+    virtual bool getXML(QString fromid, QString toid, QString date, QString time) = 0;
+
     int numstops();
-    bool getXML(QString backend, QString fromid, QString toid, QString date, QString time);
 
     Trip * getTrip(int index);
     Leg * getLeg(int tripindex, int legindex);
@@ -80,23 +80,16 @@ public:
     QString backend;
 
 signals:
-    void ready(QString err);
-    void stopsparsed(QString err);
+    void replyready(QString err);
+    void stopsready(QString err);
 
 public slots:
-    void stopsreply(QNetworkReply *reply);
-    void XMLready(QNetworkReply *reply);
 
+protected:
 
-
-private:
-    void vasttrafikstops(QNetworkReply *reply);
-    void parsevasttrafikreply(QNetworkReply *reply);
-    QString address;
-    QString nameaddress;
-    static Parser *mparser;
     static QList<Trip *> *trips;
     static QList<QString> *stops;
+    static Parser *mparser;
 
     explicit Parser(QObject *parent = 0);
 };
