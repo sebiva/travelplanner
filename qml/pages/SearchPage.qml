@@ -63,6 +63,7 @@ Page {
 
                 DBjs.setlastsearch(getfromid(), gettoid(),
                                    getfrom(), getto())
+                mainWindow.incDB()
 
                 searchpage.searching = false
                 searchpage.error = false
@@ -108,8 +109,12 @@ Page {
                 MenuItem {
                     text: qsTr("Save as favourite")
                     onClicked: {
+                        // Database not yet setup?
+                        if (mainWindow.verDB == 0) {
+                            return
+                        }
                         DBjs.setfav(searcher.getfromid(), searcher.gettoid(), searcher.getfrom(), searcher.getto());
-                        mainWindow.database = (mainWindow.database + 2) % 4
+                        mainWindow.incDB()
                     }
                 }
             }
@@ -201,8 +206,8 @@ Page {
 
             BusyIndicator {
                 id: busy
-                visible: searching
-                running: searching
+                visible: searchpage.searching
+                running: searchpage.searching
                 width: parent.width / 3
                 height: width
                 anchors.horizontalCenter:  parent.horizontalCenter

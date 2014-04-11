@@ -37,7 +37,7 @@ ApplicationWindow
     property string date: ""
     property string changetime: "5"
     property string errmsg: qsTr("Search failed:") + "\n"
-    property int database: 1
+    property int verDB: 0
     property string timeofsearch: ""
     property string dateofsearch: ""
     property string backend: "Västtrafik"
@@ -46,6 +46,14 @@ ApplicationWindow
 
     Search {
         id: searcher
+    }
+
+    function incDB() {
+        if (verDB===0) {
+            verDB = 1;
+        } else {
+            verDB = (verDB+2) % 4
+        }
     }
 
     function getsettings() {
@@ -104,8 +112,9 @@ ApplicationWindow
             backend = "Västtrafik"
             searcher.setbackend(backend);
         }
-
         DBjs.setsetting(setting, value)
+        console.log("Database changed")
+        incDB()
     }
 
     //Language

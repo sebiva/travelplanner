@@ -25,22 +25,20 @@ import timehelp 1.0
 
 CoverBackground {
     id: coverpage
+    /*
+      Keeps track of the status of the cover. Can be either in:
+      "started"; the app was just started, cover showing the logo
+      "error"; an error has occured, and a message is shown
+      "searching"; waiting for a reply
+      "avail"; a result is displayed
+      */
     property string coverstatus: "started"
-//    property bool avail: mainWindow.avail
-//    property bool error: false
-//    property string from: mainWindow.from
-//    property string to: mainWindow.to
-//    property int searched: mainWindow.searched
-//    property string lang: mainWindow.lang
-//    property string err: mainWindow.errmsg
-//    //onErrChanged: search(false)
-//    onLangChanged: {
-//        if (coverstatus === "error") {
-//            placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed") //mainWindow.strappname + "\n" + mainWindow.strcovererr;
-//        }
-//    }
 
-
+    /*
+      Updates the cover, now specifying whether to use the original search time or
+      the current time to search. Updates the internal search object, thus making
+      this new search visible to the SearchPage as well.
+      */
     function refresh(now) {
         console.log("REFRESHING COVER " + coverstatus)
         listmodel.clear()
@@ -61,9 +59,15 @@ CoverBackground {
         coverstatus = "searching"
     }
 
-
+    /*
+      Used to perform searches, and intercept signals.
+      */
     Search {
         id: searcher
+
+        /*
+          Called when a search is ready in the Search class.
+          */
         onReady: {
             console.log("Ready signal received in CoverPage")
             listmodel.clear()
@@ -71,7 +75,8 @@ CoverBackground {
                 //No error
                 var tripindex = 0
                 var trip
-                while((trip = searcher.getTrip(tripindex))!==null) {
+                // Add the result to the list (only add the first 3, as the others won't be visible
+                while((trip = searcher.getTrip(tripindex))!==null || tripindex == 3) {
                     listmodel.append({  deptime: trip.getdeptime(),
                                         arivtime: trip.getarivtime(),
                                         depdate: trip.getdepdate(),
@@ -92,11 +97,6 @@ CoverBackground {
                 coverstatus = "error"
                 placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed") // mainWindow.strappname + "\n" + mainWindow.strcovererr;
             }
-        }
-        //TODO: TEST
-        onSearching: {
-            console.log("CoverPage, onSearchnig")
-            listmodel.clear()
         }
     }
     Timehelp {
@@ -139,24 +139,10 @@ CoverBackground {
             height: parent.height - from.height - to.height
             clip: true
 
-            property bool searching: false
-
-
-            //TODO: test double text error
-//            function doneloading(msg) {
-//                searching = false;
-//                if(msg === 0) {
-//                    error = false
-//                } else {
-//                    error = true;
-//                    placeholdertext.text = msg//mainWindow.errmsg;
-//                }
-//            }
-
             BusyIndicator {
                 id: busy
                 visible: coverstatus === "searching"
-                running: triplist.searching
+                running: coverstatus === "searching"
                 width: parent.width / 3
                 height: width
                 anchors.horizontalCenter:  parent.horizontalCenter
@@ -174,6 +160,9 @@ CoverBackground {
                 height: triplist.height / 3
                 width: triplist.width
 
+                /*
+                  Sets up the icons for the trip, using data from the Search object.
+                  */
                 Component.onCompleted: {
                     var legnr = 0
                     var leg
@@ -223,7 +212,7 @@ CoverBackground {
                         orientation: ListView.Horizontal
 
                         spacing: Theme.paddingSmall
-                        property int recsize0: height//(iconlist.width - 6*iconlist.spacing) / 7
+                        property int recsize0: height
 
                         model: ListModel {
                             id: iconmodel

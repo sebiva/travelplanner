@@ -22,27 +22,59 @@ function getDatabase() {
     return LS.LocalStorage.openDatabaseSync("Travelplanner", "1.0", "StorageDatabase", 100);
 }
 
+/*
+  Sets up the database, creating the necessary tables if needed.
+  */
 function setup() {
-    var db = getDatabase(); //db.transaction(function (trans) {
-        //trans.executeSql('DROP TABLE IF EXISTS favourites');
-        //console.log("TABLE CLEARED" + setuped)
-    //});
+    var db = getDatabase();
+    var res = 0
     db.transaction(function (trans) {
-        //trans.executeSql('DELETE FROM favourites')
-        trans.executeSql('CREATE TABLE IF NOT EXISTS favourites(fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT, time INTEGER, PRIMARY KEY(fromid, toid))');
-        trans.executeSql('CREATE TABLE IF NOT EXISTS lastsearch(fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT)')
-        trans.executeSql('CREATE TABLE IF NOT EXISTS settings(keyattr TEXT PRIMARY KEY, valueattr TEXT)')
-    });
-}
+        // Check if there are already any tables
+        var x = trans.executeSql('SELECT name FROM sqlite_master WHERE type="table" AND name="settings"')
+        var tablesexist = x.rows.length > 0
 
+        var transfer = false
+        if (tablesexist) {
+            // Get the version number to see if old favourites and lastsearch need to be imported
+            x = trans.executeSql('SELECT valueattr FROM settings WHERE keyattr = "version"')
+            var ver = x.rows.length === 0 ? 0 : x.rows.item(0)['valueattr'].valueOf()
+            if (ver < 0.5) {
+                trans.executeSql('ALTER TABLE favourites RENAME TO oldfavs')
+                trans.executeSql('ALTER TABLE lastsearch RENAME TO oldlast')
+                trans.executeSql('INSERT OR REPLACE INTO settings VALUES("version", "0.5")')
+                transfer = true
+            }
+        }
+        // Create the tables
+        trans.executeSql('CREATE TABLE IF NOT EXISTS favourites(backend TEXT, fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT, time INTEGER, PRIMARY KEY(backend, fromid, toid))');
+        trans.executeSql('CREATE TABLE IF NOT EXISTS lastsearch(backend TEXT, fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT, PRIMARY KEY(backend))')
+        trans.executeSql('CREATE TABLE IF NOT EXISTS settings(keyattr TEXT PRIMARY KEY, valueattr TEXT)')
+
+        // Transfer old favourites and lastsearches if needed
+        if (transfer) {
+            trans.executeSql('INSERT INTO favourites(backend,fromid,toid,fromstop,tostop,time) SELECT "Västtrafik",fromid,toid,fromstop,tostop,time FROM oldfavs')
+            trans.executeSql('INSERT INTO lastsearch(backend,fromid,toid,fromstop,tostop) SELECT "Västtrafik",fromid,toid,fromstop,tostop FROM oldlast')
+            trans.executeSql('DROP TABLE oldfavs')
+            trans.executeSql('DROP TABLE oldlast')
+        }
+        console.log("Database really set up")
+        res = 1
+    });
+    console.log("Database set up")
+    return res
+}
+/*
+  Sets a setting in the database to the given value. Returns 1 if successfull, otherwise 0.
+  */
 function setsetting(setting, value) {
     var db = getDatabase();
     var result;
     db.transaction(function (trans) {
+        // Clear the old value
         trans.executeSql('DELETE FROM settings WHERE keyattr=?',[setting])
+        //Set the new value
         var x = trans.executeSql('INSERT INTO settings VALUES(?, ?)', [setting, value]);
         if(x.rowsAffected > 0) {
-            //console.log("Setting saved: " + setting + ":" + value)
             result= 1;
         } else {
             result = 0;
@@ -51,6 +83,9 @@ function setsetting(setting, value) {
     return result;
 }
 
+/*
+  Gets a setting from the database. Returns 0 on failure.
+  */
 function getsetting(setting) {
     var db = getDatabase();
     var result;
@@ -61,17 +96,18 @@ function getsetting(setting) {
         }
         result = x.rows.item(0)['val'];
     });
-    //console.log("Getting setting: " + result + ", " + setting)
     return result;
 }
 
-
+/*
+  Saves a trip as a favourite. Returns 1 on success, 0 on failure.
+  */
 function setfav(fromid, toid, from, to) {
     var db = getDatabase();
     var result;
+    var backend = getsetting("backend")
     db.transaction(function (trans) {
-        var x = trans.executeSql('INSERT OR REPLACE INTO favourites VALUES(?, ?, ?, ?, datetime(?))', [fromid, toid, from, to, 'now']);
-        //console.log("ADDED: " + from + to)
+        var x = trans.executeSql('INSERT OR REPLACE INTO favourites VALUES(?, ?, ?, ?, ?, datetime(?))', [backend, fromid, toid, from, to, 'now']);
         if(x.rowsAffected > 0) {
             result= 1;
         } else {
@@ -81,11 +117,16 @@ function setfav(fromid, toid, from, to) {
     return result;
 }
 
+
+/*
+  Removes a trip from being a favourite. Returns 1 when a row is deleted, 0 otherwise.
+  */
 function remfav(fromid, toid) {
     var db = getDatabase();
     var result;
+    var backend = getsetting("backend")
     db.transaction(function (trans) {
-        var x = trans.executeSql('DELETE FROM favourites WHERE fromid=? AND toid=?', [fromid, toid]);
+        var x = trans.executeSql('DELETE FROM favourites WHERE backend=? AND fromid=? AND toid=?', [backend, fromid, toid]);
         if(x.rowsAffected > 0) {
             result= 1;
         } else {
@@ -95,17 +136,25 @@ function remfav(fromid, toid) {
     return result;
 }
 
+/*
+  Moves a favourite to the top of the "list"
+  */
 function movetotop(fromid, toid, from, to) {
     remfav(fromid, toid);
     setfav(fromid, toid, from, to);
 }
 
+/*
+  Gets all the favourites, returning them as json objects in a list.
+  If no favourites are found, 0 is returned.
+  */
 function getfaves() {
     var db = getDatabase();
     var result = [];
+    console.log("Getting favourites")
+    backend = getsetting("backend")
     db.transaction(function (trans) {
-        var x = trans.executeSql('SELECT * FROM favourites ORDER BY datetime(time) DESC');
-        //console.log("SIZE of fav: " + x.rows.length);
+        var x = trans.executeSql('SELECT * FROM favourites WHERE backend=?ORDER BY datetime(time) DESC', [backend]);
         for(var i=0; i<x.rows.length; i++) {
             var row = x.rows.item(i);
             result[i] = {
@@ -114,7 +163,6 @@ function getfaves() {
                 from: row['fromstop'],
                 to: row['tostop']
             }
-            //console.log(row['fromid'], row['toid'], row['fromstop'], row['tostop'], row['time']);
         }
 
         if(x.rows.length === 0) {
@@ -124,14 +172,21 @@ function getfaves() {
     return result;
 }
 
+/*
+  Gets the last trip searched, returning a json object. If there was
+  no last search, 0 is returned.
+  */
 function getlastsearch() {
     var db = getDatabase();
     var result;
+    var backend = getsetting("backend")
+    console.log("backend is " + backend)
     db.transaction(function (trans) {
-        var x = trans.executeSql('SELECT * FROM lastsearch');
-        //console.log("Getting : " + x.rows.length)
+        var x = trans.executeSql('SELECT * FROM lastsearch WHERE backend = ?', [backend]);
         if (x.rows.length !== 1) {
+            console.log("No last search found")
             result = 0;
+            return;
         }
 
         var row = x.rows.item(0);
@@ -147,13 +202,16 @@ function getlastsearch() {
     return result;
 }
 
+/*
+  Sets the last trip searched, returning 1 on success, or 0 on failure.
+  */
 function setlastsearch(fromid, toid, from, to) {
     var db = getDatabase();
     var result;
+    var backend = getsetting("backend")
     db.transaction(function (trans) {
-        //console.log("Setting: " + fromid + toid + from + to)
-        trans.executeSql('DELETE FROM lastsearch')
-        var x = trans.executeSql('INSERT INTO lastsearch VALUES(?, ?, ?, ?)', [fromid, toid, from, to]);
+        trans.executeSql('DELETE FROM lastsearch WHERE backend = ?', [backend])
+        var x = trans.executeSql('INSERT INTO lastsearch VALUES(?, ?, ?, ?, ?)', [backend, fromid, toid, from, to]);
         if(x.rowsAffected > 0) {
             result= 1;
         } else {

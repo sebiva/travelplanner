@@ -36,6 +36,8 @@ Dialog {
     property bool typing: fromtext.typing || totext.typing
     property int animtime: 500
 
+    property int database: mainWindow.verDB
+
     canAccept: (fromid !== "null") && (toid !== "null") && !typing;
     acceptDestination: canAccept ? Qt.resolvedUrl("SearchPage.qml") : null
 
@@ -50,6 +52,50 @@ Dialog {
         searcher.settimeofsearch(timehelp.getcurrenttime())
     }
 
+    onDatabaseChanged: {
+        console.log("Database changed according to mainpage")
+        updatelastsearch() //TODO: Signal in c++ instead
+        favlist.updatefavs()
+    }
+
+    /*
+      Updates the searchfields with the last succefull search from the database
+      */
+    function updatelastsearch() {
+        // Database not yet setup?
+        if (mainWindow.verDB == 0) {
+            return
+        }
+        var lastsearch = DBjs.getlastsearch()
+        if (lastsearch === 0) {
+            fromid = "null"
+            toid = "null"
+            from = ""
+            to = ""
+            fromtext.text = ""
+            totext.text = ""
+            fromready = false
+            toready = false
+            return;
+        }
+        fromid = lastsearch.fromid
+        toid = lastsearch.toid
+        fromtext.text = lastsearch.from
+        totext.text = lastsearch.to
+        from = lastsearch.from
+        to = lastsearch.to
+        fromready = true
+        toready = true
+    }
+
+    Component.onCompleted: {
+        console.log("Setting up db from main")
+        DBjs.setup()
+        incDB()
+        console.log("Db setup in main")
+        mainWindow.getsettings()
+        console.log("Loaded MainPage\n")
+    }
 
     Search {
         id: searcher
@@ -71,26 +117,6 @@ Dialog {
     }
     Timehelp {
         id: timehelp
-    }
-
-
-    Component.onCompleted: {
-
-        DBjs.setup()
-        mainWindow.getsettings()
-        var lastsearch = DBjs.getlastsearch()
-        if (lastsearch === 0) {
-            return;
-        }
-        fromid = lastsearch.fromid
-        toid = lastsearch.toid
-        fromtext.text = lastsearch.from
-        totext.text = lastsearch.to
-        from = lastsearch.from
-        to = lastsearch.to
-        fromready = true
-        toready = true
-        console.log("Loaded MainPage\n")
     }
 
     Column {
@@ -492,15 +518,16 @@ Dialog {
                 anchors.centerIn: parent;
                 text: qsTr("No favourites")
                 color: Theme.highlightColor;
-                Component.onCompleted: favlist.updatefavs()
             }
         }
         SilicaListView {
             id: favlist
             property bool empty: true
-
-            property int database: mainWindow.database
             function updatefavs() {
+                // Database not yet setup?
+                if (mainWindow.verDB == 0) {
+                    return
+                }
                 var res = DBjs.getfaves();
                 favmodel.clear();
                 if (res === 0) {
@@ -509,15 +536,11 @@ Dialog {
                 } else {
                     empty = false;
                 }
-                console.log("Updating favourites " + empty)
 
                 for(var i=0;i<res.length;i++) {
                     favmodel.append(res[i]);
                 }
             }
-
-            Component.onCompleted: updatefavs()
-            onDatabaseChanged: updatefavs()
 
             visible: !maindialog.typing && !empty
             header: Label {
@@ -582,6 +605,10 @@ Dialog {
                             text: qsTr("Delete")
                             onClicked: {
                                 console.log(favmodel.count + " " + index + " uahoeutna hej");
+                                // Database not yet setup?
+                                if (mainWindow.verDB == 0) {
+                                    return
+                                }
                                 DBjs.remfav(fid, tid);
 
                                 favmodel.remove(index);
@@ -594,6 +621,10 @@ Dialog {
                             text: qsTr("Move to top")
                             onClicked: {
                                 favmodel.move(index, 0, 1);
+                                // Database not yet setup?
+                                if (mainWindow.verDB == 0) {
+                                    return
+                                }
                                 DBjs.movetotop(fid, tid, favfromtext.text, favtotext.text);
                             }
                         }
