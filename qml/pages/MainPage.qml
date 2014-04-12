@@ -21,7 +21,7 @@ import Sailfish.Silica 1.0
 
 import "../database.js" as DBjs
 
-import searcher 1.0
+//import searcher 1.0
 import timehelp 1.0
 
 
@@ -41,15 +41,20 @@ Dialog {
     canAccept: (fromid !== "null") && (toid !== "null") && !typing;
     acceptDestination: canAccept ? Qt.resolvedUrl("SearchPage.qml") : null
 
+
+//    Search {
+//        id: searcher
+//    }
+
     onAccepted: {
-        searcher.setfromid(fromid)
-        searcher.settoid(toid)
-        searcher.setfrom(from)
-        searcher.setto(to)
-        searcher.setdate(datepicker.value)
-        searcher.settime(timepicker.value)
-        searcher.setdateofsearch(timehelp.getcurrentdate())
-        searcher.settimeofsearch(timehelp.getcurrenttime())
+        searchx.setfromid(fromid)
+        searchx.settoid(toid)
+        searchx.setfrom(from)
+        searchx.setto(to)
+        searchx.setdate(datepicker.value)
+        searchx.settime(timepicker.value)
+        searchx.setdateofsearch(timehelp.getcurrentdate())
+        searchx.settimeofsearch(timehelp.getcurrenttime())
     }
 
     onDatabaseChanged: {
@@ -62,6 +67,7 @@ Dialog {
       Updates the searchfields with the last succefull search from the database
       */
     function updatelastsearch() {
+        console.log("SearchX " + searchx.getdateofsearch())
         // Database not yet setup?
         if (mainWindow.verDB == 0) {
             return
@@ -97,8 +103,8 @@ Dialog {
         console.log("Loaded MainPage\n")
     }
 
-    Search {
-        id: searcher
+    Connections {
+        target: searchx
         onReady: console.log("Ready signal received in MainPage");
         //TODO: TEST
         onSearching: {
@@ -108,8 +114,8 @@ Dialog {
             console.log("Mainpage, stops ready")
             searchmodel.clear()
             var i = 0
-            while(i < searcher.getnumstops()) {
-                var data = searcher.getstop(i).split("#")
+            while(i < searchx.getnumstops()) {
+                var data = searchx.getstop(i).split("#")
                 searchmodel.append({name: data[0], nmbr: data[1] } )
                 i++
             }
@@ -202,7 +208,7 @@ Dialog {
                 }
 
                 function getsuggestions(text) {
-                    searcher.getstops(text)
+                    searchx.getstops(text)
                 }
 
                 function textchang(from) {

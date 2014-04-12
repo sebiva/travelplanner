@@ -19,10 +19,9 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-import "../search.js" as Searchjs
 import "../database.js" as DBjs
 
-import searcher 1.0
+//import searcher 1.0
 import timehelp 1.0
 
 Page {
@@ -35,25 +34,23 @@ Page {
         if (status === PageStatus.Active) {
             console.log("SEARCHING from SearchPage")
             listmodel.clear()
-            searcher.search()
-            searcher.setdateofsearch(timehelp.getcurrentdatestr())
-            searcher.settimeofsearch(timehelp.getcurrenttimestr())
-            fromlabel.text = qsTr("From") + " " + searcher.getfrom()
-            tolabel.text = qsTr("To") + " " + searcher.getto()
-            datelabel.text = searcher.getdate()
-            timelabel.text = searcher.gettime()
+            searchx.search()
+            searchx.setdateofsearch(timehelp.getcurrentdatestr())
+            searchx.settimeofsearch(timehelp.getcurrenttimestr())
+            fromlabel.text = qsTr("From") + " " + searchx.getfrom()
+            tolabel.text = qsTr("To") + " " + searchx.getto()
+            datelabel.text = searchx.getdate()
+            timelabel.text = searchx.gettime()
         }
     }
 
-    function search() {
-        mainWindow.timeofsearch = timehelp.getcurrenttimestr()
-        mainWindow.dateofsearch = timehelp.getcurrentdatestr()
-        console.log("IN SEARCHPAGE SEARCH::" + date + time)
-        listmodel.clear()
-    }
+//    Search {
+//        id: searcher
+//    }
 
-    Search {
-        id: searcher
+
+    Connections {
+        target: searchx
         onReady: {
             console.log("Ready signal received in SearchPage")
             listmodel.clear()
@@ -61,19 +58,19 @@ Page {
                 //No error
                 listView.setup()
 
-                DBjs.setlastsearch(getfromid(), gettoid(),
-                                   getfrom(), getto())
+                DBjs.setlastsearch(searchx.getfromid(), searchx.gettoid(),
+                                   searchx.getfrom(), searchx.getto())
                 mainWindow.incDB()
 
                 searchpage.searching = false
                 searchpage.error = false
                 mainWindow.avail = false
-                mainWindow.from = searcher.getfrom()
-                mainWindow.to = searcher.getto()
-                mainWindow.fromid = searcher.getfromid()
-                mainWindow.toid = searcher.gettoid()
-                mainWindow.time = searcher.gettime()
-                mainWindow.date = searcher.getdate()
+                mainWindow.from = searchx.getfrom()
+                mainWindow.to = searchx.getto()
+                mainWindow.fromid = searchx.getfromid()
+                mainWindow.toid = searchx.gettoid()
+                mainWindow.time = searchx.gettime()
+                mainWindow.date = searchx.getdate()
                 mainWindow.avail = true;
             } else {
                 console.log("ERROR IN SEARCHPAGE: " + err);
@@ -83,15 +80,21 @@ Page {
                 mainWindow.errmsg = qsTr("Search failed:") + "\n" + err; //TODO: formating on long messages
             }
         }
-
         //TODO: TEST
         onSearching: {
             console.log("SearchPage, onSearchnig")
-            fromlabel.text = qsTr("From") + " " + searcher.getfrom()
-            tolabel.text = qsTr("To") + " " + searcher.getto()
-            datelabel.text = searcher.getdate()
-            timelabel.text = searcher.gettime()
+            fromlabel.text = qsTr("From") + " " + searchx.getfrom()
+            tolabel.text = qsTr("To") + " " + searchx.getto()
+            datelabel.text = searchx.getdate()
+            timelabel.text = searchx.gettime()
         }
+    }
+
+    function search() {
+        mainWindow.timeofsearch = timehelp.getcurrenttimestr()
+        mainWindow.dateofsearch = timehelp.getcurrentdatestr()
+        console.log("IN SEARCHPAGE SEARCH::" + date + time)
+        listmodel.clear()
     }
 
     Timehelp {
@@ -113,7 +116,7 @@ Page {
                         if (mainWindow.verDB == 0) {
                             return
                         }
-                        DBjs.setfav(searcher.getfromid(), searcher.gettoid(), searcher.getfrom(), searcher.getto());
+                        DBjs.setfav(searchx.getfromid(), searchx.gettoid(), searchx.getfrom(), searchx.getto());
                         mainWindow.incDB()
                     }
                 }
@@ -131,14 +134,14 @@ Page {
                     width: parent.width - 2*x
                     Label {
                         id: fromlabel
-                        text: qsTr("From") + " " + searcher.getfrom()
+                        text: qsTr("From") + " " + searchx.getfrom()
                         truncationMode: TruncationMode.Elide
                         width: parent.width - timelabel.width
                         color: Theme.secondaryHighlightColor
                     }
                     Label {
                         id: timelabel
-                        text: searcher.gettime()
+                        text: searchx.gettime()
                         horizontalAlignment: Text.AlignRight
                     }
                 }
@@ -149,14 +152,14 @@ Page {
                     width: parent.width - 2*x
                     Label {
                         id: tolabel
-                        text: qsTr("To") + " " + searcher.getto()
+                        text: qsTr("To") + " " + searchx.getto()
                         truncationMode: TruncationMode.Elide
                         width: parent.width - datelabel.width
                         color: Theme.highlightColor
                     }
                     Label {
                         id: datelabel
-                        text: searcher.getdate()
+                        text: searchx.getdate()
                         horizontalAlignment: Text.AlignRight
                     }
                 }
@@ -177,18 +180,18 @@ Page {
             function setup() {
                 var tripindex = 0
                 var trip
-                while((trip = searcher.getTrip(tripindex))!==null) {
+                while((trip = searchx.getTrip(tripindex))!==null) {
                     listmodel.append({  deptime: trip.getdeptime(),
-                                        arivtime: trip.getarivtime(),
-                                        depdate: trip.getdepdate(),
-                                        arivdate: trip.getarivdate(),
-                                        deprttime: trip.getdeprttime(),
-                                        arivrttime: trip.getarivrttime(),
-                                        deprtdate: trip.getdeprtdate(),
-                                        arivrtdate: trip.getarivrtdate(),
-                                        depdelay: trip.getdepdelay(),
-                                        arivdelay: trip.getarivdelay(),
-                                        duration: trip.getduration()  })
+                                         arivtime: trip.getarivtime(),
+                                         depdate: trip.getdepdate(),
+                                         arivdate: trip.getarivdate(),
+                                         deprttime: trip.getdeprttime(),
+                                         arivrttime: trip.getarivrttime(),
+                                         deprtdate: trip.getdeprtdate(),
+                                         arivrtdate: trip.getarivrtdate(),
+                                         depdelay: trip.getdepdelay(),
+                                         arivdelay: trip.getarivdelay(),
+                                         duration: trip.getduration()  })
                     tripindex++
                 }
             }
@@ -280,7 +283,7 @@ Page {
                         function setupicons() {
                             var legnr = 0
                             var leg
-                            while((leg = searcher.getLeg(index, legnr)) !== null) {
+                            while((leg = searchx.getLeg(index, legnr)) !== null) {
                                 iconmodel.append({name: leg.line, fgcolour: leg.fgcolour, bgcolour: leg.bgcolour, dir: leg.dir,
                                                      fromname: leg.from.split(",")[0], fromtrack: leg.fromtrack,
                                                      destname: leg.to.split(",")[0], totrack: leg.totrack,
@@ -485,7 +488,7 @@ Page {
                             target: iconlist
                             orientation: ListView.Vertical
                             recsize: width / 4
-                            height: searcher.getnumlegs(index) !== -1 ? (spacing + recsize) * searcher.getnumlegs(index) - spacing : 0
+                            height: searchx.getnumlegs(index) !== -1 ? (spacing + recsize) * searchx.getnumlegs(index) - spacing : 0
                             textvis: true
                         }
                     }

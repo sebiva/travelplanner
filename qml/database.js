@@ -57,10 +57,8 @@ function setup() {
             trans.executeSql('DROP TABLE oldfavs')
             trans.executeSql('DROP TABLE oldlast')
         }
-        console.log("Database really set up")
         res = 1
     });
-    console.log("Database set up")
     return res
 }
 /*

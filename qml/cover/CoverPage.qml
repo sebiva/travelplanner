@@ -20,7 +20,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-import searcher 1.0
+//import searcher 1.0
 import timehelp 1.0
 
 CoverBackground {
@@ -47,23 +47,27 @@ CoverBackground {
             placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed")
         }
         console.log("Refreshing Cover")
-        var time = searcher.gettime()
-        var date = searcher.getdate()
+        var time = searchx.gettime()
+        var date = searchx.getdate()
         if (now) {
             time = timehelp.getcurrenttimestr();
             date = timehelp.getcurrentdatestr();
         }
-        searcher.search(searcher.getfromid(),searcher.gettoid(),date,time)
-        searcher.setdateofsearch(timehelp.getcurrentdatestr())
-        searcher.settimeofsearch(timehelp.getcurrenttimestr())
+        searchx.search(searchx.getfromid(),searchx.gettoid(),date,time)
+        searchx.setdateofsearch(timehelp.getcurrentdatestr())
+        searchx.settimeofsearch(timehelp.getcurrenttimestr())
         coverstatus = "searching"
     }
+
+//    Search {
+//        id: searcher
+//    }
 
     /*
       Used to perform searches, and intercept signals.
       */
-    Search {
-        id: searcher
+    Connections {
+        target: searchx
 
         /*
           Called when a search is ready in the Search class.
@@ -76,7 +80,7 @@ CoverBackground {
                 var tripindex = 0
                 var trip
                 // Add the result to the list (only add the first 3, as the others won't be visible
-                while((trip = searcher.getTrip(tripindex))!==null || tripindex == 3) {
+                while((trip = searchx.getTrip(tripindex))!==null || tripindex == 3) {
                     listmodel.append({  deptime: trip.getdeptime(),
                                         arivtime: trip.getarivtime(),
                                         depdate: trip.getdepdate(),
@@ -90,19 +94,18 @@ CoverBackground {
                                         duration: trip.getduration()  })
                     tripindex++
                 }
-                from.text = searcher.getfrom()
-                to.text = searcher.getto()
+                from.text = searchx.getfrom()
+                to.text = searchx.getto()
                 coverstatus = "avail"
             } else {
                 coverstatus = "error"
-                placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed") // mainWindow.strappname + "\n" + mainWindow.strcovererr;
+                placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed")
             }
         }
     }
     Timehelp {
         id: timehelp
     }
-
 
     Column {
         anchors.centerIn: parent
@@ -166,7 +169,7 @@ CoverBackground {
                 Component.onCompleted: {
                     var legnr = 0
                     var leg
-                    while((leg = searcher.getLeg(index, legnr)) !== null) {
+                    while((leg = searchx.getLeg(index, legnr)) !== null) {
                         iconmodel.append({name: leg.line, fgcolour: leg.fgcolour, bgcolour: leg.bgcolour, dir: leg.dir,
                                              fromname: leg.from.split(",")[0], fromtrack: leg.fromtrack,
                                              destname: leg.to.split(",")[0], totrack: leg.totrack,

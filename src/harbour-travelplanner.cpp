@@ -25,26 +25,47 @@
 #include <QLocale>
 
 #include <QtQml/QQmlEngine>
+
 #include <qqml.h>
 #include "src/vasttrafik.h"
 #include "src/search.h"
 #include <sailfishapp.h>
 #include "timehelper.h"
 
+#include <QScopedPointer>
+
 
 int main(int argc, char *argv[])
 {
     Vasttrafik::getinstance();
-    qmlRegisterType<Search>("searcher", 1, 0, "Search");
+    //qmlRegisterType<Search>("searcher", 1, 0, "Search");
     qmlRegisterType<Timehelper>("timehelp", 1,0, "Timehelp");
 
-    QGuiApplication * app = SailfishApp::application(argc, argv);
+    QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
+    QScopedPointer<QQuickView> view(SailfishApp::createView());
+    Search s;
+    view->rootContext()->setContextProperty("searchx",  &s);
+    view->setSource(SailfishApp::pathTo("qml/harbour-travelplanner.qml"));
+    view->show();
+    view->showFullScreen();
+    return app->exec();
 
+
+    //QGuiApplication * app = SailfishApp::application(argc, argv);
+
+//    QGuiApplication * app = (SailfishApp::application(argc, argv));
+//    QQuickView * view = (SailfishApp::createView());
+//    Search se;
+//    view->rootContext()->setContextProperty("searchx", &se);
+//    //SailfishApp:setView(view.data(), QUrl::fromLocalFile("../qml/harbour-travelplanner.qml"));
+
+    //Singleton~
+//    QQuickView view;
+//    Search s;
+//    view.rootContext()->setContextProperty("searcher22", &s);
+    //view.setSource(QUrl::fromLocalFile("../qml/harbour-travelplanner.qml"));
 
     //Translations
-
-
-
     QString langCode(getenv("LANG"));
     qDebug() << "Code" << langCode;
     if (langCode.isEmpty() || langCode == "C" || !langCode.contains("_"))

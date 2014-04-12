@@ -20,7 +20,8 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "pages"
 import "database.js" as DBjs
-import searcher 1.0
+
+//import searcher 1.0
 
 ApplicationWindow
 {
@@ -44,10 +45,6 @@ ApplicationWindow
 
     property int searched: 1
 
-    Search {
-        id: searcher
-    }
-
     function incDB() {
         if (verDB===0) {
             verDB = 1;
@@ -56,8 +53,12 @@ ApplicationWindow
         }
     }
 
+//    Search {
+//        id: searcher
+//    }
+
     function getsettings() {
-        var language = searcher.getlanguage()
+        var language = searchx.getlanguage()
         if (language !== null) {
             lang = language
         } else {
@@ -75,13 +76,13 @@ ApplicationWindow
         } else {
             backend = "Västtrafik"
         }
-        searcher.setbackend(backend); //Set the backend properly
+        searchx.setbackend(backend); //Set the backend properly
     }
 
     function getsetting(setting) {
         var value = ""
         if (setting === "language") {
-            value = searcher.getlanguage()
+            value = searchx.getlanguage()
             if (value === null) {
                 setsetting(setting, stren)
                 value = stren
@@ -110,7 +111,7 @@ ApplicationWindow
             changetime = value
         } else if (setting === "backend") {
             backend = "Västtrafik"
-            searcher.setbackend(backend);
+            searchx.setbackend(backend);
         }
         DBjs.setsetting(setting, value)
         console.log("Database changed")

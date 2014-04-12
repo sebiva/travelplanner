@@ -26,7 +26,6 @@ Search::Search(QObject *parent) :
 }
 
 void Search::setbackend(QString backend) {
-    qDebug() << "Stting backend";
     if (backend == "Västtrafik") {
         qDebug() << "Setting backend to Västtrafik";
         mparser = Vasttrafik::getinstance();
@@ -36,6 +35,7 @@ void Search::setbackend(QString backend) {
     } else {
         return;
     }
+    //parent
 
     connect(mparser,SIGNAL(replyready(QString)),this,SLOT(parseready(QString)));
     connect(mparser,SIGNAL(stopsready(QString)),this,SLOT(stopsreceived(QString)));

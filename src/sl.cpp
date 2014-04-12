@@ -101,7 +101,7 @@ void SL::parsestops(QNetworkReply *reply) {
         qDebug() << "Site | Sites true?" << xml.name() << xml.isEndElement();
         count++;
     }
-
-
+    emit stopsready("");
+    sender()->deleteLater();
 
 }
