@@ -110,7 +110,7 @@ ApplicationWindow
         } else if (setting === "changetime") {
             changetime = value
         } else if (setting === "backend") {
-            backend = "Västtrafik"
+            backend = value
             searchx.setbackend(backend);
         }
         DBjs.setsetting(setting, value)

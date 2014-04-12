@@ -67,7 +67,6 @@ Dialog {
       Updates the searchfields with the last succefull search from the database
       */
     function updatelastsearch() {
-        console.log("SearchX " + searchx.getdateofsearch())
         // Database not yet setup?
         if (mainWindow.verDB == 0) {
             return

@@ -35,7 +35,8 @@ void Search::setbackend(QString backend) {
     } else {
         return;
     }
-    //parent
+    //Clear the current search
+    mparser->cleartrips();
 
     connect(mparser,SIGNAL(replyready(QString)),this,SLOT(parseready(QString)));
     connect(mparser,SIGNAL(stopsready(QString)),this,SLOT(stopsreceived(QString)));

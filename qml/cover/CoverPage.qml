@@ -33,6 +33,7 @@ CoverBackground {
       "avail"; a result is displayed
       */
     property string coverstatus: "started"
+    property string backend: mainWindow.backend
 
     /*
       Updates the cover, now specifying whether to use the original search time or
@@ -59,9 +60,18 @@ CoverBackground {
         coverstatus = "searching"
     }
 
-//    Search {
-//        id: searcher
-//    }
+    onBackendChanged: {
+        console.log("Database changed according to coverpage")
+
+        //Clear the search
+        listmodel.clear()
+        coverstatus = "started"
+
+    }
+
+    //    Search {
+    //        id: searcher
+    //    }
 
     /*
       Used to perform searches, and intercept signals.
@@ -82,16 +92,16 @@ CoverBackground {
                 // Add the result to the list (only add the first 3, as the others won't be visible
                 while((trip = searchx.getTrip(tripindex))!==null || tripindex == 3) {
                     listmodel.append({  deptime: trip.getdeptime(),
-                                        arivtime: trip.getarivtime(),
-                                        depdate: trip.getdepdate(),
-                                        arivdate: trip.getarivdate(),
-                                        deprttime: trip.getdeprttime(),
-                                        arivrttime: trip.getarivrttime(),
-                                        deprtdate: trip.getdeprtdate(),
-                                        arivrtdate: trip.getarivrtdate(),
-                                        depdelay: trip.getdepdelay(),
-                                        arivdelay: trip.getarivdelay(),
-                                        duration: trip.getduration()  })
+                                         arivtime: trip.getarivtime(),
+                                         depdate: trip.getdepdate(),
+                                         arivdate: trip.getarivdate(),
+                                         deprttime: trip.getdeprttime(),
+                                         arivrttime: trip.getarivrttime(),
+                                         deprtdate: trip.getdeprtdate(),
+                                         arivrtdate: trip.getarivrtdate(),
+                                         depdelay: trip.getdepdelay(),
+                                         arivdelay: trip.getarivdelay(),
+                                         duration: trip.getduration()  })
                     tripindex++
                 }
                 from.text = searchx.getfrom()
@@ -103,6 +113,7 @@ CoverBackground {
             }
         }
     }
+
     Timehelp {
         id: timehelp
     }
