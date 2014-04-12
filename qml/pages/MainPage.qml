@@ -631,30 +631,32 @@ Dialog {
                     }
                     Column {
                         id: faventry
+                        width: maindialog.width - 2 * Theme.paddingLarge
+                        x: Theme.paddingLarge
                         Row {
-                            x: Theme.paddingSmall
+                            width: parent.width
                             y: Theme.paddingSmall
                             Label {
                                 id: favfromheadtext
-                                x: Theme.paddingMedium
                                 text: qsTr("From") + ": "
                                 color: Theme.secondaryHighlightColor
                             }
 
                             Label {
                                 id: favfromtext
-                                x: Theme.paddingMedium
                                 text: from
+                                width: parent.width - favfromheadtext.width
+                                truncationMode: TruncationMode.Elide
                                 font.pixelSize: Theme.fontSizeMedium
                                 opacity: 0.6
                             }
                         }
                         Row {
-                            x: Theme.paddingSmall
+                            width: parent.width
                             y: Theme.paddingSmall
+
                             Label {
                                 id: favtoheadtext
-                                x: Theme.paddingMedium
                                 text: qsTr("To") + ":"
                                 color: Theme.highlightColor
                                 width: favfromheadtext.width
@@ -662,8 +664,9 @@ Dialog {
                             }
                             Label {
                                 id: favtotext
-                                x: Theme.paddingMedium
                                 text: to
+                                width: parent.width - favtoheadtext.width
+                                truncationMode: TruncationMode.Elide
                                 font.pixelSize: Theme.fontSizeMedium
                                 opacity: 0.8
                             }
