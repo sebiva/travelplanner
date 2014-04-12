@@ -46,6 +46,10 @@ private:
 
     QString toappdate(QString sldate);
     QString tosldate(QString appdate);
+
+    static QString red;
+    static QString green;
+    static QString blue;
 };
 
 #endif // SL_H

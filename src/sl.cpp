@@ -6,6 +6,10 @@ QString SL::nameaddress =
         "https://api.trafiklab.se/sl/realtid/GetSite.xml?key=pZwMMjTu8Ye8bReCbEiegba4AHUoWnJg&stationSearch=";
 SL *SL::msl = 0;
 
+QString SL::red = "#F1491c";
+QString SL::green = "#6ec72d";
+QString SL::blue = "#25368b";
+
 
 SL::SL()
 {
@@ -45,6 +49,7 @@ void SL::parsereply(QNetworkReply *reply) {
         return;
     }
 
+    trips->clear();
     QTextCodec *cod = QTextCodec::codecForName("iso-8859-1");
     QString bytes = cod->toUnicode(reply->readAll());
 
@@ -137,15 +142,41 @@ void SL::parsereply(QNetworkReply *reply) {
 
             qDebug() << leg->mline << leg->mdir;
 
+            QString type = transport.value("Type").toString();
+            qDebug() << "Type" << type;
+            if (type == "MET") {
+                if (leg->mline == "10" || leg->mline == "11") {
+                    leg->mfgcolour = blue;
+                } else if (leg->mline == "13" || leg->mline == "14") {
+                    leg->mfgcolour = red;
+                } else if (leg->mline == "17" || leg->mline == "18" || leg->mline == "19") {
+                    leg->mfgcolour = green;
+                }
+                leg->mbgcolour = "#ffffff";
+                leg->mline = "T" + leg->mline;
+            } else if (type == "BUS") {
+                leg->mfgcolour = "#ffffff";
+                leg->mbgcolour = "#00abe5";
+            } else if (type == "SHP") {
+                leg->mfgcolour = "#00abe5";
+                leg->mbgcolour = "#ffffff";
+            } else if (type == "TRN") {
+                leg->mfgcolour = "#000000";
+            }
+
+
+
+
             QJsonObject origin = subtrip.value("Origin").toObject();
             //Add origin info
             leg->mfrom = origin.value("#text").toString();
             leg->mfromid = "null";
             leg->mfromtrack = "";
-            leg->mdepdate = toappdate(summary.value("DepartureDate").toString());
+            leg->mdepdate = toappdate(subtrip.value("DepartureDate").toString());
             leg->mdeprtdate = leg->mdepdate;
-            leg->mdeptime = summary.value("DepartureTime").toObject().value("#text").toString();
+            leg->mdeptime = subtrip.value("DepartureTime").toObject().value("#text").toString();
             leg->mdeprttime = leg->mdeptime;
+
 
             qDebug() << leg->mfrom << leg->mdepdate << leg->mdeptime;
 
@@ -154,9 +185,9 @@ void SL::parsereply(QNetworkReply *reply) {
             leg->mto = destination.value("#text").toString();
             leg->mtoid = "null";
             leg->mtotrack = "";
-            leg->marivdate = toappdate(summary.value("ArrivalDate").toString());
+            leg->marivdate = toappdate(subtrip.value("ArrivalDate").toString());
             leg->marivrtdate = leg->marivdate;
-            leg->marivtime = summary.value("ArrivalTime").toObject().value("#text").toString();
+            leg->marivtime = subtrip.value("ArrivalTime").toObject().value("#text").toString();
             leg->marivrttime = leg->marivtime;
 
             qDebug() << leg->mto << leg->marivdate << leg->marivtime;
