@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 
     QScopedPointer<QQuickView> view(SailfishApp::createView());
     Search s;
+    s.setParent(app.data()); //TODO: Test if no mem crash, may work without this line
     view->rootContext()->setContextProperty("searchx",  &s);
     view->setSource(SailfishApp::pathTo("qml/harbour-travelplanner.qml"));
     view->show();

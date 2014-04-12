@@ -4,15 +4,15 @@
 <context>
     <name>CoverPage</name>
     <message>
-        <location filename="../qml/cover/CoverPage.qml" line="49"/>
-        <location filename="../qml/cover/CoverPage.qml" line="93"/>
-        <location filename="../qml/cover/CoverPage.qml" line="125"/>
+        <location filename="../qml/cover/CoverPage.qml" line="48"/>
+        <location filename="../qml/cover/CoverPage.qml" line="112"/>
+        <location filename="../qml/cover/CoverPage.qml" line="139"/>
         <source>Travelplanner</source>
         <translation>Reseplaneraren</translation>
     </message>
     <message>
-        <location filename="../qml/cover/CoverPage.qml" line="49"/>
-        <location filename="../qml/cover/CoverPage.qml" line="93"/>
+        <location filename="../qml/cover/CoverPage.qml" line="48"/>
+        <location filename="../qml/cover/CoverPage.qml" line="112"/>
         <source>Search failed</source>
         <translation>Sökningen\nmisslyckades</translation>
     </message>
@@ -20,69 +20,69 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="126"/>
+        <location filename="../qml/pages/MainPage.qml" line="142"/>
         <source>Settings</source>
         <translation>Inställningar</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="134"/>
+        <location filename="../qml/pages/MainPage.qml" line="150"/>
         <source>Change direction</source>
         <translation>Byt riktning</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="181"/>
+        <location filename="../qml/pages/MainPage.qml" line="197"/>
         <source>Search</source>
         <translation>Sök</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="181"/>
+        <location filename="../qml/pages/MainPage.qml" line="197"/>
         <source>Travelplanner</source>
         <translation>Reseplaneraren</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="234"/>
-        <location filename="../qml/pages/MainPage.qml" line="624"/>
+        <location filename="../qml/pages/MainPage.qml" line="250"/>
+        <location filename="../qml/pages/MainPage.qml" line="646"/>
         <source>From</source>
         <translation>Från</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="300"/>
-        <location filename="../qml/pages/MainPage.qml" line="642"/>
+        <location filename="../qml/pages/MainPage.qml" line="316"/>
+        <location filename="../qml/pages/MainPage.qml" line="665"/>
         <source>To</source>
         <translation>Till</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="382"/>
+        <location filename="../qml/pages/MainPage.qml" line="398"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="402"/>
+        <location filename="../qml/pages/MainPage.qml" line="418"/>
         <source>Time</source>
         <translation>Tid</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="408"/>
+        <location filename="../qml/pages/MainPage.qml" line="424"/>
         <source>Now</source>
         <translation>Nu</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="508"/>
+        <location filename="../qml/pages/MainPage.qml" line="524"/>
         <source>No favourites</source>
         <translation>Inga favoriter</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="539"/>
+        <location filename="../qml/pages/MainPage.qml" line="552"/>
         <source>Favourites</source>
         <translation>Favoriter</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="597"/>
+        <location filename="../qml/pages/MainPage.qml" line="610"/>
         <source>Delete</source>
         <translation>Ta bort</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="609"/>
+        <location filename="../qml/pages/MainPage.qml" line="626"/>
         <source>Move to top</source>
         <translation>Flytta överst</translation>
     </message>
@@ -119,25 +119,33 @@
     </message>
 </context>
 <context>
+    <name>SL</name>
+    <message>
+        <location filename="../src/sl.cpp" line="138"/>
+        <source>Departed</source>
+        <translation>Avgången</translation>
+    </message>
+</context>
+<context>
     <name>SearchPage</name>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="44"/>
-        <location filename="../qml/pages/SearchPage.qml" line="90"/>
-        <location filename="../qml/pages/SearchPage.qml" line="130"/>
-        <location filename="../qml/pages/SearchPage.qml" line="334"/>
+        <location filename="../qml/pages/SearchPage.qml" line="40"/>
+        <location filename="../qml/pages/SearchPage.qml" line="86"/>
+        <location filename="../qml/pages/SearchPage.qml" line="137"/>
+        <location filename="../qml/pages/SearchPage.qml" line="341"/>
         <source>From</source>
         <translation>Från</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="45"/>
-        <location filename="../qml/pages/SearchPage.qml" line="91"/>
-        <location filename="../qml/pages/SearchPage.qml" line="148"/>
-        <location filename="../qml/pages/SearchPage.qml" line="372"/>
+        <location filename="../qml/pages/SearchPage.qml" line="41"/>
+        <location filename="../qml/pages/SearchPage.qml" line="87"/>
+        <location filename="../qml/pages/SearchPage.qml" line="155"/>
+        <location filename="../qml/pages/SearchPage.qml" line="379"/>
         <source>To</source>
         <translation>Till</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="83"/>
+        <location filename="../qml/pages/SearchPage.qml" line="80"/>
         <source>Search failed:</source>
         <translation>Sökningen misslyckades:</translation>
     </message>
@@ -147,12 +155,12 @@
         <translation type="obsolete">Sökningen misslyckades:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="110"/>
+        <location filename="../qml/pages/SearchPage.qml" line="113"/>
         <source>Save as favourite</source>
         <translation>Spara som favorit</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="122"/>
+        <location filename="../qml/pages/SearchPage.qml" line="129"/>
         <source>Search results</source>
         <translation>Sökresultat</translation>
     </message>
@@ -203,33 +211,33 @@
 <context>
     <name>Vasttrafik</name>
     <message>
-        <location filename="../src/vasttrafik.cpp" line="92"/>
-        <location filename="../src/vasttrafik.cpp" line="182"/>
+        <location filename="../src/vasttrafik.cpp" line="103"/>
+        <location filename="../src/vasttrafik.cpp" line="191"/>
         <source>walk</source>
         <translation>gå</translation>
     </message>
     <message>
-        <location filename="../src/vasttrafik.cpp" line="95"/>
+        <location filename="../src/vasttrafik.cpp" line="106"/>
         <source>Walk</source>
         <translation>Gå</translation>
     </message>
     <message>
-        <location filename="../src/vasttrafik.cpp" line="104"/>
+        <location filename="../src/vasttrafik.cpp" line="115"/>
         <source>train</source>
         <translation>tåg</translation>
     </message>
     <message>
-        <location filename="../src/vasttrafik.cpp" line="227"/>
+        <location filename="../src/vasttrafik.cpp" line="232"/>
         <source>Departed</source>
         <translation>Avgången</translation>
     </message>
     <message>
-        <location filename="../src/vasttrafik.cpp" line="236"/>
+        <location filename="../src/vasttrafik.cpp" line="241"/>
         <source>Canceled</source>
         <translation>Inställd</translation>
     </message>
     <message>
-        <location filename="../src/vasttrafik.cpp" line="239"/>
+        <location filename="../src/vasttrafik.cpp" line="244"/>
         <source>Risk to miss</source>
         <translation>Risk att missa</translation>
     </message>
@@ -237,7 +245,7 @@
 <context>
     <name>harbour-travelplanner</name>
     <message>
-        <location filename="../qml/harbour-travelplanner.qml" line="39"/>
+        <location filename="../qml/harbour-travelplanner.qml" line="40"/>
         <source>Search failed:</source>
         <translation>Sökningen misslyckades:</translation>
     </message>

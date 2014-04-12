@@ -97,6 +97,8 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
             leg->mbgcolour = attr.value("bgColor").toString();
             QString sname = attr.value("sname").toString();
 
+
+            //Fix approriate line name
             if (leg->mline == "Gå") {
                 leg->mline = tr("walk");
                 leg->mfgcolour = "#00abe5";
@@ -182,12 +184,10 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
                     leg->marivrttime = leg->marivtime;
                 }
             }
-            //qDebug() << "Leginfo: " << xml.name() << xml.attributes().value("name");
 
 
 
             //There is no journeydetail for walking
-            //qDebug() << "Type: " << leg->mline << "Gå?";
             if (leg->mline == tr("walk")) {
 
                 //Go to next leg (or trip)
@@ -207,15 +207,12 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
             //Go to the journeydetails, and skip them
             xml.skipCurrentElement();
             xml.readNextStartElement();
-            //qDebug() << "Journey?: " << xml.name() << xml.attributes().value("name");
+
             //Skip journeydetails
             xml.skipCurrentElement();
             xml.readNextStartElement();
-            //qDebug() << "Journey2?: " << xml.name() << xml.attributes().value("name");
-
             //Read the next Leg(or trip)
             xml.readNextStartElement();
-            //qDebug() << "Journey3?: " << xml.name() << xml.attributes().value("name");
 
             leg->calculatetimes();
             trip->addleg(leg);
@@ -229,7 +226,6 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
         }
 
         xml.readNextStartElement();
-        //qDebug() << "afterlegs2" << xml.name();
 
         if (Timehelper::beforenow(trip->deprtdate, trip->deprttime)) {
             trip->passed = true;
@@ -286,7 +282,6 @@ void Vasttrafik::parsestops(QNetworkReply *reply) {
     int count = 0;
     xml.readNextStartElement(); //First stop element
     while(!xml.isEndElement() && count < 10) {
-        //qDebug() << xml.name() << xml.attributes().value("name");
 
         QString type = xml.name().toString();
         if (type == "StopLocation") {
@@ -295,11 +290,9 @@ void Vasttrafik::parsestops(QNetworkReply *reply) {
             QString id = xml.attributes().value("id").toString();
             stops->append(name + "#" + id);
         }
-        //qDebug() << xml.name() << xml.attributes().value("name");
+
         xml.skipCurrentElement();
-        //qDebug() << xml.name() << xml.isEndElement();
         xml.readNextStartElement();
-        //qDebug() << xml.name() << xml.isEndElement();
     }
     emit stopsready("");
     sender()->deleteLater();

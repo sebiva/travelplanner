@@ -8,6 +8,10 @@
 #include <QNetworkReply>
 
 #include <QXmlStreamReader>
+#include <QTemporaryFile>
+#include <QJsonDocument>
+#include <QByteArray>
+#include <QTextCodec>
 
 #include <QtDebug>
 
@@ -32,12 +36,16 @@ public slots:
     void parsestops(QNetworkReply *reply);
     void parsereply(QNetworkReply *reply);
 
-private:
+private:   
     static QString address;
     static QString nameaddress;
     static SL *msl;
 
     explicit SL();
+
+
+    QString toappdate(QString sldate);
+    QString tosldate(QString appdate);
 };
 
 #endif // SL_H
