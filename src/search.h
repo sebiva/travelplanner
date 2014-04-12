@@ -121,7 +121,7 @@ public slots:
     void stopsreceived(QString err);
 
 private:
-    /*static*/ Parser * mparser;
+    static Parser * mparser;
 
 };
 #endif // SEARCH_H

@@ -42,6 +42,28 @@ int main(int argc, char *argv[])
     qmlRegisterType<Timehelper>("timehelp", 1,0, "Timehelp");
 
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
+
+    //Translations
+    QString langCode(getenv("LANG"));
+    qDebug() << "Code" << langCode;
+    if (langCode.isEmpty() || langCode == "C" || !langCode.contains("_"))
+        langCode = QLocale::system().name();
+    if (langCode.contains('.'))
+        langCode = langCode.mid(0, langCode.lastIndexOf('.'));
+    QString filename = QString("languages/harbour_travelplanner_") + langCode;
+
+    qDebug() << "Language Code:" << langCode;
+    static QTranslator translator;
+    if( translator.load(filename, ":/") ){
+        app->installTranslator(&translator);
+        //QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
+        qDebug() << "Translation file loaded" << filename;
+    } else
+        qDebug() << "Translation file not loaded:" << filename;
+
+
+
+
     QScopedPointer<QQuickView> view(SailfishApp::createView());
     Search s;
     view->rootContext()->setContextProperty("searchx",  &s);
@@ -63,27 +85,8 @@ int main(int argc, char *argv[])
 //    QQuickView view;
 //    Search s;
 //    view.rootContext()->setContextProperty("searcher22", &s);
-    //view.setSource(QUrl::fromLocalFile("../qml/harbour-travelplanner.qml"));
+    //view.setSource(QUrl::fromLocalFile("../qml/harbour-travelplanner.qml"))
 
-    //Translations
-    QString langCode(getenv("LANG"));
-    qDebug() << "Code" << langCode;
-    if (langCode.isEmpty() || langCode == "C" || !langCode.contains("_"))
-        langCode = QLocale::system().name();
-    if (langCode.contains('.'))
-        langCode = langCode.mid(0, langCode.lastIndexOf('.'));
-    QString filename = QString("languages/harbour_travelplanner_") + langCode;
-
-    qDebug() << "Language Code:" << langCode;
-    static QTranslator translator;
-    if( translator.load(filename, ":/") ){
-        app->installTranslator(&translator);
-        //QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
-        qDebug() << "Translation file loaded" << filename;
-    } else
-        qDebug() << "Translation file not loaded:" << filename;
-
-
-    return SailfishApp::main(argc, argv);
+    //return SailfishApp::main(argc, argv);
 }
 

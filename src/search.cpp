@@ -17,12 +17,12 @@
 */
 #include "search.h"
 
-//Parser *Search::mparser = Vasttrafik::getinstance();
+Parser *Search::mparser = Vasttrafik::getinstance();
 
 Search::Search(QObject *parent) :
     QObject(parent)
 {
-    setbackend("Västtrafik");
+    //setbackend("Västtrafik");
 }
 
 void Search::setbackend(QString backend) {
