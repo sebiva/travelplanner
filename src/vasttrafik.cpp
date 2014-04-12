@@ -14,7 +14,9 @@ Vasttrafik::Vasttrafik()
 Vasttrafik::~Vasttrafik() {
     qDebug() << "Deleting Vasttrafik";
 }
-
+/*
+ * Returns the singleton västtrafik parser.
+ */
 Parser *Vasttrafik::getinstance() {
     if (mvasttrafik == 0) {
         mvasttrafik = new Vasttrafik();
@@ -22,12 +24,16 @@ Parser *Vasttrafik::getinstance() {
     return mvasttrafik;
 }
 
-
+/*
+ * Takes information about a trip and makes a search. Eventually emits ready() when the result is available
+ * in the list trips.
+ */
 bool Vasttrafik::getXML(QString fromid, QString toid, QString date, QString time) {
     qDebug() << "SEARCHING::" << date << time << fromid << toid;
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(parsereply(QNetworkReply*)) );
+    // Make the search
     manager->get(QNetworkRequest(QUrl(address +
                                       "&date=" + date +
                                       "&time=" + time +
@@ -37,6 +43,10 @@ bool Vasttrafik::getXML(QString fromid, QString toid, QString date, QString time
     return true;
 }
 
+/*
+ * Parses the search reply, putting the resulting trip info in the trips list. Emits ready() when done,
+ * containing a message for any error  that occured.
+ */
 void Vasttrafik::parsereply(QNetworkReply *reply) {
     if (reply->error() != QNetworkReply::NoError) {
         qDebug() << "An error occured";

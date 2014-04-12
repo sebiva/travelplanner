@@ -16,7 +16,8 @@ SOURCES += src/harbour-travelplanner.cpp \
     src/leg.cpp \
     src/search.cpp \
     src/timehelper.cpp \
-    src/vasttrafik.cpp
+    src/vasttrafik.cpp \
+    src/sl.cpp
 
 OTHER_FILES += qml/harbour-travelplanner.qml \
     qml/cover/CoverPage.qml \
@@ -28,9 +29,7 @@ OTHER_FILES += qml/harbour-travelplanner.qml \
     search.js \
     qml/pages/database.js \
     qml/database.js \
-    qml/pages/SettingsPage.qml \
-    qml/time.js \
-    qml/parsehelper.js
+    qml/pages/SettingsPage.qml
 
 HEADERS += \
     src/parser.h \
@@ -38,7 +37,8 @@ HEADERS += \
     src/leg.h \
     src/search.h \
     src/timehelper.h \
-    src/vasttrafik.h
+    src/vasttrafik.h \
+    src/sl.h
 
 TRANSLATIONS += languages/harbour_travelplanner_en.ts \
                 languages/harbour_travelplanner_sv.ts

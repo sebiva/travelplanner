@@ -17,6 +17,8 @@
 */
 #include "search.h"
 
+//Parser *Search::mparser = Vasttrafik::getinstance();
+
 Search::Search(QObject *parent) :
     QObject(parent)
 {
@@ -24,11 +26,17 @@ Search::Search(QObject *parent) :
 }
 
 void Search::setbackend(QString backend) {
+    qDebug() << "Stting backend";
     if (backend == "Västtrafik") {
+        qDebug() << "Setting backend to Västtrafik";
         mparser = Vasttrafik::getinstance();
+    } else if (backend == "SL"){
+        qDebug() << "Setting backend to SL";
+        mparser = SL::getinstance();
     } else {
         return;
     }
+
     connect(mparser,SIGNAL(replyready(QString)),this,SLOT(parseready(QString)));
     connect(mparser,SIGNAL(stopsready(QString)),this,SLOT(stopsreceived(QString)));
 }
@@ -127,6 +135,7 @@ int Search::getnumlegs(int tripindex) {
 }
 
 void Search::parseready(QString err) {
+    qDebug() << "Ready";
     emit ready(err);
 }
 

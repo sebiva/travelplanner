@@ -74,8 +74,8 @@ ApplicationWindow
             backend = back
         } else {
             backend = "Västtrafik"
-            searcher.setbackend(backend);
         }
+        searcher.setbackend(backend); //Set the backend properly
     }
 
     function getsetting(setting) {

@@ -18,24 +18,16 @@
 #ifndef SEARCH_H
 #define SEARCH_H
 
-#include <QNetworkAccessManager>
-#include <QUrl>
-#include <QHttpPart>
-#include <QTemporaryFile>
-#include <QNetworkReply>
-
-#include <QXmlStreamReader>
-
 #include <QtDebug>
-#include <QDebug>
 
 #include <QList>
 #include <QStringList>
 #include "trip.h"
 #include "leg.h"
 #include "parser.h"
-#include "vasttrafik.h"
 #include "timehelper.h"
+#include "vasttrafik.h"
+#include "sl.h"
 
 #include <QQmlEngine>
 #include <QJSEngine>
@@ -51,6 +43,7 @@ class Search : public QObject
 {
     Q_OBJECT
 public:
+
     explicit Search(QObject *parent = 0);
 
     Q_INVOKABLE QString getstop(int i);
@@ -128,7 +121,7 @@ public slots:
     void stopsreceived(QString err);
 
 private:
-    Parser * mparser;
+    /*static*/ Parser * mparser;
 
 };
 #endif // SEARCH_H
