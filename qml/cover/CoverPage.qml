@@ -20,7 +20,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-//import searcher 1.0
 import timehelp 1.0
 
 CoverBackground {
@@ -68,10 +67,6 @@ CoverBackground {
         coverstatus = "started"
 
     }
-
-    //    Search {
-    //        id: searcher
-    //    }
 
     Component.onDestruction: {
         console.log("Destroying Coverpage")

@@ -115,11 +115,11 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
                 leg->mline = tr("train");
                 leg->mfgcolour = "#ffffff";
                 leg->mbgcolour = "#000000";
-            } else if (leg->mline.split(" ").length() > 1 && leg->mline.split(" ").at(0) == "STENUNGSUND") {
+            } else if (leg->mline.split(" ").length() > 0 && leg->mline.split(" ").at(0) == "STENUNGSUND") {
                 leg->mline = "sten.";
             } else if (leg->mline.split(" ").length() > 1 && leg->mline.split(" ").at(1) == "EXPRESS") {
                 leg->mline = (leg->mline.split(" ").at(0)).toLower();
-            } else if (leg->mline.split(" ").at(1) == "ÄLVSNABBEN" || leg->mline.split(" ").at(1) == "ÄLVSNABBARE" ) {
+            } else if (leg->mline.split(" ").length() > 1 && (leg->mline.split(" ").at(1) == "ÄLVSNABBEN" || leg->mline.split(" ").at(1) == "ÄLVSNABBARE") ) {
                 leg->mline = "älvs.";
             } else {
                 leg->mline = sname;
@@ -201,9 +201,10 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
                 } else {
                     trip->addleg(leg);
                 }
+                qDebug() << "Walking" << leg->mdir << xml.name() << xml.isEndElement();
                 continue;
             }
-
+            qDebug() << "Journey" << leg->mdir << xml.name() << xml.isEndElement();
             //Go to the journeydetails, and skip them
             xml.skipCurrentElement();
             xml.readNextStartElement();
@@ -254,6 +255,7 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
 }
 
 bool Vasttrafik::getstops(QString str) {
+    str = removespecials(str);
     qDebug() << "SEARCHING STOPS::" << str;
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),

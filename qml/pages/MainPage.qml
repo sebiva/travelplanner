@@ -21,7 +21,6 @@ import Sailfish.Silica 1.0
 
 import "../database.js" as DBjs
 
-//import searcher 1.0
 import timehelp 1.0
 
 
@@ -40,11 +39,6 @@ Dialog {
 
     canAccept: (fromid !== "null") && (toid !== "null") && !typing;
     acceptDestination: canAccept ? Qt.resolvedUrl("SearchPage.qml") : null
-
-
-//    Search {
-//        id: searcher
-//    }
 
     onAccepted: {
         searchx.setfromid(fromid)

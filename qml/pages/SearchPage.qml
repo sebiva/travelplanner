@@ -21,7 +21,6 @@ import Sailfish.Silica 1.0
 
 import "../database.js" as DBjs
 
-//import searcher 1.0
 import timehelp 1.0
 
 Page {
@@ -30,11 +29,16 @@ Page {
     property bool searching : true
     property bool error : false
 
+    property bool active : Qt.application.active
+    property bool coversearch : false
+    property string searcherr: ""
+
     onStatusChanged: {
         if (status === PageStatus.Active) {
             console.log("SEARCHING from SearchPage")
             listmodel.clear()
             searchx.search()
+            searching=true
             searchx.setdateofsearch(timehelp.getcurrentdatestr())
             searchx.settimeofsearch(timehelp.getcurrenttimestr())
             fromlabel.text = qsTr("From") + ": " + searchx.getfrom()
@@ -44,52 +48,31 @@ Page {
         }
     }
 
-//    Search {
-//        id: searcher
-//    }
-
+    onActiveChanged: {
+        console.log("Searchpage in focus?" + active)
+        if (active && coversearch) {
+            console.log("Searchpage refreshing bc of coversearch")
+        }
+    }
 
     Component.onDestruction: {
         console.log("Destroying SearchPage")
         conn.destroy()
     }
 
+
+
     Connections {
         id: conn
         target: searchx
         onReady: {
-            console.log("Ready signal received in SearchPage")
-            console.log(listmodel)
-            listmodel.clear()
-            console.log("List cleared in Searchpage")
-            if (err === "") {
-                //No error
-                console.log("Searchpage, no error")
-                listView.setup()
-                console.log("Searchpage: List setup")
-                DBjs.setlastsearch(searchx.getfromid(), searchx.gettoid(),
-                                   searchx.getfrom(), searchx.getto())
-                console.log("Searchpage: Last search set")
-                mainWindow.incDB()
-                console.log("Searchpage: incDB run")
-                searchpage.searching = false
-                searchpage.error = false
-//                mainWindow.avail = false
-//                mainWindow.from = searchx.getfrom()
-//                mainWindow.to = searchx.getto()
-//                mainWindow.fromid = searchx.getfromid()
-//                mainWindow.toid = searchx.gettoid()
-//                mainWindow.time = searchx.gettime()
-//                mainWindow.date = searchx.getdate()
-//                mainWindow.avail = true;
+            if (!active) {
+                console.log("Searchpage: Coversearch detected")
+                coversearch = true
+                searcherr = err
             } else {
-                console.log("ERROR IN SEARCHPAGE: " + err);
-                mainWindow.avail = false;
-                searchpage.searching = false;
-                searchpage.error = true
-                mainWindow.errmsg = qsTr("Search failed:") + "\n" + err; //TODO: formating on long messages
+               replyready(err)
             }
-            console.log("Searchpage, onReady done")
         }
         //TODO: TEST
         onSearching: {
@@ -108,6 +91,33 @@ Page {
         mainWindow.dateofsearch = timehelp.getcurrentdatestr()
         listmodel.clear()
         console.log("IN SEARCHPAGE SEARCH::" + date + time)
+    }
+
+
+    function replyready(err) {
+        console.log("Ready signal received in SearchPage")
+        console.log(listmodel)
+        listmodel.clear()
+        console.log("List cleared in Searchpage")
+        if (err === "") {
+            //No error
+            console.log("Searchpage, no error")
+            listView.setup()
+            console.log("Searchpage: List setup")
+            DBjs.setlastsearch(searchx.getfromid(), searchx.gettoid(),
+                               searchx.getfrom(), searchx.getto())
+            console.log("Searchpage: Last search set")
+            mainWindow.incDB()
+            console.log("Searchpage: incDB run")
+            searchpage.searching = false
+            searchpage.error = false
+        } else {
+            console.log("ERROR IN SEARCHPAGE: " + err);
+            searchpage.searching = false;
+            searchpage.error = true
+            mainWindow.errmsg = qsTr("Search failed:") + "\n" + err; //TODO: formating on long messages
+        }
+        console.log("Searchpage, onReady done")
     }
 
     Timehelp {

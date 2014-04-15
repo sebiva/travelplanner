@@ -4,15 +4,15 @@
 <context>
     <name>CoverPage</name>
     <message>
-        <location filename="../qml/cover/CoverPage.qml" line="48"/>
-        <location filename="../qml/cover/CoverPage.qml" line="112"/>
-        <location filename="../qml/cover/CoverPage.qml" line="139"/>
+        <location filename="../qml/cover/CoverPage.qml" line="47"/>
+        <location filename="../qml/cover/CoverPage.qml" line="116"/>
+        <location filename="../qml/cover/CoverPage.qml" line="144"/>
         <source>Travelplanner</source>
         <translation>Travelplanner</translation>
     </message>
     <message>
-        <location filename="../qml/cover/CoverPage.qml" line="48"/>
-        <location filename="../qml/cover/CoverPage.qml" line="112"/>
+        <location filename="../qml/cover/CoverPage.qml" line="47"/>
+        <location filename="../qml/cover/CoverPage.qml" line="116"/>
         <source>Search failed</source>
         <translation>Search failed</translation>
     </message>
@@ -121,7 +121,7 @@
 <context>
     <name>SL</name>
     <message>
-        <location filename="../src/sl.cpp" line="138"/>
+        <location filename="../src/sl.cpp" line="207"/>
         <source>Departed</source>
         <translation>Departed</translation>
     </message>
@@ -129,23 +129,23 @@
 <context>
     <name>SearchPage</name>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="40"/>
-        <location filename="../qml/pages/SearchPage.qml" line="86"/>
-        <location filename="../qml/pages/SearchPage.qml" line="137"/>
-        <location filename="../qml/pages/SearchPage.qml" line="341"/>
+        <location filename="../qml/pages/SearchPage.qml" line="44"/>
+        <location filename="../qml/pages/SearchPage.qml" line="80"/>
+        <location filename="../qml/pages/SearchPage.qml" line="160"/>
+        <location filename="../qml/pages/SearchPage.qml" line="390"/>
         <source>From</source>
         <translation>From</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="41"/>
-        <location filename="../qml/pages/SearchPage.qml" line="87"/>
-        <location filename="../qml/pages/SearchPage.qml" line="155"/>
-        <location filename="../qml/pages/SearchPage.qml" line="379"/>
+        <location filename="../qml/pages/SearchPage.qml" line="45"/>
+        <location filename="../qml/pages/SearchPage.qml" line="81"/>
+        <location filename="../qml/pages/SearchPage.qml" line="178"/>
+        <location filename="../qml/pages/SearchPage.qml" line="425"/>
         <source>To</source>
         <translation>To</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="80"/>
+        <location filename="../qml/pages/SearchPage.qml" line="118"/>
         <source>Search failed:</source>
         <translation>Search failed:</translation>
     </message>
@@ -155,12 +155,12 @@
         <translation type="obsolete">Search failed:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="113"/>
+        <location filename="../qml/pages/SearchPage.qml" line="136"/>
         <source>Save as favourite</source>
         <translation>Save as favourite</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="129"/>
+        <location filename="../qml/pages/SearchPage.qml" line="152"/>
         <source>Search results</source>
         <translation>Search results</translation>
     </message>
@@ -193,17 +193,26 @@
         <translation>Uses the</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="119"/>
-        <source>Västtrafik API</source>
-        <translation>Västtrafik API</translation>
+        <location filename="../qml/pages/SettingsPage.qml" line="120"/>
+        <source>and</source>
+        <translation>and</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="127"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="120"/>
+        <source>APIs</source>
+        <translation> APIs</translation>
+    </message>
+    <message>
+        <source>Västtrafik API</source>
+        <translation type="obsolete">Västtrafik API</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SettingsPage.qml" line="128"/>
         <source>The source code is available on</source>
         <translation>The source code is available on</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="135"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="136"/>
         <source>Licensed under</source>
         <translation>Licensed under</translation>
     </message>
@@ -227,17 +236,17 @@
         <translation>train</translation>
     </message>
     <message>
-        <location filename="../src/vasttrafik.cpp" line="232"/>
+        <location filename="../src/vasttrafik.cpp" line="233"/>
         <source>Departed</source>
         <translation>Departed</translation>
     </message>
     <message>
-        <location filename="../src/vasttrafik.cpp" line="241"/>
+        <location filename="../src/vasttrafik.cpp" line="242"/>
         <source>Canceled</source>
         <translation>Canceled</translation>
     </message>
     <message>
-        <location filename="../src/vasttrafik.cpp" line="244"/>
+        <location filename="../src/vasttrafik.cpp" line="245"/>
         <source>Risk to miss</source>
         <translation>Risk to miss</translation>
     </message>

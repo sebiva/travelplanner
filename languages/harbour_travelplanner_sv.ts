@@ -4,15 +4,15 @@
 <context>
     <name>CoverPage</name>
     <message>
-        <location filename="../qml/cover/CoverPage.qml" line="48"/>
-        <location filename="../qml/cover/CoverPage.qml" line="112"/>
-        <location filename="../qml/cover/CoverPage.qml" line="139"/>
+        <location filename="../qml/cover/CoverPage.qml" line="47"/>
+        <location filename="../qml/cover/CoverPage.qml" line="116"/>
+        <location filename="../qml/cover/CoverPage.qml" line="144"/>
         <source>Travelplanner</source>
         <translation>Reseplaneraren</translation>
     </message>
     <message>
-        <location filename="../qml/cover/CoverPage.qml" line="48"/>
-        <location filename="../qml/cover/CoverPage.qml" line="112"/>
+        <location filename="../qml/cover/CoverPage.qml" line="47"/>
+        <location filename="../qml/cover/CoverPage.qml" line="116"/>
         <source>Search failed</source>
         <translation>Sökningen\nmisslyckades</translation>
     </message>
@@ -121,7 +121,7 @@
 <context>
     <name>SL</name>
     <message>
-        <location filename="../src/sl.cpp" line="138"/>
+        <location filename="../src/sl.cpp" line="207"/>
         <source>Departed</source>
         <translation>Avgången</translation>
     </message>
@@ -129,23 +129,23 @@
 <context>
     <name>SearchPage</name>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="40"/>
-        <location filename="../qml/pages/SearchPage.qml" line="86"/>
-        <location filename="../qml/pages/SearchPage.qml" line="137"/>
-        <location filename="../qml/pages/SearchPage.qml" line="341"/>
+        <location filename="../qml/pages/SearchPage.qml" line="44"/>
+        <location filename="../qml/pages/SearchPage.qml" line="80"/>
+        <location filename="../qml/pages/SearchPage.qml" line="160"/>
+        <location filename="../qml/pages/SearchPage.qml" line="390"/>
         <source>From</source>
         <translation>Från</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="41"/>
-        <location filename="../qml/pages/SearchPage.qml" line="87"/>
-        <location filename="../qml/pages/SearchPage.qml" line="155"/>
-        <location filename="../qml/pages/SearchPage.qml" line="379"/>
+        <location filename="../qml/pages/SearchPage.qml" line="45"/>
+        <location filename="../qml/pages/SearchPage.qml" line="81"/>
+        <location filename="../qml/pages/SearchPage.qml" line="178"/>
+        <location filename="../qml/pages/SearchPage.qml" line="425"/>
         <source>To</source>
         <translation>Till</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="80"/>
+        <location filename="../qml/pages/SearchPage.qml" line="118"/>
         <source>Search failed:</source>
         <translation>Sökningen misslyckades:</translation>
     </message>
@@ -155,12 +155,12 @@
         <translation type="obsolete">Sökningen misslyckades:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="113"/>
+        <location filename="../qml/pages/SearchPage.qml" line="136"/>
         <source>Save as favourite</source>
         <translation>Spara som favorit</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SearchPage.qml" line="129"/>
+        <location filename="../qml/pages/SearchPage.qml" line="152"/>
         <source>Search results</source>
         <translation>Sökresultat</translation>
     </message>
@@ -193,17 +193,26 @@
         <translation>Använder</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="119"/>
-        <source>Västtrafik API</source>
-        <translation>Västtrafiks API</translation>
+        <location filename="../qml/pages/SettingsPage.qml" line="120"/>
+        <source>and</source>
+        <translation>och</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="127"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="120"/>
+        <source>APIs</source>
+        <translation>s APIer</translation>
+    </message>
+    <message>
+        <source>Västtrafik API</source>
+        <translation type="obsolete">Västtrafiks API</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SettingsPage.qml" line="128"/>
         <source>The source code is available on</source>
         <translation>Källkoden finns tillgänglig på</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="135"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="136"/>
         <source>Licensed under</source>
         <translation>Licensierat under</translation>
     </message>
@@ -227,17 +236,17 @@
         <translation>tåg</translation>
     </message>
     <message>
-        <location filename="../src/vasttrafik.cpp" line="232"/>
+        <location filename="../src/vasttrafik.cpp" line="233"/>
         <source>Departed</source>
         <translation>Avgången</translation>
     </message>
     <message>
-        <location filename="../src/vasttrafik.cpp" line="241"/>
+        <location filename="../src/vasttrafik.cpp" line="242"/>
         <source>Canceled</source>
         <translation>Inställd</translation>
     </message>
     <message>
-        <location filename="../src/vasttrafik.cpp" line="244"/>
+        <location filename="../src/vasttrafik.cpp" line="245"/>
         <source>Risk to miss</source>
         <translation>Risk att missa</translation>
     </message>
