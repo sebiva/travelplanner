@@ -37,7 +37,7 @@
 
 int main(int argc, char *argv[])
 {
-    Vasttrafik::getinstance();
+    Vasttrafik::getinstance(); //TODO: Test without this
     //qmlRegisterType<Search>("searcher", 1, 0, "Search");
     qmlRegisterType<Timehelper>("timehelp", 1,0, "Timehelp");
 

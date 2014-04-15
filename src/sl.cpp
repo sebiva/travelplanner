@@ -78,7 +78,7 @@ void SL::parsereply(QNetworkReply *reply) {
 
 
     for (int i = 0; i < triplist.size(); i++) {
-        qDebug() << "######################### NEW TRIP" << i << "/" << triplist.size();
+        //qDebug() << "######################### NEW TRIP" << i << "/" << triplist.size();
         Trip *strip = new Trip();
         strip->setParent(this);
         strip->valid = true;
@@ -105,7 +105,7 @@ void SL::parsereply(QNetworkReply *reply) {
         strip->arivrttime = strip->arivtime;
 
 
-        qDebug() << strip->depdate << strip->deptime << strip->arivdate << strip->arivrttime;
+        //qDebug() << strip->depdate << strip->deptime << strip->arivdate << strip->arivrttime;
 
         //See if the subtrips are in a list
         int len;
@@ -119,7 +119,7 @@ void SL::parsereply(QNetworkReply *reply) {
 
         Leg *leg = NULL;
         for (int j = 0; j < len; j++) {
-            qDebug() << "######################### NEW SUBTRIP" << j << "/" << subtriplist.size();
+            //qDebug() << "######################### NEW SUBTRIP" << j << "/" << subtriplist.size();
             leg = new Leg();
             leg->setParent(strip);
 
@@ -135,10 +135,6 @@ void SL::parsereply(QNetworkReply *reply) {
             //Add leg info
             leg->mline = transport.value("Line").toString();
             leg->mdir = transport.value("Towards").toString();
-
-            //TODO: Fix with boats, trams, underground
-            leg->mfgcolour = "#00abe5";
-            leg->mbgcolour = "#ffffff";
 
             qDebug() << leg->mline << leg->mdir;
 
@@ -162,6 +158,13 @@ void SL::parsereply(QNetworkReply *reply) {
                 leg->mbgcolour = "#ffffff";
             } else if (type == "TRN") {
                 leg->mfgcolour = "#000000";
+                leg->mbgcolour = "#ffffff";
+            } else if (type == "TRM") {
+                leg->mfgcolour = "#ffe600";
+                leg->mbgcolour = "#00abe5";
+            } else {
+                leg->mfgcolour = "#ffffff";
+                leg->mbgcolour = "#00abe5";
             }
 
 
@@ -178,7 +181,7 @@ void SL::parsereply(QNetworkReply *reply) {
             leg->mdeprttime = leg->mdeptime;
 
 
-            qDebug() << leg->mfrom << leg->mdepdate << leg->mdeptime;
+            //qDebug() << leg->mfrom << leg->mdepdate << leg->mdeptime;
 
             QJsonObject destination = subtrip.value("Destination").toObject();
             //Add destination info
@@ -190,7 +193,7 @@ void SL::parsereply(QNetworkReply *reply) {
             leg->marivtime = subtrip.value("ArrivalTime").toObject().value("#text").toString();
             leg->marivrttime = leg->marivtime;
 
-            qDebug() << leg->mto << leg->marivdate << leg->marivtime;
+            //qDebug() << leg->mto << leg->marivdate << leg->marivtime;
 
 
             //Add it
@@ -235,7 +238,7 @@ void SL::parsestops(QNetworkReply *reply) {
     xml.setDevice(reply);
     stops->clear();
     xml.readNextStartElement(); //Hafas
-    qDebug() << "Hafas?" << xml.name() << xml.isEndElement();
+    //qDebug() << "Hafas?" << xml.name() << xml.isEndElement();
     if(xml.name() == "ErrorMessage") {
         qDebug() << "No stops found";
         sender()->deleteLater();
@@ -245,31 +248,31 @@ void SL::parsestops(QNetworkReply *reply) {
 
     xml.readNextStartElement(); //Execution time
     xml.skipCurrentElement();
-    qDebug() << "Exec true?" << xml.name() << xml.isEndElement();
+    //qDebug() << "Exec true?" << xml.name() << xml.isEndElement();
     xml.readNextStartElement(); //Sites
-    qDebug() << "Sites?" << xml.name() << xml.isEndElement();
+    //qDebug() << "Sites?" << xml.name() << xml.isEndElement();
 
     int count = 0;
     xml.readNextStartElement(); //Read first Site
     while (!xml.isEndElement() && count < 10) {
-        qDebug() << "Site?" << xml.name() << xml.isEndElement();
+        //qDebug() << "Site?" << xml.name() << xml.isEndElement();
 
         xml.readNextStartElement(); //Number
-        qDebug() << "Number?" << xml.name() << xml.isEndElement();
+        //qDebug() << "Number?" << xml.name() << xml.isEndElement();
 
         QString num = xml.readElementText();
 
         xml.readNextStartElement(); //Name
-        qDebug() << "Name?" << xml.name() << xml.isEndDocument();
+        //qDebug() << "Name?" << xml.name() << xml.isEndDocument();
 
         QString name  = xml.readElementText();
-        qDebug() << "RES:" << num << name;
+        //qDebug() << "RES:" << num << name;
         stops->append(name + "#" + num);
 
         xml.skipCurrentElement();//Skip the site end tag
-        qDebug() << "Site true?" << xml.name() << xml.isEndElement();
+        //qDebug() << "Site true?" << xml.name() << xml.isEndElement();
         xml.readNextStartElement();//Read next site
-        qDebug() << "Site | Sites true?" << xml.name() << xml.isEndElement();
+        //qDebug() << "Site | Sites true?" << xml.name() << xml.isEndElement();
         count++;
     }
     emit stopsready("");

@@ -73,10 +73,16 @@ CoverBackground {
     //        id: searcher
     //    }
 
+    Component.onDestruction: {
+        console.log("Destroying Coverpage")
+        conn.destroy()
+    }
+
     /*
       Used to perform searches, and intercept signals.
       */
     Connections {
+        id: conn
         target: searchx
 
         /*
@@ -86,11 +92,12 @@ CoverBackground {
             console.log("Ready signal received in CoverPage")
             listmodel.clear()
             if (err === "") {
+                console.log("No error in search")
                 //No error
                 var tripindex = 0
                 var trip
                 // Add the result to the list (only add the first 3, as the others won't be visible
-                while((trip = searchx.getTrip(tripindex))!==null || tripindex == 3) {
+                while((trip = searchx.getTrip(tripindex))!==null && tripindex < 3) {
                     listmodel.append({  deptime: trip.getdeptime(),
                                          arivtime: trip.getarivtime(),
                                          depdate: trip.getdepdate(),
@@ -107,10 +114,13 @@ CoverBackground {
                 from.text = searchx.getfrom()
                 to.text = searchx.getto()
                 coverstatus = "avail"
+
             } else {
+                console.log("Error in search")
                 coverstatus = "error"
                 placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed")
             }
+            console.log("onReady done")
         }
     }
 
@@ -178,6 +188,7 @@ CoverBackground {
                   Sets up the icons for the trip, using data from the Search object.
                   */
                 Component.onCompleted: {
+                    console.log("In oncompleted, delegate")
                     var legnr = 0
                     var leg
                     while((leg = searchx.getLeg(index, legnr)) !== null) {
@@ -188,6 +199,7 @@ CoverBackground {
                                              arivtime: leg.arivtime, arivdate: leg.arivdate, arivrttime: leg.arivrttime, arivrtdate: leg.arivrtdate})
                         legnr++;
                     }
+                    console.log("oncompleted done")
                 }
 
                 Column {

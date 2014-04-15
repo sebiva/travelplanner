@@ -102,7 +102,13 @@ Dialog {
         console.log("Loaded MainPage\n")
     }
 
+    Component.onDestruction: {
+        console.log("Destroying Mainpage")
+        conn.destroy()
+    }
+
     Connections {
+        id: conn
         target: searchx
         onReady: console.log("Ready signal received in MainPage");
         //TODO: TEST

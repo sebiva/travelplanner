@@ -29,21 +29,21 @@ ApplicationWindow
     initialPage: Component { MainPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 
-    property bool avail: false
-    property string from: ""
-    property string to: ""
-    property string fromid: ""
-    property string toid: ""
-    property string time: ""
-    property string date: ""
+//    property bool avail: false
+//    property string from: ""
+//    property string to: ""
+//    property string fromid: ""
+//    property string toid: ""
+//    property string time: ""
+//    property string date: ""
     property string changetime: "5"
     property string errmsg: qsTr("Search failed:") + "\n"
     property int verDB: 0
-    property string timeofsearch: ""
-    property string dateofsearch: ""
+//    property string timeofsearch: ""
+//    property string dateofsearch: ""
     property string backend: "Västtrafik"
 
-    property int searched: 1
+//    property int searched: 1
 
     function incDB() {
         if (verDB===0) {

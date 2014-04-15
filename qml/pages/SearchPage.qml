@@ -37,8 +37,8 @@ Page {
             searchx.search()
             searchx.setdateofsearch(timehelp.getcurrentdatestr())
             searchx.settimeofsearch(timehelp.getcurrenttimestr())
-            fromlabel.text = qsTr("From") + " " + searchx.getfrom()
-            tolabel.text = qsTr("To") + " " + searchx.getto()
+            fromlabel.text = qsTr("From") + ": " + searchx.getfrom()
+            tolabel.text = qsTr("To") + ": " + searchx.getto()
             datelabel.text = searchx.getdate()
             timelabel.text = searchx.gettime()
         }
@@ -49,29 +49,39 @@ Page {
 //    }
 
 
+    Component.onDestruction: {
+        console.log("Destroying SearchPage")
+        conn.destroy()
+    }
+
     Connections {
+        id: conn
         target: searchx
         onReady: {
             console.log("Ready signal received in SearchPage")
+            console.log(listmodel)
             listmodel.clear()
+            console.log("List cleared in Searchpage")
             if (err === "") {
                 //No error
+                console.log("Searchpage, no error")
                 listView.setup()
-
+                console.log("Searchpage: List setup")
                 DBjs.setlastsearch(searchx.getfromid(), searchx.gettoid(),
                                    searchx.getfrom(), searchx.getto())
+                console.log("Searchpage: Last search set")
                 mainWindow.incDB()
-
+                console.log("Searchpage: incDB run")
                 searchpage.searching = false
                 searchpage.error = false
-                mainWindow.avail = false
-                mainWindow.from = searchx.getfrom()
-                mainWindow.to = searchx.getto()
-                mainWindow.fromid = searchx.getfromid()
-                mainWindow.toid = searchx.gettoid()
-                mainWindow.time = searchx.gettime()
-                mainWindow.date = searchx.getdate()
-                mainWindow.avail = true;
+//                mainWindow.avail = false
+//                mainWindow.from = searchx.getfrom()
+//                mainWindow.to = searchx.getto()
+//                mainWindow.fromid = searchx.getfromid()
+//                mainWindow.toid = searchx.gettoid()
+//                mainWindow.time = searchx.gettime()
+//                mainWindow.date = searchx.getdate()
+//                mainWindow.avail = true;
             } else {
                 console.log("ERROR IN SEARCHPAGE: " + err);
                 mainWindow.avail = false;
@@ -79,22 +89,25 @@ Page {
                 searchpage.error = true
                 mainWindow.errmsg = qsTr("Search failed:") + "\n" + err; //TODO: formating on long messages
             }
+            console.log("Searchpage, onReady done")
         }
         //TODO: TEST
         onSearching: {
             console.log("SearchPage, onSearchnig")
-            fromlabel.text = qsTr("From") + " " + searchx.getfrom()
-            tolabel.text = qsTr("To") + " " + searchx.getto()
+            fromlabel.text = qsTr("From") + ": " + searchx.getfrom()
+            tolabel.text = qsTr("To") + ": " + searchx.getto()
             datelabel.text = searchx.getdate()
             timelabel.text = searchx.gettime()
+            console.log("Searchpage, onSearching done")
         }
     }
 
     function search() {
+        console.log("Searchpage, search()")
         mainWindow.timeofsearch = timehelp.getcurrenttimestr()
         mainWindow.dateofsearch = timehelp.getcurrentdatestr()
-        console.log("IN SEARCHPAGE SEARCH::" + date + time)
         listmodel.clear()
+        console.log("IN SEARCHPAGE SEARCH::" + date + time)
     }
 
     Timehelp {
@@ -134,7 +147,7 @@ Page {
                     width: parent.width - 2*x
                     Label {
                         id: fromlabel
-                        text: qsTr("From") + " " + searchx.getfrom()
+                        text: qsTr("From") + ": " + searchx.getfrom()
                         truncationMode: TruncationMode.Elide
                         width: parent.width - timelabel.width
                         color: Theme.secondaryHighlightColor
@@ -152,7 +165,7 @@ Page {
                     width: parent.width - 2*x
                     Label {
                         id: tolabel
-                        text: qsTr("To") + " " + searchx.getto()
+                        text: qsTr("To") + ": " + searchx.getto()
                         truncationMode: TruncationMode.Elide
                         width: parent.width - datelabel.width
                         color: Theme.highlightColor
@@ -178,6 +191,7 @@ Page {
 
             // The reply is available in Search
             function setup() {
+                console.log("ListView: Setting up list")
                 var tripindex = 0
                 var trip
                 while((trip = searchx.getTrip(tripindex))!==null) {
@@ -194,6 +208,7 @@ Page {
                                          duration: trip.getduration()  })
                     tripindex++
                 }
+                console.log("ListView: done setting up")
             }
 
             property var allstates: ["small", "small", "small", "small", "small", "small", "small", "small"]
@@ -235,31 +250,38 @@ Page {
                 Component.onCompleted: {
                     iconlist.setupicons()
                 }
+
                 Column {
                     width: parent.width
                     Row {
                         height: searchpage.height / 10
+                        Component.onCompleted: {
+                            console.log("Setting up trip")
+                            var depnumdays = timehelp.daysfromtoday(depdate,deptime)
+                            var depnextday = depnumdays > 0 ? "+" + depnumdays : depnumdays
+                            deptimelabel.text = deptime + depdelay + (depnumdays !== 0 ? " [" + depnextday + "d]" : "")
+                            var numdays = timehelp.daysfromtoday(arivdate,arivtime)
+                            var nextday = numdays > 0 ? "+" + numdays : numdays
+                            arivtimelabel.text = arivtime + arivdelay + (numdays !== 0 ? " [" + nextday + "d]" : "")
+                            durlabel.text = duration
+
+                            iconlist.numlegs = searchx.getnumlegs(index)
+                        }
+
                         Label {
                             id: deptimelabel
-                            property int numdays : timehelp.daysfromtoday(depdate,deptime)
-                            property string nextday : numdays > 0 ? "+" + numdays : numdays
-                            text: deptime + depdelay + (numdays != 0 ? " [" + nextday + "d]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                         Label {
                             id: arivtimelabel
-                            property int numdays : timehelp.daysfromtoday(arivdate,arivtime)
-                            property string nextday : numdays > 0 ? "+" + numdays : numdays
-                            text: arivtime + arivdelay + (numdays != 0 ? " [" + nextday + "d]" : "")
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
                         }
                         Label {
                             id: durlabel
-                            text: duration
                             width: searchpage.width / 3
                             anchors.verticalCenter: parent.verticalCenter
                             color: trip.highlighted ? Theme.highlightColor : Theme.primaryColor
@@ -279,8 +301,10 @@ Page {
                         property int recsize0: (iconlist.width - 6*iconlist.spacing) / 7
                         property int recsize: recsize0
                         property bool textvis: false
+                        property int numlegs: 0
 
                         function setupicons() {
+                            console.log("Iconlist: setting up")
                             var legnr = 0
                             var leg
                             while((leg = searchx.getLeg(index, legnr)) !== null) {
@@ -292,8 +316,13 @@ Page {
                                                      depdelay: leg.depdelay, arivdelay: leg.arivdelay})
                                 legnr++;
                             }
-
+                            console.log("Iconlist: set up")
                         }
+
+//                        function clearicons() {
+//                            console.log("Clearing searchpage result")
+//                            iconmodel.clear()
+//                        }
 
                         model: ListModel {
                             id: iconmodel
@@ -334,6 +363,16 @@ Page {
                                     }
                                     Row {
                                         x: Theme.paddingSmall
+                                        Component.onCompleted: {
+                                            console.log("Setting up leg")
+                                            legfrom.text = fromname + ((fromtrack === undefined || fromtrack === "") ? "" : ", " + fromtrack)
+                                            legto.text = destname + ((totrack === undefined || totrack === "") ? "" : ", " + totrack)
+                                            legdeptime.text = deptime
+                                            legdeprttime.text = depdelay
+                                            legarivtime.text = arivtime
+                                            legarivrttime.text = arivdelay
+                                        }
+
                                         Row {
                                             width: searchpage.width - iconlist.recsize0 - legdeptime.width - legdeprttime.width - 2 * parent.x
                                             Label {
@@ -345,7 +384,6 @@ Page {
                                             }
                                             Label {
                                                 id: legfrom
-                                                text: fromname + ((fromtrack === undefined || fromtrack === "") ? "" : ", " + fromtrack)
                                                 width: parent.width - legfromlabel.width
                                                 truncationMode: TruncationMode.Elide
                                                 visible: iconlist.textvis
@@ -356,7 +394,6 @@ Page {
                                         }
                                         Label {
                                             id: legdeptime
-                                            text: deptime
                                             visible: iconlist.textvis
                                             horizontalAlignment: Text.AlignRight
                                             font.pixelSize: (Theme.fontSizeTiny + Theme.fontSizeSmall) /2
@@ -364,7 +401,6 @@ Page {
                                         }
                                         Label {
                                             id: legdeprttime
-                                            text: depdelay
                                             visible: iconlist.textvis
                                             horizontalAlignment: Text.AlignRight
                                             font.pixelSize: (Theme.fontSizeTiny + Theme.fontSizeSmall) /2
@@ -385,7 +421,6 @@ Page {
                                             }
                                             Label {
                                                 id: legto
-                                                text: destname + ((totrack === undefined || totrack === "") ? "" : ", " + totrack)
                                                 visible: iconlist.textvis
                                                 width: parent.width - legtolabel.width
                                                 truncationMode: TruncationMode.Elide
@@ -395,7 +430,6 @@ Page {
                                         }
                                         Label {
                                             id: legarivtime
-                                            text: arivtime
                                             visible: iconlist.textvis
                                             horizontalAlignment: Text.AlignRight
                                             font.pixelSize: (Theme.fontSizeTiny + Theme.fontSizeSmall) /2
@@ -403,7 +437,6 @@ Page {
                                         }
                                         Label {
                                             id: legarivrttime
-                                            text: arivdelay
                                             visible: iconlist.textvis
                                             color: Theme.primaryColor
                                             horizontalAlignment: Text.AlignRight
@@ -485,10 +518,11 @@ Page {
                         }
 
                         PropertyChanges {
+                            id: propchange
                             target: iconlist
                             orientation: ListView.Vertical
-                            recsize: width / 4
-                            height: searchx.getnumlegs(index) !== -1 ? (spacing + recsize) * searchx.getnumlegs(index) - spacing : 0
+                            recsize: width/4
+                            height: iconlist.numlegs !== -1 ? (spacing + iconlist.recsize)*iconlist.numlegs - spacing : 0
                             textvis: true
                         }
                     }
