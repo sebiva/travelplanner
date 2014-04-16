@@ -52,6 +52,8 @@ Page {
         console.log("Searchpage in focus?" + active)
         if (active && coversearch) {
             console.log("Searchpage refreshing bc of coversearch")
+            coversearch = false
+            replyready(searcherr) //TODO: test
         }
     }
 
@@ -77,6 +79,8 @@ Page {
         //TODO: TEST
         onSearching: {
             console.log("SearchPage, onSearchnig")
+            searching = true
+            listmodel.clear()
             fromlabel.text = qsTr("From") + ": " + searchx.getfrom()
             tolabel.text = qsTr("To") + ": " + searchx.getto()
             datelabel.text = searchx.getdate()
@@ -95,6 +99,10 @@ Page {
 
 
     function replyready(err) {
+        if (coversearch) {
+            searching = false //TODO: test
+        }
+
         console.log("Ready signal received in SearchPage")
         console.log(listmodel)
         listmodel.clear()
@@ -204,7 +212,9 @@ Page {
                 console.log("ListView: Setting up list")
                 var tripindex = 0
                 var trip
+                allstates = []
                 while((trip = searchx.getTrip(tripindex))!==null) {
+                    allstates[tripindex] = "small"
                     listmodel.append({  deptime: trip.getdeptime(),
                                          arivtime: trip.getarivtime(),
                                          depdate: trip.getdepdate(),
@@ -221,8 +231,7 @@ Page {
                 console.log("ListView: done setting up")
             }
 
-            property var allstates: ["small", "small", "small", "small", "small", "small", "small", "small"]
-
+            property var allstates: [] //TODO: test
             Label {
                 id: placeholdertext
                 visible: error

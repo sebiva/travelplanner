@@ -117,6 +117,11 @@ CoverBackground {
             }
             console.log("onReady done")
         }
+        onSearching :{
+            console.log("onSearching signal received in CoverPage")
+            coverstatus = "searching"
+            listmodel.clear()
+        }
     }
 
     Timehelp {
