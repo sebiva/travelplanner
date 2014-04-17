@@ -45,7 +45,6 @@ int main(int argc, char *argv[])
 
     //Translations
     QString langCode(getenv("LANG"));
-    qDebug() << "Code" << langCode;
     if (langCode.isEmpty() || langCode == "C" || !langCode.contains("_"))
         langCode = QLocale::system().name();
     if (langCode.contains('.'))

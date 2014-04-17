@@ -69,6 +69,7 @@ Page {
         target: searchx
         onReady: {
             if (!active) {
+                //If the Searchpage isn't active, wait to search until it becomes active
                 console.log("Searchpage: Coversearch detected")
                 coversearch = true
                 searcherr = err
@@ -78,45 +79,37 @@ Page {
         }
         //TODO: TEST
         onSearching: {
-            console.log("SearchPage, onSearchnig")
+            console.log("SearchPage, onSearching")
             searching = true
             listmodel.clear()
             fromlabel.text = qsTr("From") + ": " + searchx.getfrom()
             tolabel.text = qsTr("To") + ": " + searchx.getto()
             datelabel.text = searchx.getdate()
             timelabel.text = searchx.gettime()
-            console.log("Searchpage, onSearching done")
         }
     }
 
-    function search() {
-        console.log("Searchpage, search()")
-        mainWindow.timeofsearch = timehelp.getcurrenttimestr()
-        mainWindow.dateofsearch = timehelp.getcurrentdatestr()
-        listmodel.clear()
-        console.log("IN SEARCHPAGE SEARCH::" + date + time)
-    }
+//    function search() {
+//        console.log("Searchpage, search()")
+//        mainWindow.timeofsearch = timehelp.getcurrenttimestr()
+//        mainWindow.dateofsearch = timehelp.getcurrentdatestr()
+//        listmodel.clear()
+//    }
 
 
     function replyready(err) {
+        console.log("Ready signal received in SearchPage")
         if (coversearch) {
-            searching = false //TODO: test
+            searching = false
         }
 
-        console.log("Ready signal received in SearchPage")
-        console.log(listmodel)
         listmodel.clear()
-        console.log("List cleared in Searchpage")
         if (err === "") {
             //No error
-            console.log("Searchpage, no error")
             listView.setup()
-            console.log("Searchpage: List setup")
             DBjs.setlastsearch(searchx.getfromid(), searchx.gettoid(),
                                searchx.getfrom(), searchx.getto())
-            console.log("Searchpage: Last search set")
             mainWindow.incDB()
-            console.log("Searchpage: incDB run")
             searchpage.searching = false
             searchpage.error = false
         } else {
@@ -228,10 +221,9 @@ Page {
                                          duration: trip.getduration()  })
                     tripindex++
                 }
-                console.log("ListView: done setting up")
             }
 
-            property var allstates: [] //TODO: test
+            property var allstates: []
             Label {
                 id: placeholdertext
                 visible: error
@@ -275,7 +267,6 @@ Page {
                     Row {
                         height: searchpage.height / 10
                         Component.onCompleted: {
-                            console.log("Setting up trip")
                             var depnumdays = timehelp.daysfromtoday(depdate,deptime)
                             var depnextday = depnumdays > 0 ? "+" + depnumdays : depnumdays
                             deptimelabel.text = deptime + depdelay + (depnumdays !== 0 ? " [" + depnextday + "d]" : "")
@@ -323,7 +314,6 @@ Page {
                         property int numlegs: 0
 
                         function setupicons() {
-                            console.log("Iconlist: setting up")
                             var legnr = 0
                             var leg
                             while((leg = searchx.getLeg(index, legnr)) !== null) {
@@ -335,13 +325,7 @@ Page {
                                                      depdelay: leg.depdelay, arivdelay: leg.arivdelay})
                                 legnr++;
                             }
-                            console.log("Iconlist: set up")
                         }
-
-//                        function clearicons() {
-//                            console.log("Clearing searchpage result")
-//                            iconmodel.clear()
-//                        }
 
                         model: ListModel {
                             id: iconmodel
@@ -383,7 +367,6 @@ Page {
                                     Row {
                                         x: Theme.paddingSmall
                                         Component.onCompleted: {
-                                            console.log("Setting up leg")
                                             legfrom.text = fromname + ((fromtrack === undefined || fromtrack === "") ? "" : ", " + fromtrack)
                                             legto.text = destname + ((totrack === undefined || totrack === "") ? "" : ", " + totrack)
                                             legdeptime.text = deptime

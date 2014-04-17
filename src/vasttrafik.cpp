@@ -29,7 +29,6 @@ Parser *Vasttrafik::getinstance() {
  * in the list trips.
  */
 bool Vasttrafik::getXML(QString fromid, QString toid, QString date, QString time) {
-    qDebug() << "SEARCHING::" << date << time << fromid << toid;
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(parsereply(QNetworkReply*)) );
@@ -55,7 +54,7 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
         return;
     }
 
-    qDebug() << "Parsing";
+    //qDebug() << "Parsing";
     QXmlStreamReader xml;
     xml.setDevice(reply);
     QXmlStreamAttributes attr;
@@ -201,10 +200,10 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
                 } else {
                     trip->addleg(leg);
                 }
-                qDebug() << "Walking" << leg->mdir << xml.name() << xml.isEndElement();
+                //qDebug() << "Walking" << leg->mdir << xml.name() << xml.isEndElement();
                 continue;
             }
-            qDebug() << "Journey" << leg->mdir << xml.name() << xml.isEndElement();
+            //qDebug() << "Journey" << leg->mdir << xml.name() << xml.isEndElement();
             //Go to the journeydetails, and skip them
             xml.skipCurrentElement();
             xml.readNextStartElement();

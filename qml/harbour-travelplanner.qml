@@ -87,7 +87,6 @@ ApplicationWindow
                 setsetting(setting, stren)
                 value = stren
             }
-            console.log("language " + value)
 
         } else if (setting === "changetime") {
             value = DBjs.getsetting(setting)
@@ -114,7 +113,6 @@ ApplicationWindow
             searchx.setbackend(backend);
         }
         DBjs.setsetting(setting, value)
-        console.log("Database changed")
         incDB()
     }
 

@@ -40,13 +40,12 @@ CoverBackground {
       this new search visible to the SearchPage as well.
       */
     function refresh(now) {
-        console.log("REFRESHING COVER " + coverstatus)
+        console.log("Coverpage, refreshing. Status: " + coverstatus)
         listmodel.clear()
         if (coverstatus === "error") {
             console.log("Coverpage in errorstate");
             placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed")
         }
-        console.log("Refreshing Cover")
         var time = searchx.gettime()
         var date = searchx.getdate()
         if (now) {
@@ -60,7 +59,7 @@ CoverBackground {
     }
 
     onBackendChanged: {
-        console.log("Database changed according to coverpage")
+        console.log("Database changed: CoverPage")
 
         //Clear the search
         listmodel.clear()
@@ -87,7 +86,6 @@ CoverBackground {
             console.log("Ready signal received in CoverPage")
             listmodel.clear()
             if (err === "") {
-                console.log("No error in search")
                 //No error
                 var tripindex = 0
                 var trip
@@ -111,11 +109,10 @@ CoverBackground {
                 coverstatus = "avail"
 
             } else {
-                console.log("Error in search")
+                console.log("CoverPage: Error in search")
                 coverstatus = "error"
                 placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed")
             }
-            console.log("onReady done")
         }
         onSearching :{
             console.log("onSearching signal received in CoverPage")
@@ -188,7 +185,7 @@ CoverBackground {
                   Sets up the icons for the trip, using data from the Search object.
                   */
                 Component.onCompleted: {
-                    console.log("In oncompleted, delegate")
+                    console.log("Coverpage, setting up icons")
                     var legnr = 0
                     var leg
                     while((leg = searchx.getLeg(index, legnr)) !== null) {
@@ -199,7 +196,6 @@ CoverBackground {
                                              arivtime: leg.arivtime, arivdate: leg.arivdate, arivrttime: leg.arivrttime, arivrtdate: leg.arivrtdate})
                         legnr++;
                     }
-                    console.log("oncompleted done")
                 }
 
                 Column {

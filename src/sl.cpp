@@ -136,10 +136,10 @@ void SL::parsereply(QNetworkReply *reply) {
             leg->mline = transport.value("Line").toString();
             leg->mdir = transport.value("Towards").toString();
 
-            qDebug() << leg->mline << leg->mdir;
+            //qDebug() << leg->mline << leg->mdir;
 
             QString type = transport.value("Type").toString();
-            qDebug() << "Type" << type;
+            //qDebug() << "Type" << type;
             if (type == "MET") {
                 if (leg->mline == "10" || leg->mline == "11") {
                     leg->mfgcolour = blue;
@@ -213,13 +213,13 @@ void SL::parsereply(QNetworkReply *reply) {
 
     }
 
+    qDebug() << "Parsing done, no errors!";
     emit replyready("");
     sender()->deleteLater();
 }
 
 
 bool SL::getstops(QString str) {
-    qDebug() << "SEARCHING STOPS::" << str;
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(parsestops(QNetworkReply*)) );

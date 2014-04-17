@@ -52,7 +52,7 @@ Dialog {
     }
 
     onDatabaseChanged: {
-        console.log("Database changed according to mainpage")
+        console.log("Database changed: MainPage")
         updatelastsearch() //TODO: Signal in c++ instead
         favlist.updatefavs()
     }
@@ -88,12 +88,10 @@ Dialog {
     }
 
     Component.onCompleted: {
-        console.log("Setting up db from main")
         DBjs.setup()
         incDB()
-        console.log("Db setup in main")
         mainWindow.getsettings()
-        console.log("Loaded MainPage\n")
+        console.log("Loaded MainPage, database set up\n")
     }
 
     Component.onDestruction: {
@@ -222,7 +220,6 @@ Dialog {
                             searchlist.from = false;
                         }
                         if(txt.focus && txt.text.length > 2 && typing) {
-                            console.log("Getting name " + txt.text.length)
                             getsuggestions(txt.text);
                         }    
                     }
@@ -468,7 +465,7 @@ Dialog {
                         color: searchdelegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                     }
                     onClicked: {
-                        console.log("STATE IN SELECT: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                        //console.log("STATE IN SELECT: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                         column.state = "chosen"
                         column.active = false
                         if (searchlist.from) {
@@ -495,7 +492,7 @@ Dialog {
                 anchors.bottom: parent.bottom
                 highlightedColor: "transparent"
                 onClicked: {
-                    console.log("STATE IN FILLER: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                    //console.log("STATE IN FILLER: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                     column.active = false
                     column.state = ""
                     fromtext.typing = false
@@ -508,7 +505,7 @@ Dialog {
                 anchors.bottom: parent.bottom
                 highlightedColor: "transparent"
                 onClicked: {
-                    console.log("STATE IN FILLER: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
+                    //console.log("STATE IN FILLER: "+ column.state + " FOCUS: " + focus + " ACTIVE: " + column.active)
                     column.active = false
                     column.state = ""
                     totext.typing = false
@@ -609,7 +606,6 @@ Dialog {
                         MenuItem {
                             text: qsTr("Delete")
                             onClicked: {
-                                console.log(favmodel.count + " " + index + " uahoeutna hej");
                                 // Database not yet setup?
                                 if (mainWindow.verDB == 0) {
                                     return

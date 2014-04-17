@@ -105,7 +105,6 @@ QString Parser::removespecials(QString str) {
     QString res = str;
 
     for(int i = 0; i < res.length();i++) {
-        qDebug() << res;
         QString letter = res.mid(i,1);
         if (letter=="å" || letter=="Å") {
             res = res.left(i) + "%C5" + res.right(res.length()-i-1);
