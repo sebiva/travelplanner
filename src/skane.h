@@ -1,5 +1,5 @@
-#ifndef VASTTRAFIK_H
-#define VASTTRAFIK_H
+#ifndef SKANE_H
+#define SKANE_H
 
 #include <QObject>
 
@@ -17,12 +17,12 @@
 #include "leg.h"
 #include "parser.h"
 
-class Vasttrafik : public Parser
+class Skane : public Parser
 {
     Q_OBJECT
 public:
     static Parser *getinstance();
-    ~Vasttrafik();
+    ~Skane();
 
     bool getXML(QString fromid, QString toid, QString date, QString time);
     bool getstops(QString str);
@@ -35,8 +35,8 @@ public slots:
 private:
     static QString address;
     static QString nameaddress;
-    static Vasttrafik *mvasttrafik;
-    explicit Vasttrafik();
+    static Skane *mskane;
+    explicit Skane();
 };
 
-#endif // VASTTRAFIK_H
+#endif // SKANE_H

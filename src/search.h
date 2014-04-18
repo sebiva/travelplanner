@@ -28,6 +28,7 @@
 #include "timehelper.h"
 #include "vasttrafik.h"
 #include "sl.h"
+#include "skane.h"
 
 #include <QQmlEngine>
 #include <QJSEngine>

@@ -62,6 +62,7 @@ Page {
                 menu: ContextMenu {
                     MenuItem {text: "Västtrafik"; onClicked: mainWindow.setsetting("backend", text)}
                     MenuItem {text: "SL"; onClicked: mainWindow.setsetting("backend", text)}
+                    MenuItem {text: "Skånetrafiken"; onClicked: mainWindow.setsetting("backend", text)}
                 }
             }
 

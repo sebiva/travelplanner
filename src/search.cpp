@@ -31,6 +31,9 @@ void Search::setbackend(QString backend) {
     } else if (backend == "SL"){
         qDebug() << "Setting backend to SL";
         mparser = SL::getinstance();
+    } else if (backend == "Skånetrafiken") {
+        qDebug() << "Setting backend to Skånetrafiken";
+        mparser = Skane::getinstance();
     } else {
         return;
     }

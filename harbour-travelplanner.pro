@@ -17,7 +17,8 @@ SOURCES += src/harbour-travelplanner.cpp \
     src/search.cpp \
     src/timehelper.cpp \
     src/vasttrafik.cpp \
-    src/sl.cpp
+    src/sl.cpp \
+    src/skane.cpp
 
 OTHER_FILES += qml/harbour-travelplanner.qml \
     qml/cover/CoverPage.qml \
@@ -38,7 +39,8 @@ HEADERS += \
     src/search.h \
     src/timehelper.h \
     src/vasttrafik.h \
-    src/sl.h
+    src/sl.h \
+    src/skane.h
 
 TRANSLATIONS += languages/harbour_travelplanner_en.ts \
                 languages/harbour_travelplanner_sv.ts

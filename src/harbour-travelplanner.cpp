@@ -37,10 +37,6 @@
 
 int main(int argc, char *argv[])
 {
-    //Vasttrafik::getinstance(); //TODO: Test without this
-    //qmlRegisterType<Search>("searcher", 1, 0, "Search");
-    //qmlRegisterType<Timehelper>("timehelp", 1,0, "Timehelp");
-
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
 
     //Translations
@@ -55,7 +51,6 @@ int main(int argc, char *argv[])
     static QTranslator translator;
     if( translator.load(filename, ":/") ){
         app->installTranslator(&translator);
-        //QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
         qDebug() << "Translation file loaded" << filename;
     } else
         qDebug() << "Translation file not loaded:" << filename;
@@ -73,22 +68,5 @@ int main(int argc, char *argv[])
     view->show();
     view->showFullScreen();
     return app->exec();
-
-
-    //QGuiApplication * app = SailfishApp::application(argc, argv);
-
-//    QGuiApplication * app = (SailfishApp::application(argc, argv));
-//    QQuickView * view = (SailfishApp::createView());
-//    Search se;
-//    view->rootContext()->setContextProperty("searchx", &se);
-//    //SailfishApp:setView(view.data(), QUrl::fromLocalFile("../qml/harbour-travelplanner.qml"));
-
-    //Singleton~
-//    QQuickView view;
-//    Search s;
-//    view.rootContext()->setContextProperty("searcher22", &s);
-    //view.setSource(QUrl::fromLocalFile("../qml/harbour-travelplanner.qml"))
-
-    //return SailfishApp::main(argc, argv);
 }
 
