@@ -21,8 +21,6 @@ import Sailfish.Silica 1.0
 
 import "../database.js" as DBjs
 
-import timehelp 1.0
-
 Page {
     id: searchpage
 
@@ -119,10 +117,6 @@ Page {
             mainWindow.errmsg = qsTr("Search failed:") + "\n" + err; //TODO: formating on long messages
         }
         console.log("Searchpage, onReady done")
-    }
-
-    Timehelp {
-        id: timehelp
     }
 
     Column {

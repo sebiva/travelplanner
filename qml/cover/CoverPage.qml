@@ -20,7 +20,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-import timehelp 1.0
 
 CoverBackground {
     id: coverpage
@@ -119,10 +118,6 @@ CoverBackground {
             coverstatus = "searching"
             listmodel.clear()
         }
-    }
-
-    Timehelp {
-        id: timehelp
     }
 
     Column {

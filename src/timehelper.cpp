@@ -17,9 +17,17 @@
 */
 #include "timehelper.h"
 
-Timehelper::Timehelper(QObject *parent) :
-    QObject(parent)
+Timehelper *Timehelper::mtime = Timehelper::getinstance();
+
+Timehelper::Timehelper()
 {
+}
+
+Timehelper *Timehelper::getinstance() {
+    if (mtime == 0) {
+        mtime = new Timehelper();
+    }
+    return mtime;
 }
 
 QString Timehelper::convertdate(QString date) {

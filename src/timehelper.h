@@ -29,7 +29,7 @@ class Timehelper : public QObject
 {
     Q_OBJECT
 public:
-    explicit Timehelper(QObject *parent = 0);
+    static Timehelper *getinstance();
 
     Q_INVOKABLE static QString convertdate(QString date);
     Q_INVOKABLE static QString converttime(QString hour, QString minute);
@@ -44,6 +44,10 @@ public:
 signals:
 
 public slots:
+
+private:
+    explicit Timehelper();
+    static Timehelper *mtime;
 
 };
 

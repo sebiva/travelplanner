@@ -12,8 +12,8 @@ Name:       harbour-travelplanner
 %{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
-Summary:    Travelplanner for Västtrafik
-Version:    0.2
+Summary:    Travelplanner for Västtrafik and SL
+Version:    0.5
 Release:    1
 Group:      Qt/Qt
 License:    LICENSE
@@ -21,14 +21,14 @@ URL:        http://example.org/
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-travelplanner.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
-BuildRequires:  pkgconfig(sailfishapp) >= 0.0.10
-BuildRequires:  pkgconfig(Qt5Core)
-BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
+BuildRequires:  pkgconfig(Qt5Qml)
+BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(sailfishapp) >= 0.0.10
 BuildRequires:  desktop-file-utils
 
 %description
-Simple travelplanner for Swedish Västtrafik
+Simple travelplanner for Swedish Västtrafik and SL
 
 
 %prep
@@ -63,15 +63,15 @@ desktop-file-install --delete-original       \
 
 %files
 %defattr(-,root,root,-)
-%defattr(644,root,root,755)
-/usr/share/icons/hicolor/86x86/apps
-/usr/share/applications
-/usr/share/harbour-travelplanner
-/usr/bin
-%{_datadir}/icons/hicolor/86x86/apps/%{name}.png
-%{_datadir}/applications/%{name}.desktop
-%{_datadir}/%{name}/qml
-%{_bindir}
 %attr(755,root,root) %{_bindir}/%{name}
+%{_bindir}
+%{_datadir}/%{name}/qml
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/86x86/apps/%{name}.png
+/usr/bin
+/usr/share/harbour-travelplanner
+/usr/share/applications
+/usr/share/icons/hicolor/86x86/apps
+%defattr(644,root,root,755)
 # >> files
 # << files

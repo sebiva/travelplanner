@@ -37,9 +37,9 @@
 
 int main(int argc, char *argv[])
 {
-    Vasttrafik::getinstance(); //TODO: Test without this
+    //Vasttrafik::getinstance(); //TODO: Test without this
     //qmlRegisterType<Search>("searcher", 1, 0, "Search");
-    qmlRegisterType<Timehelper>("timehelp", 1,0, "Timehelp");
+    //qmlRegisterType<Timehelper>("timehelp", 1,0, "Timehelp");
 
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
 
@@ -65,8 +65,10 @@ int main(int argc, char *argv[])
 
     QScopedPointer<QQuickView> view(SailfishApp::createView());
     Search s;
+    Timehelper *t = Timehelper::getinstance();
     s.setParent(app.data()); //TODO: Test if no mem crash, may work without this line
     view->rootContext()->setContextProperty("searchx",  &s);
+    view->rootContext()->setContextProperty("timehelp", t);
     view->setSource(SailfishApp::pathTo("qml/harbour-travelplanner.qml"));
     view->show();
     view->showFullScreen();

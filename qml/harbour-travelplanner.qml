@@ -21,8 +21,6 @@ import Sailfish.Silica 1.0
 import "pages"
 import "database.js" as DBjs
 
-//import searcher 1.0
-
 ApplicationWindow
 {
     id: mainWindow
