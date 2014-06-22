@@ -31,10 +31,10 @@ function setup() {
     db.transaction(function (trans) {
         // Check if there are already any tables
         var x = trans.executeSql('SELECT name FROM sqlite_master WHERE type="table" AND name="settings"')
-        var tablesexist = x.rows.length > 0
+        var tableesexist = x.rows.length > 0
 
         var transfer = false
-        if (tablesexist) {
+        if (tableesexist) {
             // Get the version number to see if old favourites and lastsearch need to be imported
             x = trans.executeSql('SELECT valueattr FROM settings WHERE keyattr = "version"')
             var ver = x.rows.length === 0 ? 0 : x.rows.item(0)['valueattr'].valueOf()
@@ -49,7 +49,7 @@ function setup() {
         trans.executeSql('CREATE TABLE IF NOT EXISTS favourites(backend TEXT, fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT, time INTEGER, PRIMARY KEY(backend, fromid, toid))');
         trans.executeSql('CREATE TABLE IF NOT EXISTS lastsearch(backend TEXT, fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT, PRIMARY KEY(backend))')
         trans.executeSql('CREATE TABLE IF NOT EXISTS settings(keyattr TEXT PRIMARY KEY, valueattr TEXT)')
-        if (!transfer) {
+        if (!tableesexist) {
             // Set Västtrafik as default
             trans.executeSql('INSERT INTO settings VALUES("backend","Västtrafik")')
         }
