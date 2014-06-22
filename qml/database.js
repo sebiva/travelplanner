@@ -49,6 +49,11 @@ function setup() {
         trans.executeSql('CREATE TABLE IF NOT EXISTS favourites(backend TEXT, fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT, time INTEGER, PRIMARY KEY(backend, fromid, toid))');
         trans.executeSql('CREATE TABLE IF NOT EXISTS lastsearch(backend TEXT, fromid TEXT, toid TEXT, fromstop TEXT, tostop TEXT, PRIMARY KEY(backend))')
         trans.executeSql('CREATE TABLE IF NOT EXISTS settings(keyattr TEXT PRIMARY KEY, valueattr TEXT)')
+        if (!transfer) {
+            // Set Västtrafik as default
+            trans.executeSql('INSERT INTO settings VALUES("backend","Västtrafik")')
+        }
+
 
         // Transfer old favourites and lastsearches if needed
         if (transfer) {

@@ -1,0 +1,63 @@
+{
+"HafasResponse":{
+        "Queries":{
+                "CurrentQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/current\/2y.03164354.1397315224\/1.json",
+                "PrevQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/prev\/2y.03164354.1397315224\/1.json",
+                "NextQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/next\/2y.03164354.1397315224\/1.json"
+                },
+        "Trips":"5",
+        "Trip":
+                [
+                        {
+                        "Summary":
+                        {
+                                "Origin":{"@sa":"200108005","@x":"18152403","@y":"59343188","#text":"Liding�\/Dal�num"},
+                                "Destination":{"@sa":"200110149","@x":"18070178","@y":"59321011","#text":"Slussen"},
+                                "DepartureDate":"12.04.14",
+                                "DepartureTime":{"@type":"EXACT","#text":"16:45"},
+                                "ArrivalDate":"12.04.14",
+                                "ArrivalTime":{"@type":"EXACT","#text":"17:37"},
+                                "SubTrips":"4",
+                                "Changes":"2",
+                                "Duration":"0:52",
+                                "PriceInfo":{"TariffZones":"A","TariffRemark":"tid-biljett"},
+                                "CO2":"-1",
+                                "MT6MessagesExist":"0","RTUMessagesExist":"0","RemarksExist":"0"
+                        },
+                       "SubTrip":
+                                [
+                                        {
+                                                "Origin":{"@sa":"200108005","@x":"18152403","@y":"59343188","#text":"Liding�\/Dal�num"},
+                                                 "Destination":{"@sa":"200108003","@x":"18157616","@y":"59318126","#text":"Nacka strand"},
+                                                 "DepartureDate":"12.04.14",
+                                                 "DepartureTime":{"@type":"EXACT","#text":"16:45"},
+                                                 "ArrivalDate":"12.04.14",
+                                                 "ArrivalTime":{"@type":"EXACT","#text":"16:58"},
+                                                 "Transport":{"Type":"SHP","Name":"Pendelb�tstrafiken Sj�v�gen 80","Line":"80","Towards":"Nybroplan"},
+                                                 "IntermediateStopsQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/intermediate\/2y.03164354.1397315224\/1\/C0-0:0.json"
+                                        },
+                                        {
+                                                "Origin":{"@sa":"200140133","@x":"18160358","@y":"59316355","#text":"Nacka strand"},
+                                                "Destination":{"@sa":"200140117","@x":"18162803","@y":"59309262","#text":"Nacka Forum, stadshuset"},
+                                                "DepartureDate":"12.04.14",
+                                                "DepartureTime":{"@type":"CA","#text":"17:15"},
+                                                "ArrivalDate":"12.04.14",
+                                                "ArrivalTime":{"@type":"EXACT","#text":"17:18"},
+                                                "Transport":{"Type":"BUS","Name":"buss 71","Line":"71","Towards":"Slussen"},
+                                                "IntermediateStopsQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/intermediate\/2y.03164354.1397315224\/1\/C0-0:0C0-0:2.json"
+                                        },
+                                        {
+                                                "Origin":{"@sa":"200140116","@x":"18164970","@y":"59308372","#text":"Nacka Forum"},
+                                                "Destination":{"@sa":"200110149","@x":"18070178","@y":"59321011","#text":"Slussen"},
+                                                "DepartureDate":"12.04.14",
+                                                "DepartureTime":{"@type":"EXACT","#text":"17:23"},
+                                                "ArrivalDate":"12.04.14",
+                                                "ArrivalTime":{"@type":"EXACT","#text":"17:37"},
+                                                "Transport":{"Type":"BUS","Name":"bl�buss 471","Line":"471","Towards":"Slussen"},
+                                                "IntermediateStopsQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/intermediate\/2y.03164354.1397315224\/1\/C0-0:0C0-0:2C0-0:4.json"
+                                        }
+                                ]
+                        },
+
+
+{"Summary":{"Origin":{"@sa":"200108005","@x":"18152403","@y":"59343188","#text":"Liding�\/Dal�num"},"Destination":{"@sa":"200110149","@x":"18070178","@y":"59321011","#text":"Slussen"},"DepartureDate":"12.04.14","DepartureTime":{"@type":"EXACT","#text":"16:45"},"ArrivalDate":"12.04.14","ArrivalTime":{"@type":"EXACT","#text":"17:39"},"SubTrips":"3","Changes":"1","Duration":"0:54","PriceInfo":{"TariffZones":"A","TariffRemark":"tid-biljett"},"CO2":"-1","MT6MessagesExist":"0","RTUMessagesExist":"0","RemarksExist":"0"},"SubTrip":[{"Origin":{"@sa":"200108005","@x":"18152403","@y":"59343188","#text":"Liding�\/Dal�num"},"Destination":{"@sa":"200108001","@x":"18111070","@y":"59315096","#text":"Saltsj�qvarn"},"DepartureDate":"12.04.14","DepartureTime":{"@type":"EXACT","#text":"16:45"},"ArrivalDate":"12.04.14","ArrivalTime":{"@type":"EXACT","#text":"17:19"},"Transport":{"Type":"SHP","Name":"Pendelb�tstrafiken Sj�v�gen 80","Line":"80","Towards":"Nybroplan"},"IntermediateStopsQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/intermediate\/2y.03164354.1397315224\/1\/C0-0:0C0-0:2C0-0:4C0-1:0.json"},{"Origin":{"@sa":"200110595","@x":"18107762","@y":"59312283","#text":"Henriksdal"},"Destination":{"@sa":"200110149","@x":"18070178","@y":"59321011","#text":"Slussen"},"DepartureDate":"12.04.14","DepartureTime":{"@type":"CA","#text":"17:33"},"ArrivalDate":"12.04.14","ArrivalTime":{"@type":"EXACT","#text":"17:39"},"Transport":{"Type":"BUS","Name":"bl�buss 474","Line":"474","Towards":"Slussen"},"IntermediateStopsQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/intermediate\/2y.03164354.1397315224\/1\/C0-0:0C0-0:2C0-0:4C0-1:0C0-1:2.json"}]},{"Summary":{"Origin":{"@sa":"200108005","@x":"18152403","@y":"59343188","#text":"Liding�\/Dal�num"},"Destination":{"@sa":"200110149","@x":"18072489","@y":"59320076","#text":"Slussen (Katarinav�gen)"},"DepartureDate":"12.04.14","DepartureTime":{"@type":"EXACT","#text":"17:40"},"ArrivalDate":"12.04.14","ArrivalTime":{"@type":"EXACT","#text":"18:36"},"SubTrips":"2","Changes":"1","Duration":"0:56","PriceInfo":{"TariffZones":"A","TariffRemark":"tid-biljett"},"CO2":"-1","MT6MessagesExist":"0","RTUMessagesExist":"0","RemarksExist":"0"},"SubTrip":[{"Origin":{"@sa":"200108005","@x":"18152403","@y":"59343188","#text":"Liding�\/Dal�num"},"Destination":{"@sa":"200108001","@x":"18111070","@y":"59315096","#text":"Saltsj�qvarn"},"DepartureDate":"12.04.14","DepartureTime":{"@type":"EXACT","#text":"17:40"},"ArrivalDate":"12.04.14","ArrivalTime":{"@type":"EXACT","#text":"18:14"},"Transport":{"Type":"SHP","Name":"Pendelb�tstrafiken Sj�v�gen 80","Line":"80","Towards":"Nybroplan"},"IntermediateStopsQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/intermediate\/2y.03164354.1397315224\/1\/C0-0:0C0-0:2C0-0:4C0-1:0C0-1:2C0-2:0.json"},{"Origin":{"@sa":"200110598","@x":"18111043","@y":"59314323","#text":"Saltsj�qvarn"},"Destination":{"@sa":"200110149","@x":"18072489","@y":"59320076","#text":"Slussen (Katarinav�gen)"},"DepartureDate":"12.04.14","DepartureTime":{"@type":"CA","#text":"18:23"},"ArrivalDate":"12.04.14","ArrivalTime":{"@type":"EXACT","#text":"18:36"},"Transport":{"Type":"BUS","Name":"buss 53","Line":"53","Towards":"Roslagstull"},"IntermediateStopsQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/intermediate\/2y.03164354.1397315224\/1\/C0-0:0C0-0:2C0-0:4C0-1:0C0-1:2C0-2:0C0-2:2.json"}]},{"Summary":{"Origin":{"@sa":"200108005","@x":"18152403","@y":"59343188","#text":"Liding�\/Dal�num"},"Destination":{"@sa":"200110149","@x":"18070178","@y":"59321011","#text":"Slussen"},"DepartureDate":"12.04.14","DepartureTime":{"@type":"EXACT","#text":"18:30"},"ArrivalDate":"12.04.14","ArrivalTime":{"@type":"EXACT","#text":"19:15"},"SubTrips":"2","Changes":"1","Duration":"0:45","PriceInfo":{"TariffZones":"A","TariffRemark":"tid-biljett"},"CO2":"-1","MT6MessagesExist":"0","RTUMessagesExist":"0","RemarksExist":"0"},"SubTrip":[{"Origin":{"@sa":"200108005","@x":"18152403","@y":"59343188","#text":"Liding�\/Dal�num"},"Destination":{"@sa":"200108003","@x":"18157616","@y":"59318126","#text":"Nacka strand"},"DepartureDate":"12.04.14","DepartureTime":{"@type":"EXACT","#text":"18:30"},"ArrivalDate":"12.04.14","ArrivalTime":{"@type":"EXACT","#text":"18:43"},"Transport":{"Type":"SHP","Name":"Pendelb�tstrafiken Sj�v�gen 80","Line":"80","Towards":"Nybroplan"},"IntermediateStopsQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/intermediate\/2y.03164354.1397315224\/1\/C0-0:0C0-0:2C0-0:4C0-1:0C0-1:2C0-2:0C0-2:2C0-3:0.json"},{"Origin":{"@sa":"200140133","@x":"18160358","@y":"59316355","#text":"Nacka strand"},"Destination":{"@sa":"200110149","@x":"18070178","@y":"59321011","#text":"Slussen"},"DepartureDate":"12.04.14","DepartureTime":{"@type":"CA","#text":"19:01"},"ArrivalDate":"12.04.14","ArrivalTime":{"@type":"EXACT","#text":"19:15"},"Transport":{"Type":"BUS","Name":"buss 404","Line":"404","Towards":"Slussen"},"IntermediateStopsQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/intermediate\/2y.03164354.1397315224\/1\/C0-0:0C0-0:2C0-0:4C0-1:0C0-1:2C0-2:0C0-2:2C0-3:0C0-3:2.json"}]},{"Summary":{"Origin":{"@sa":"200108005","@x":"18152403","@y":"59343188","#text":"Liding�\/Dal�num"},"Destination":{"@sa":"200110149","@x":"18070178","@y":"59321011","#text":"Slussen"},"DepartureDate":"13.04.14","DepartureTime":{"@type":"EXACT","#text":"10:00"},"ArrivalDate":"13.04.14","ArrivalTime":{"@type":"EXACT","#text":"10:45"},"SubTrips":"2","Changes":"1","Duration":"0:45","PriceInfo":{"TariffZones":"A","TariffRemark":"tid-biljett"},"CO2":"-1","MT6MessagesExist":"0","RTUMessagesExist":"0","RemarksExist":"0"},"SubTrip":[{"Origin":{"@sa":"200108005","@x":"18152403","@y":"59343188","#text":"Liding�\/Dal�num"},"Destination":{"@sa":"200108003","@x":"18157616","@y":"59318126","#text":"Nacka strand"},"DepartureDate":"13.04.14","DepartureTime":{"@type":"EXACT","#text":"10:00"},"ArrivalDate":"13.04.14","ArrivalTime":{"@type":"EXACT","#text":"10:13"},"Transport":{"Type":"SHP","Name":"Pendelb�tstrafiken Sj�v�gen 80","Line":"80","Towards":"Nybroplan"},"IntermediateStopsQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/intermediate\/2y.03164354.1397315224\/1\/C0-0:0C0-0:2C0-0:4C0-1:0C0-1:2C0-2:0C0-2:2C0-3:0C0-3:2C0-4:0.json"},{"Origin":{"@sa":"200140133","@x":"18160358","@y":"59316355","#text":"Nacka strand"},"Destination":{"@sa":"200110149","@x":"18070178","@y":"59321011","#text":"Slussen"},"DepartureDate":"13.04.14","DepartureTime":{"@type":"EXACT","#text":"10:32"},"ArrivalDate":"13.04.14","ArrivalTime":{"@type":"EXACT","#text":"10:45"},"Transport":{"Type":"BUS","Name":"buss 443","Line":"443","Towards":"Slussen"},"IntermediateStopsQuery":"https:\/\/api.trafiklab.se\/sl\/reseplanerare\/intermediate\/2y.03164354.1397315224\/1\/C0-0:0C0-0:2C0-0:4C0-1:0C0-1:2C0-2:0C0-2:2C0-3:0C0-3:2C0-4:0C0-4:2.json"}]}]}}
