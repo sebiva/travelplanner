@@ -33,6 +33,7 @@ bool Skane::getXML(QString fromid, QString toid, QString date, QString time) {
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(parsereply(QNetworkReply*)) );
     // Make the search
+    manager->get(
     manager->get(QNetworkRequest(QUrl(address +
                                       "&date=" + date +
                                       "&time=" + time +
