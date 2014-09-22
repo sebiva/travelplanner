@@ -33,8 +33,6 @@ public slots:
     void parsestops(QNetworkReply *reply);
     void parsereply(QNetworkReply *reply);
 private:
-    bool skiptoendof(QXmlStreamReader *reader, QString str);
-
     static QString address;
     static QString nameaddress;
     static Skane *mskane;
