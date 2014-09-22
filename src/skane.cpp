@@ -1,7 +1,7 @@
 #include "skane.h"
 
 QString Skane::address =
-        "http://api.vasttrafik.se/bin/rest.exe/v1/trip?authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml";
+        "http://www.labs.skanetrafiken.se/v2.2/resultspage.asp?cmdaction=next&selPointFr="; //&LastStart=2014-06-22%2016:38;
 QString Skane::nameaddress =
         "http://www.labs.skanetrafiken.se/v2.2/querystation.asp?inpPointfr=";
 Skane *Skane::mskane = 0;
@@ -34,11 +34,10 @@ bool Skane::getXML(QString fromid, QString toid, QString date, QString time) {
             this, SLOT(parsereply(QNetworkReply*)) );
     // Make the search
     manager->get(QNetworkRequest(QUrl(address +
-                                      "&date=" + date +
-                                      "&time=" + time +
-                                      "&originId=" + fromid +
-                                      "&destId=" + toid)));
-    qDebug()<<"ADDRESS::"<<(address+"&date="+date +"&time="+time+"&originId="+fromid+"&destId="+toid);
+                                      "|" + fromid + "|0" +
+                                      "&selPointTo=|" + toid + "|0" +
+                                      "&LastStart=" + date + "%20" + time)));
+    qDebug()<<"ADDRESS::"<<(address + "|" + fromid + "|0" + "&selPointTo=|" + toid + "|0" + "&LastStart=" + date + "%20" + time);
     return true;
 }
 
@@ -60,101 +59,193 @@ void Skane::parsereply(QNetworkReply *reply) {
     QXmlStreamAttributes attr;
 
     trips->clear();
-    xml.readNextStartElement(); //Envelope
+
+//    xml.readNextStartElement(); //Envelope
+//    qDebug() << xml.name() << xml.isEndElement();
+
+//    xml.readNextStartElement(); //Body
+//    qDebug() << xml.name() << xml.isEndElement();
+
+//    xml.readNextStartElement(); //Getjourneyresponse
+//    qDebug() << xml.name() << xml.isEndElement();
+
+//    xml.readNextStartElement(); //Getjourneyresult
+//    qDebug() << xml.name() << xml.isEndElement();
+
+//    skiptoendof(&xml, "Code");
+//    qDebug() << xml.name() << xml.isEndElement();
+
+//    skiptoendof(&xml, "Message");
+//    qDebug() << xml.name() << xml.isEndElement();
+
+//    skiptoendof(&xml, "JourneyResultKey");
+//    qDebug() << xml.name() << xml.isEndElement(); //Journeys
+
+//    xml.readNextStartElement(); //Journey
+//    qDebug() << xml.name() << xml.isEndElement();
+
+    skiptostartof(&xml, "Journeys");
     qDebug() << xml.name() << xml.isEndElement();
 
-    xml.readNextStartElement(); //Body
-    qDebug() << xml.name() << xml.isEndElement();
 
-    xml.readNextStartElement(); //Getjourneyresponse
-    qDebug() << xml.name() << xml.isEndElement();
-
-    xml.readNextStartElement(); //Getjourneyresult
-    qDebug() << xml.name() << xml.isEndElement();
-
-    skiptoendof(&xml, "Code");
-    qDebug() << xml.name() << xml.isEndElement();
-
-    skiptoendof(&xml, "Message");
-    qDebug() << xml.name() << xml.isEndElement();
-
-    skiptoendof(&xml, "JourneyResultKey");
-    qDebug() << xml.name() << xml.isEndElement();
-
-    xml.readNextStartElement(); //Journeys
-    qDebug() << xml.name() << xml.isEndElement();
-
-    Trip *trip = new Trip();
-    trip->setParent(this);
-    trip->valid = true;
-    trip->passed = true;
-    trip->errmsg = "";
-
-    xml.readNextStartElement(); //Journey
-    qDebug() << xml.name() << xml.isEndElement();
 
     //While
-    skiptoendof(&xml, "SequenceNo");
-    qDebug() << xml.name() << xml.isEndElement();
-
-    xml.readNextStartElement(); //Depdatetime
-    qDebug() << xml.name() << xml.isEndElement();
-
-    QStringList dep = xml.readElementText().split("T");
-    trip->depdate = dep.at(0);
-    trip->deprtdate = trip->depdate;
-    trip->deptime = dep.at(1);
-    trip->deprttime = trip->deptime;
-    xml.skipCurrentElement();
-
-    xml.readNextStartElement(); //Arrdatetime
-    qDebug() << xml.name() << xml.isEndElement();
-
-    QStringList ariv = xml.readElementText().split("T");
-    trip->arivdate = ariv.at(0);
-    trip->arivrtdate = trip->arivdate;
-    trip->arivtime = ariv.at(1);
-    trip->arivrttime = trip->arivtime;
-    xml.skipCurrentElement();
-
-    skiptoendof(&xml, "JourneyKey");
-    qDebug() << xml.name() << xml.isEndElement();
-
-    xml.readNextStartElement(); //Routelink
-    qDebug() << xml.name() << xml.isEndElement();
+    while (xml.readNextStartElement() && (xml.name() == "Journey")) {
+        Trip *trip = new Trip();
+        trip->setParent(this);
+        trip->valid = true;
+        trip->passed = true;
+        trip->errmsg = "";
 
 
+        skiptostartof(&xml, "DepDateTime");
+        qDebug() << xml.name() << xml.isEndElement();
 
-    Leg *leg = NULL;
-    //While2
+        QStringList dep = xml.readElementText().split("T");
+        trip->depdate = dep.at(0);
+        trip->deprtdate = trip->depdate;
+        QString deptime = dep.at(1);
+        deptime.chop(3); // Remove seconds
+        trip->deptime = deptime;
+        trip->deprttime = trip->deptime;
 
-    leg = new Leg();
-    leg->setParent(trip);
-    skiptoendof(&xml, "RouteLinkKey");
-    qDebug() << xml.name() << xml.isEndElement();
+        qDebug() << "Deptime" << trip->deptime;
 
-    QStringList depleg = xml.readElementText().split("T");
+        skiptostartof(&xml, "ArrDateTime");
+        qDebug() << xml.name() << xml.isEndElement();
+
+        QStringList ariv = xml.readElementText().split("T");
+        trip->arivdate = ariv.at(0);
+        trip->arivrtdate = trip->arivdate;
+        QString arivtime = ariv.at(1);
+        arivtime.chop(3);
+        trip->arivtime = arivtime;
+        trip->arivrttime = trip->arivtime;
+
+        qDebug() << "Arrtime" << trip->arivtime;
+
+        skiptostartof(&xml, "RouteLinks");
+        qDebug() << xml.name() << xml.isEndElement();
+
+        //While2
+        while (xml.readNextStartElement() && (xml.name() == "RouteLink")) {
+            //xml.readNextStartElement(); //Routelink
+            qDebug() << xml.name() << xml.isEndElement();
+
+            Leg *leg = NULL;
+            leg = new Leg();
+            leg->setParent(trip);
+
+            skiptostartof(&xml, "DepDateTime");
+            qDebug() << xml.name() << xml.isEndElement();
+
+            QStringList depleg = xml.readElementText().split("T");
+            leg->mdepdate = depleg.at(0);
+            leg->mdeprtdate = leg->mdepdate; //TODO
+            QString deplegtime = depleg.at(1);
+            deplegtime.chop(3);
+            leg->mdeptime = deplegtime;
+            leg->mdeprttime = leg->mdeptime;
+
+            qDebug() << "LegDepTime" << leg->mdeptime;
+
+            skiptostartof(&xml, "ArrDateTime");
+            qDebug() << xml.name() << xml.isEndElement();
+
+            QStringList arivleg = xml.readElementText().split("T");
+            leg->marivdate = arivleg.at(0);
+            leg->marivrtdate = leg->marivdate; //TODO RT
+            QString arivlegtime = arivleg.at(1);
+            arivlegtime.chop(3);
+            leg->marivtime = arivlegtime;
+            leg->marivrttime = leg->marivtime;
+
+            qDebug() << "LegArrTime" << leg->mdeptime;
+
+            skiptostartof(&xml, "From");
+            skiptostartof(&xml, "Id");
+            qDebug() << xml.name() << xml.isEndElement();
+            leg->mfromid = xml.readElementText();
+            skiptostartof(&xml, "Name");
+            qDebug() << xml.name() << xml.isEndElement();
+            leg->mfrom = xml.readElementText();
+
+            skiptostartof(&xml, "To");
+            skiptostartof(&xml, "Id");
+            qDebug() << xml.name() << xml.isEndElement();
+            leg->mtoid = xml.readElementText();
+            skiptostartof(&xml, "Name");
+            qDebug() << xml.name() << xml.isEndElement();
+            leg->mto = xml.readElementText();
+
+            skiptostartof(&xml, "Line");
+            skiptostartof(&xml, "Name");
+            qDebug() << xml.name() << xml.isEndElement();
+            QString line = xml.readElementText();
+
+            skiptostartof(&xml, "Towards");
+            qDebug() << xml.name() << xml.isEndElement();
+            leg->mdir = xml.readElementText();
+
+            qDebug() << line << (line == "PågaTåg");
+            if ((line == "Pågatåg") || (line == "Öresundståg")) {
+                qDebug() << "TRAIN!!";
+                leg->mdir.append("; ").append(line.toLower());
+                leg->mline = tr("train");
+                leg->mfgcolour = "#ffffff";
+                leg->mbgcolour = "#000000";
+            } else {
+                leg->mline = line;
+                leg->mfgcolour = "#00abe5";
+                leg->mbgcolour = "#ffffff";
+            }
+
+            leg->calculatetimes();
+            trip->addleg(leg);
+
+            skiptoendof(&xml, "RouteLink");
+            qDebug() << xml.name() << xml.isEndElement();
+        }
 
 
 
 
+        //end while2
+
+        if (Timehelper::beforenow(trip->deprtdate, trip->deprttime)) {
+            trip->passed = true;
+            trip->errmsg = tr("Departed");
+        } else {
+            trip->passed = false;
+        }
+
+
+        bool canceled = false; //TODO
+        bool risktomiss = false; //TODO
+        if (!trip->valid) {
+            qDebug() << "Invalid trip";
+            if (canceled) {
+                qDebug() << "Setting canceled";
+                trip->errmsg = tr("Canceled");
+            } else if (risktomiss) {
+                qDebug() << "Setting risk";
+                trip->errmsg = tr("Risk to miss");
+            }
+        }
+
+        trip->calculatetimes();
+        trips->append(trip);
+
+        skiptoendof(&xml, "Journey");
+        qDebug() << xml.name() << xml.isEndElement();
+    }
+
+
+    //end while
 
     qDebug() << "Parsing done, no errors!";
     emit replyready("");
     sender()->deleteLater();
-}
-
-bool Skane::skiptoendof(QXmlStreamReader *reader, QString str) {
-    int i = 20;
-    while (i > 0) {
-        if (reader->isEndElement() && reader->name() == str) {
-            reader->readNext();
-            return true;
-        }
-        reader->readNext();
-        i++;
-    }
-    return false;
 }
 
 bool Skane::getstops(QString str) {

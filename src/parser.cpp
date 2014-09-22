@@ -117,3 +117,26 @@ QString Parser::removespecials(QString str) {
     return res;
 }
 
+bool Parser::skiptoendof(QXmlStreamReader *reader, QString str) {
+    int i = 50;
+    while (i > 0) {
+        if (reader->isEndElement() && reader->name() == str) {
+            return true;
+        }
+        reader->readNext();
+        i++;
+    }
+    return false;
+}
+
+bool Parser::skiptostartof(QXmlStreamReader *reader, QString str) {
+    int i = 50;
+    while (i > 0) {
+        if (reader->isStartElement() && reader->name() == str) {
+            return true;
+        }
+        reader->readNext();
+        i++;
+    }
+    return false;
+}

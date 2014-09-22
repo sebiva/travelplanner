@@ -67,6 +67,9 @@ public:
     int numlegs(int tripindex);
     void cleartrips();
 
+    bool skiptoendof(QXmlStreamReader *reader, QString str);
+    bool skiptostartof(QXmlStreamReader *reader, QString str);
+
     QString removespecials(QString str);
 
     QString fromid;
@@ -92,6 +95,9 @@ protected:
     static Parser *mparser;
 
     explicit Parser(QObject *parent = 0);
+
+private:
+
 };
 
 #endif // PARSER_H
