@@ -1,13 +1,13 @@
 Name: harbour-travelplanner
-Summary: "Travelplanner for V\xE4sttrafik"
-Version: 0.2
+Summary: "Travelplanner for Vasttrafik, SL and Skanetrafiken"
+Version: 0.6
 Release: 1
 Group: Qt/Qt
 URL: http://example.org/
 License: LICENSE
 Sources:
 - '%{name}-%{version}.tar.bz2'
-Description: "Simple travelplanner for Swedish V\xE4sttrafik\n"
+Description: "Simple travelplanner for Vasttrafik, SL and Skanetrafiken\n"
 Configure: none
 Builder: qtc5
 PkgConfigBR:

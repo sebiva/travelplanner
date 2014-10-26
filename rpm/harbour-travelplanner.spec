@@ -12,8 +12,8 @@ Name:       harbour-travelplanner
 %{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
-Summary:    Travelplanner for Västtrafik and SL
-Version:    0.5
+Summary:    Travelplanner for Vasttrafik, SL and Skanetrafiken
+Version:    0.6
 Release:    1
 Group:      Qt/Qt
 License:    LICENSE
@@ -28,7 +28,7 @@ BuildRequires:  pkgconfig(sailfishapp) >= 0.0.10
 BuildRequires:  desktop-file-utils
 
 %description
-Simple travelplanner for Swedish Västtrafik and SL
+Simple travelplanner for Vasttrafik, SL and Skanetrafiken
 
 
 %prep

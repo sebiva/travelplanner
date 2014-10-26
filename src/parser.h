@@ -71,6 +71,7 @@ public:
     bool skiptostartof(QXmlStreamReader *reader, QString str);
 
     QString removespecials(QString str);
+    QString removespecials_sl_skane(QString str);
 
     QString fromid;
     QString toid;

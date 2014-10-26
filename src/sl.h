@@ -34,13 +34,13 @@ signals:
 
 public slots:
     void parsestops(QNetworkReply *reply);
+    void parsestops_json(QNetworkReply *reply);
     void parsereply(QNetworkReply *reply);
 
 private:   
     static QString address;
     static QString nameaddress;
     static SL *msl;
-
     explicit SL();
 
 

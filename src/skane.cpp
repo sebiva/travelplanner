@@ -254,13 +254,12 @@ void Skane::parsereply(QNetworkReply *reply) {
 }
 
 bool Skane::getstops(QString str) {
-    str = removespecials(str);
     qDebug() << "SEARCHING STOPS::" << str;
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(parsestops(QNetworkReply*)) );
-    manager->get(QNetworkRequest(QUrl(nameaddress + str)));
-    qDebug()<<"NAMEADDRESS::"<<(nameaddress+str);
+    manager->get(QNetworkRequest(QUrl(nameaddress + removespecials_sl_skane(str))));
+    qDebug()<<"NAMEADDRESS::"<<(nameaddress+removespecials_sl_skane(str));
     return true;
 }
 

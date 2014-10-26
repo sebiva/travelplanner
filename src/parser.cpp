@@ -117,6 +117,22 @@ QString Parser::removespecials(QString str) {
     return res;
 }
 
+QString Parser::removespecials_sl_skane(QString str) {
+    QString res = str;
+
+    for(int i = 0; i < res.length();i++) {
+        QString letter = res.mid(i,1);
+        if (letter=="å" || letter=="Å") {
+            res = res.left(i) + "%C3%A5" + res.right(res.length()-i-1);
+        } else if (letter=="ä" || letter=="Ä") {
+            res = res.left(i) + "%C3%A4" + res.right(res.length()-i-1);
+        } else if (letter=="ö" || letter=="Ö") {
+            res = res.left(i) + "%C3%B6" + res.right(res.length()-i-1);
+        }
+    }
+    return res;
+}
+
 bool Parser::skiptoendof(QXmlStreamReader *reader, QString str) {
     int i = 50;
     while (i > 0) {
