@@ -2,8 +2,8 @@
 
 QString SL::address =
         "https://api.trafiklab.se/sl/reseplanerare.json?Timesel=depart&Lang=en&key=pZwMMjTu8Ye8bReCbEiegba4AHUoWnJg";
-QString SL::nameaddress =
-        "https://api.trafiklab.se/sl/realtid/GetSite.xml?key=pZwMMjTu8Ye8bReCbEiegba4AHUoWnJg&stationSearch=";
+QString SL::nameaddress = "http://sl.se/api/TypeAhead/Find/";
+        //"https://api.trafiklab.se/sl/realtid/GetSite.xml?key=pZwMMjTu8Ye8bReCbEiegba4AHUoWnJg&stationSearch=";
 SL *SL::msl = 0;
 
 QString SL::red = "#F1491c";
@@ -222,11 +222,41 @@ void SL::parsereply(QNetworkReply *reply) {
 bool SL::getstops(QString str) {
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(parsestops(QNetworkReply*)) );
-    manager->get(QNetworkRequest(QUrl(nameaddress + str)));
-    qDebug()<<"NAMEADDRESS::"<<(nameaddress+str);
+            this, SLOT(parsestops_json(QNetworkReply*)) );
+    manager->get(QNetworkRequest(QUrl(nameaddress + removespecials_sl_skane(str))));
+    qDebug()<<"NAMEADDRESS::"<<(nameaddress+removespecials_sl_skane(str));
     return true;
 }
+
+void SL::parsestops_json(QNetworkReply *reply) {
+    if (reply->error() != QNetworkReply::NoError) {
+        qDebug() << "No connection in stoplist search";
+        sender()->deleteLater();
+        return;
+    }
+
+    QString strReply = (QString)reply->readAll();
+    stops->clear();
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8());
+    QJsonObject obj = jsonResponse.object();
+
+    //qDebug() << obj["data"].toString();
+    QJsonArray array = obj["data"].toArray();
+    int count = 0;
+    while(array.size() > count && count < 10) {
+        if (!array.at(count).isObject()) {
+            break;
+        }
+        QJsonObject elem = array.at(count).toObject();
+        //qDebug() << "Name" << elem["Name"].toString() << "Id" << elem["SiteId"].toDouble();
+        count++;
+        QString id = QString::number(elem["SiteId"].toDouble());
+        stops->append(elem["Name"].toString() + "#" + id);
+    }
+    emit stopsready("");
+    sender()->deleteLater();
+}
+
 
 void SL::parsestops(QNetworkReply *reply) {
     if (reply->error() != QNetworkReply::NoError) {
