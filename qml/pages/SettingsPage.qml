@@ -126,7 +126,7 @@ Page {
                 }
                 Text {
                     color: Theme.primaryColor;
-                    text: ' <html><style type="text/css"></style><a href="http://www.labs.skanetrafiken.se/">Skånetrafiken</a></html> ' + qsTr("APIs") + "."
+                    text: ' <html><style type="text/css"></style><a href="http://www.labs.skanetrafiken.se/">Skånetrafiken</a></html>' + (qsTr("APIs") === "APIs"? ' ': "'s ") + qsTr("APIs") + "."
                     onLinkActivated: Qt.openUrlExternally(link)
                     linkColor: Theme.highlightColor
                     x: Theme.paddingLarge
