@@ -194,6 +194,11 @@ void Skane::parsereply(QNetworkReply *reply) {
                 leg->mline = tr("train");
                 leg->mfgcolour = "#ffffff";
                 leg->mbgcolour = "#000000";
+            } else if((line == "Tågbuss")) {
+                leg->mdir.append("; ").append(line.toLower());
+                leg->mline = tr("bus");
+                leg->mfgcolour = "#ffffff";
+                leg->mbgcolour = "#00abe5";
             } else {
                 leg->mline = line;
                 leg->mfgcolour = "#00abe5";
