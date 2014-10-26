@@ -230,17 +230,27 @@
         <translation>bus</translation>
     </message>
     <message>
-        <location filename="../src/skane.cpp" line="222"/>
+        <location filename="../src/skane.cpp" line="205"/>
+        <source>exp</source>
+        <translation>exp</translation>
+    </message>
+    <message>
+        <location filename="../src/skane.cpp" line="210"/>
+        <source>ferry</source>
+        <translation>ferry</translation>
+    </message>
+    <message>
+        <location filename="../src/skane.cpp" line="233"/>
         <source>Departed</source>
         <translation>Departed</translation>
     </message>
     <message>
-        <location filename="../src/skane.cpp" line="234"/>
+        <location filename="../src/skane.cpp" line="245"/>
         <source>Canceled</source>
         <translation>Canceled</translation>
     </message>
     <message>
-        <location filename="../src/skane.cpp" line="237"/>
+        <location filename="../src/skane.cpp" line="248"/>
         <source>Risk to miss</source>
         <translation>Risk to miss</translation>
     </message>

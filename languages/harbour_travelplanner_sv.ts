@@ -230,17 +230,27 @@
         <translation>buss</translation>
     </message>
     <message>
-        <location filename="../src/skane.cpp" line="222"/>
+        <location filename="../src/skane.cpp" line="205"/>
+        <source>exp</source>
+        <translation>exp</translation>
+    </message>
+    <message>
+        <location filename="../src/skane.cpp" line="210"/>
+        <source>ferry</source>
+        <translation>färja</translation>
+    </message>
+    <message>
+        <location filename="../src/skane.cpp" line="233"/>
         <source>Departed</source>
         <translation>Avgången</translation>
     </message>
     <message>
-        <location filename="../src/skane.cpp" line="234"/>
+        <location filename="../src/skane.cpp" line="245"/>
         <source>Canceled</source>
         <translation>Inställd</translation>
     </message>
     <message>
-        <location filename="../src/skane.cpp" line="237"/>
+        <location filename="../src/skane.cpp" line="248"/>
         <source>Risk to miss</source>
         <translation>Risk att missa</translation>
     </message>
