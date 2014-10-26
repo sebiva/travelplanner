@@ -198,21 +198,21 @@
         <translation>och</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="121"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="129"/>
         <source>APIs</source>
-        <translation>s APIer</translation>
+        <translation>APIer</translation>
     </message>
     <message>
         <source>Västtrafik API</source>
         <translation type="obsolete">Västtrafiks API</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="129"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="137"/>
         <source>The source code is available on</source>
         <translation>Källkoden finns tillgänglig på</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="137"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="145"/>
         <source>Licensed under</source>
         <translation>Licensierat under</translation>
     </message>
