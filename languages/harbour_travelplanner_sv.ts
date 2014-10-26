@@ -280,8 +280,12 @@
     </message>
     <message>
         <location filename="../src/vasttrafik.cpp" line="244"/>
-        <source>Canceled</source>
+        <source>Cancelled</source>
         <translation>Inställd</translation>
+    </message>
+    <message>
+        <source>Canceled</source>
+        <translation type="obsolete">Inställd</translation>
     </message>
     <message>
         <location filename="../src/vasttrafik.cpp" line="247"/>

@@ -81,7 +81,7 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
         bool first = true;
         xml.readNextStartElement();//Leg
         Leg *leg = NULL;
-        bool canceled = false;
+        bool cancelled = false;
         bool risktomiss = false;
 
         while(!xml.isEndElement()) {
@@ -124,11 +124,10 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
                 leg->mline = sname;
             }
 
-            //TODO: Test
-            if(attr.value("canceled").toString() != "") {
-                qDebug() << "Canceled";
-                leg->merrstatus = "Canceled";
-                canceled = true;
+            if(attr.value("cancelled").toString() != "") {
+                qDebug() << "Cancelled";
+                leg->merrstatus = "Cancelled";
+                cancelled = true;
             } else if (attr.value("reachable").toString() != "") {
                 qDebug() << "Risk to miss";
                 leg->merrstatus = "Risk to miss";
@@ -239,9 +238,9 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
 
         if (!trip->valid) {
             qDebug() << "Invalid trip";
-            if (canceled) {
-                qDebug() << "Setting canceled";
-                trip->errmsg = tr("Canceled");
+            if (cancelled) {
+                qDebug() << "Setting cancelled";
+                trip->errmsg = tr("Cancelled");
             } else if (risktomiss) {
                 qDebug() << "Setting risk";
                 trip->errmsg = tr("Risk to miss");
