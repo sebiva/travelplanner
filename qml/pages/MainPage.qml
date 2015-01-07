@@ -190,10 +190,12 @@ Dialog {
                     opacity: canAccept ? 1 : 0.8
                     visible: !maindialog.typing
                 }
+
                 Rectangle {
-                    id: spacer
+                    // Fix for sailfish OS 1.1.1.27
+                    id: dialogheaderspacer
                     width: parent.width
-                    height: Theme.paddingMedium
+                    height: topheader.height
                     opacity: 0
                     visible: maindialog.typing
                 }
