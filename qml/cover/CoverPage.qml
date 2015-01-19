@@ -85,8 +85,8 @@ CoverBackground {
 
         } else {
             console.log("cover inactive")
-            searchx.ready.disconnect(readyFunc)
-            searchx.searching.disconnect(searchingFunc)
+            //searchx.ready.disconnect(readyFunc)
+            //searchx.searching.disconnect(searchingFunc)
         }
     }
 
@@ -112,8 +112,8 @@ CoverBackground {
                                      duration: trip.getduration()  })
                 tripindex++
             }
-            //from.text = searchx.getfrom()
-            //to.text = searchx.getto()
+            from.text = searchx.getfrom()
+            to.text = searchx.getto()
             //coverstatus = "avail"
             //busy.visible = false
 
@@ -158,13 +158,13 @@ CoverBackground {
 
     Column {
         anchors.fill: parent
-        //Label {id: from; x: Theme.paddingSmall; visible: (coverstatus === "avail"); font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.secondaryHighlightColor}
-        //Label {id: to; x: Theme.paddingSmall; visible: (coverstatus === "avail"); font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.highlightColor}
+        Label {id: from; x: Theme.paddingSmall; /*visible: (coverstatus === "avail");*/ font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.secondaryHighlightColor}
+        Label {id: to; x: Theme.paddingSmall; /*visible: (coverstatus === "avail");*/ font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.highlightColor}
 
         ListView {
             id: triplist
             width: parent.width
-            height: parent.height// - from.height - to.height
+            height: parent.height - from.height - to.height
             clip: true
 
             BusyIndicator {
