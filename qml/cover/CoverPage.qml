@@ -33,7 +33,6 @@ CoverBackground {
     property string coverstatus: "started"
     property string backend: mainWindow.backend
     property bool active : Qt.application.active
-    property var conn: null
 
     /*
       Updates the cover, now specifying whether to use the original search time or
@@ -74,9 +73,6 @@ CoverBackground {
     Component.onCompleted: {
         searchx.ready.connect(readyFunc)
         searchx.searching.connect(searchingFunc)
-//        var comp = Qt.createComponent("CoverConn.qml")
-//        conn = comp.createObject(coverpage)
-//        console.log("Created conn")
     }
 
     onActiveChanged: {
@@ -93,6 +89,7 @@ CoverBackground {
     function readyFunc(err) {
         console.log("Ready signal received in CoverPage")
         listmodel.clear()
+        //busy.visible = false
         if (err === "") {
             //No error
             var tripindex = 0
@@ -126,6 +123,7 @@ CoverBackground {
         console.log("onSearching signal received in CoverPage")
         coverstatus = "searching"
         listmodel.clear()
+        //busy.visible = true
     }
 
 
@@ -167,8 +165,8 @@ CoverBackground {
 
 //            BusyIndicator {
 //                id: busy
-//                visible: (coverstatus === "searching")
-//                running: (coverstatus === "searching")
+//                visible: false//(coverstatus === "searching")
+//                running: visible//(coverstatus === "searching")
 //                width: parent.width / 3
 //                height: width
 //                anchors.horizontalCenter:  parent.horizontalCenter
@@ -279,7 +277,6 @@ CoverBackground {
     CoverActionList {
         id: coverAction
         enabled: (coverstatus === "avail")
-        //enabled: false
         CoverAction {
             //Update the search for the current time
             iconSource: "image://theme/icon-cover-timer"
