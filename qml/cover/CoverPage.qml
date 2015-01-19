@@ -114,8 +114,7 @@ CoverBackground {
             }
             from.text = searchx.getfrom()
             to.text = searchx.getto()
-            //coverstatus = "avail"
-            //busy.visible = false
+            coverstatus = "avail"
 
         } else {
             console.log("CoverPage: Error in search")
@@ -127,7 +126,6 @@ CoverBackground {
         console.log("onSearching signal received in CoverPage")
         coverstatus = "searching"
         listmodel.clear()
-        //busy.visible = true
     }
 
 
@@ -158,8 +156,8 @@ CoverBackground {
 
     Column {
         anchors.fill: parent
-        Label {id: from; x: Theme.paddingSmall; /*visible: (coverstatus === "avail");*/ font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.secondaryHighlightColor}
-        Label {id: to; x: Theme.paddingSmall; /*visible: (coverstatus === "avail");*/ font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.highlightColor}
+        Label {id: from; x: Theme.paddingSmall; text: ""; visible: (coverstatus === "avail"); font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.secondaryHighlightColor}
+        Label {id: to; x: Theme.paddingSmall; text: ""; visible: (coverstatus === "avail"); font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.highlightColor}
 
         ListView {
             id: triplist
@@ -167,16 +165,16 @@ CoverBackground {
             height: parent.height - from.height - to.height
             clip: true
 
-            BusyIndicator {
-                id: busy
-                visible: (coverstatus === "searching")
-                running: (coverstatus === "searching")
-                width: parent.width / 3
-                height: width
-                anchors.horizontalCenter:  parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                size: BusyIndicatorSize.Large
-            }
+//            BusyIndicator {
+//                id: busy
+//                visible: (coverstatus === "searching")
+//                running: (coverstatus === "searching")
+//                width: parent.width / 3
+//                height: width
+//                anchors.horizontalCenter:  parent.horizontalCenter
+//                anchors.verticalCenter: parent.verticalCenter
+//                size: BusyIndicatorSize.Large
+//            }
 
             model: ListModel {
                 id: listmodel
@@ -280,8 +278,8 @@ CoverBackground {
     }
     CoverActionList {
         id: coverAction
-        //enabled: (coverstatus === "avail")
-        enabled: false
+        enabled: (coverstatus === "avail")
+        //enabled: false
         CoverAction {
             //Update the search for the current time
             iconSource: "image://theme/icon-cover-timer"
