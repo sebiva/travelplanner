@@ -32,6 +32,8 @@ CoverBackground {
       */
     property string coverstatus: "started"
     property string backend: mainWindow.backend
+    property bool active : Qt.application.active
+    property var conn: null
 
     /*
       Updates the cover, now specifying whether to use the original search time or
@@ -63,62 +65,72 @@ CoverBackground {
         //Clear the search
         listmodel.clear()
         coverstatus = "started"
-
     }
 
     Component.onDestruction: {
         console.log("Destroying Coverpage")
-        conn.destroy()
     }
 
-    /*
-      Used to perform searches, and intercept signals.
-      */
-    Connections {
-        id: conn
-        target: searchx
+    Component.onCompleted: {
+        searchx.ready.connect(readyFunc)
+        searchx.searching.connect(searchingFunc)
+//        var comp = Qt.createComponent("CoverConn.qml")
+//        conn = comp.createObject(coverpage)
+//        console.log("Created conn")
+    }
 
-        /*
-          Called when a search is ready in the Search class.
-          */
-        onReady: {
-            console.log("Ready signal received in CoverPage")
-            listmodel.clear()
-            if (err === "") {
-                //No error
-                var tripindex = 0
-                var trip
-                // Add the result to the list (only add the first 3, as the others won't be visible
-                while((trip = searchx.getTrip(tripindex))!==null && tripindex < 3) {
-                    listmodel.append({  deptime: trip.getdeptime(),
-                                         arivtime: trip.getarivtime(),
-                                         depdate: trip.getdepdate(),
-                                         arivdate: trip.getarivdate(),
-                                         deprttime: trip.getdeprttime(),
-                                         arivrttime: trip.getarivrttime(),
-                                         deprtdate: trip.getdeprtdate(),
-                                         arivrtdate: trip.getarivrtdate(),
-                                         depdelay: trip.getdepdelay(),
-                                         arivdelay: trip.getarivdelay(),
-                                         duration: trip.getduration()  })
-                    tripindex++
-                }
-                from.text = searchx.getfrom()
-                to.text = searchx.getto()
-                coverstatus = "avail"
+    onActiveChanged: {
+        if (active) {
+            console.log("Cover active")
 
-            } else {
-                console.log("CoverPage: Error in search")
-                coverstatus = "error"
-                placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed")
+        } else {
+            console.log("cover inactive")
+            searchx.ready.disconnect(readyFunc)
+            searchx.searching.disconnect(searchingFunc)
+        }
+    }
+
+    function readyFunc(err) {
+        console.log("Ready signal received in CoverPage")
+        listmodel.clear()
+        if (err === "") {
+            //No error
+            var tripindex = 0
+            var trip
+            // Add the result to the list (only add the first 3, as the others won't be visible
+            while((trip = searchx.getTrip(tripindex))!==null && tripindex < 3) {
+                listmodel.append({  deptime: trip.getdeptime(),
+                                     arivtime: trip.getarivtime(),
+                                     depdate: trip.getdepdate(),
+                                     arivdate: trip.getarivdate(),
+                                     deprttime: trip.getdeprttime(),
+                                     arivrttime: trip.getarivrttime(),
+                                     deprtdate: trip.getdeprtdate(),
+                                     arivrtdate: trip.getarivrtdate(),
+                                     depdelay: trip.getdepdelay(),
+                                     arivdelay: trip.getarivdelay(),
+                                     duration: trip.getduration()  })
+                tripindex++
             }
-        }
-        onSearching :{
-            console.log("onSearching signal received in CoverPage")
-            coverstatus = "searching"
-            listmodel.clear()
+            //from.text = searchx.getfrom()
+            //to.text = searchx.getto()
+            //coverstatus = "avail"
+            //busy.visible = false
+
+        } else {
+            console.log("CoverPage: Error in search")
+            coverstatus = "error"
+            placeholdertext.text = qsTr("Travelplanner") + "\n" + qsTr("Search failed")
         }
     }
+    function searchingFunc() {
+        console.log("onSearching signal received in CoverPage")
+        coverstatus = "searching"
+        listmodel.clear()
+        //busy.visible = true
+    }
+
+
 
     Column {
         anchors.centerIn: parent
@@ -146,19 +158,19 @@ CoverBackground {
 
     Column {
         anchors.fill: parent
-        Label {id: from; x: Theme.paddingSmall; visible: (coverstatus === "avail"); font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.secondaryHighlightColor}
-        Label {id: to; x: Theme.paddingSmall; visible: (coverstatus === "avail"); font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.highlightColor}
+        //Label {id: from; x: Theme.paddingSmall; visible: (coverstatus === "avail"); font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.secondaryHighlightColor}
+        //Label {id: to; x: Theme.paddingSmall; visible: (coverstatus === "avail"); font.pixelSize: Theme.fontSizeTiny; width: parent.width; truncationMode: TruncationMode.Elide; color: Theme.highlightColor}
 
         ListView {
             id: triplist
             width: parent.width
-            height: parent.height - from.height - to.height
+            height: parent.height// - from.height - to.height
             clip: true
 
             BusyIndicator {
                 id: busy
-                visible: coverstatus === "searching"
-                running: coverstatus === "searching"
+                visible: (coverstatus === "searching")
+                running: (coverstatus === "searching")
                 width: parent.width / 3
                 height: width
                 anchors.horizontalCenter:  parent.horizontalCenter
@@ -268,7 +280,8 @@ CoverBackground {
     }
     CoverActionList {
         id: coverAction
-        enabled: (coverstatus === "avail")
+        //enabled: (coverstatus === "avail")
+        enabled: false
         CoverAction {
             //Update the search for the current time
             iconSource: "image://theme/icon-cover-timer"
