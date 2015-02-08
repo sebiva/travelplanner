@@ -1,10 +1,9 @@
 #include "sl.h"
 
-QString SL::address = "";
-
-QString SL::nameaddress =
-        "https://api.sl.se/api2/typeahead.json?key=4b4b702b390d4c07a0f57b9b1d040d89&stationsonly=True&maxresults=10&searchstring=";
-
+QString SL::address =
+        "https://api.trafiklab.se/sl/reseplanerare.json?Timesel=depart&Lang=en&key=pZwMMjTu8Ye8bReCbEiegba4AHUoWnJg";
+QString SL::nameaddress = "http://sl.se/api/TypeAhead/Find/";
+        //"https://api.trafiklab.se/sl/realtid/GetSite.xml?key=pZwMMjTu8Ye8bReCbEiegba4AHUoWnJg&stationSearch=";
 SL *SL::msl = 0;
 
 QString SL::red = "#F1491c";
@@ -235,16 +234,14 @@ void SL::parsestops_json(QNetworkReply *reply) {
         sender()->deleteLater();
         return;
     }
-    qDebug() << "Parsing stops!";
 
     QString strReply = (QString)reply->readAll();
     stops->clear();
     QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8());
     QJsonObject obj = jsonResponse.object();
 
-    qDebug() << obj.keys();
-    qDebug() << obj["ResponseData"].toArray();
-    QJsonArray array = obj["ResponseData"].toArray();
+    //qDebug() << obj["data"].toString();
+    QJsonArray array = obj["data"].toArray();
     int count = 0;
     while(array.size() > count && count < 10) {
         if (!array.at(count).isObject()) {
@@ -261,56 +258,56 @@ void SL::parsestops_json(QNetworkReply *reply) {
 }
 
 
-//void SL::parsestops(QNetworkReply *reply) {
-//    if (reply->error() != QNetworkReply::NoError) {
-//        qDebug() << "No connection in stoplist search";
-//        sender()->deleteLater();
-//        return;
-//    }
-//    QXmlStreamReader xml;
-//    xml.setDevice(reply);
-//    stops->clear();
-//    xml.readNextStartElement(); //Hafas
-//    //qDebug() << "Hafas?" << xml.name() << xml.isEndElement();
-//    if(xml.name() == "ErrorMessage") {
-//        qDebug() << "No stops found";
-//        sender()->deleteLater();
-//        return;
-//    }
+void SL::parsestops(QNetworkReply *reply) {
+    if (reply->error() != QNetworkReply::NoError) {
+        qDebug() << "No connection in stoplist search";
+        sender()->deleteLater();
+        return;
+    }
+    QXmlStreamReader xml;
+    xml.setDevice(reply);
+    stops->clear();
+    xml.readNextStartElement(); //Hafas
+    //qDebug() << "Hafas?" << xml.name() << xml.isEndElement();
+    if(xml.name() == "ErrorMessage") {
+        qDebug() << "No stops found";
+        sender()->deleteLater();
+        return;
+    }
 
 
-//    xml.readNextStartElement(); //Execution time
-//    xml.skipCurrentElement();
-//    //qDebug() << "Exec true?" << xml.name() << xml.isEndElement();
-//    xml.readNextStartElement(); //Sites
-//    //qDebug() << "Sites?" << xml.name() << xml.isEndElement();
+    xml.readNextStartElement(); //Execution time
+    xml.skipCurrentElement();
+    //qDebug() << "Exec true?" << xml.name() << xml.isEndElement();
+    xml.readNextStartElement(); //Sites
+    //qDebug() << "Sites?" << xml.name() << xml.isEndElement();
 
-//    int count = 0;
-//    xml.readNextStartElement(); //Read first Site
-//    while (!xml.isEndElement() && count < 10) {
-//        //qDebug() << "Site?" << xml.name() << xml.isEndElement();
+    int count = 0;
+    xml.readNextStartElement(); //Read first Site
+    while (!xml.isEndElement() && count < 10) {
+        //qDebug() << "Site?" << xml.name() << xml.isEndElement();
 
-//        xml.readNextStartElement(); //Number
-//        //qDebug() << "Number?" << xml.name() << xml.isEndElement();
+        xml.readNextStartElement(); //Number
+        //qDebug() << "Number?" << xml.name() << xml.isEndElement();
 
-//        QString num = xml.readElementText();
+        QString num = xml.readElementText();
 
-//        xml.readNextStartElement(); //Name
-//        //qDebug() << "Name?" << xml.name() << xml.isEndDocument();
+        xml.readNextStartElement(); //Name
+        //qDebug() << "Name?" << xml.name() << xml.isEndDocument();
 
-//        QString name  = xml.readElementText();
-//        //qDebug() << "RES:" << num << name;
-//        stops->append(name + "#" + num);
+        QString name  = xml.readElementText();
+        //qDebug() << "RES:" << num << name;
+        stops->append(name + "#" + num);
 
-//        xml.skipCurrentElement();//Skip the site end tag
-//        //qDebug() << "Site true?" << xml.name() << xml.isEndElement();
-//        xml.readNextStartElement();//Read next site
-//        //qDebug() << "Site | Sites true?" << xml.name() << xml.isEndElement();
-//        count++;
-//    }
-//    emit stopsready("");
-//    sender()->deleteLater();
-//}
+        xml.skipCurrentElement();//Skip the site end tag
+        //qDebug() << "Site true?" << xml.name() << xml.isEndElement();
+        xml.readNextStartElement();//Read next site
+        //qDebug() << "Site | Sites true?" << xml.name() << xml.isEndElement();
+        count++;
+    }
+    emit stopsready("");
+    sender()->deleteLater();
+}
 
 
 

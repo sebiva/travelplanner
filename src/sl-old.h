@@ -33,7 +33,7 @@ public:
 signals:
 
 public slots:
-    //void parsestops(QNetworkReply *reply);
+    void parsestops(QNetworkReply *reply);
     void parsestops_json(QNetworkReply *reply);
     void parsereply(QNetworkReply *reply);
 
