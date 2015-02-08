@@ -1,6 +1,6 @@
 #include "sl.h"
 
-QString SL::address = "";
+QString SL::address = "https://api.sl.se/api2/TravelplannerV2/trip.json?key=6cce74a4716e4b75a84f06fd6c987fbb";
 
 QString SL::nameaddress =
         "https://api.sl.se/api2/typeahead.json?key=4b4b702b390d4c07a0f57b9b1d040d89&stationsonly=True&maxresults=10&searchstring=";
@@ -32,13 +32,13 @@ bool SL::getXML(QString fromid, QString toid, QString date, QString time) {
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(parsereply(QNetworkReply*)) );
-    manager->get(QNetworkRequest(QUrl(address +
-                                      "&Date=" + tosldate(date) +
-                                      "&Time=" + time +
-                                      "&S=" + fromid +
-                                      "&Z=" + toid
-                                      )));
-    qDebug()<<"ADDRESS::"<<address + "&Date=" + tosldate(date) + "&Time=" + time + "&S=" + fromid + "&Z=" + toid;
+    QString req = (address +
+            "&date=" + date + //tosldate(date) +
+            "&time=" + time +
+            "&originId=" + fromid +
+            "&destId=" + toid);
+    manager->get(QNetworkRequest(QUrl(req)));
+    qDebug()<<"ADDRESS::"<< req;
     return true;
 }
 
@@ -53,95 +53,72 @@ void SL::parsereply(QNetworkReply *reply) {
     trips->clear();
     QTextCodec *cod = QTextCodec::codecForName("iso-8859-1");
     QString bytes = cod->toUnicode(reply->readAll());
+    QString bytes2 = QString(bytes.toLatin1()); // Seems to work..
 
-    //qDebug() << bytes;
+    //qDebug() << QString(bytes.toLatin1());
     QJsonParseError err;
     QJsonDocument jsondoc;
-    jsondoc = QJsonDocument::fromJson(bytes.toUtf8(),&err);
+    jsondoc = QJsonDocument::fromJson(bytes2.toUtf8(),&err);
 
 
     //qDebug() << jsondoc.isObject() << jsondoc.isArray();
 
     QJsonObject root = jsondoc.object();
     //qDebug() << root.keys();
-    QJsonObject hafas = root.value("HafasResponse").toObject();
-    //qDebug() << hafas.keys();
-
-
-    QJsonArray triplist;
-    int lentrips;
-    if (hafas.value("Trip").isObject()) {
-        lentrips = 1;
+    QJsonObject root2 = root["TripList"].toObject();
+    //qDebug() << "List?" << root2["Trip"].isArray();
+    if (!root2.contains("Trip")) {
+        emit replyready("No trips found"); //TODO: Better error msg
+    }
+    QJsonArray triplist = QJsonArray();
+    // If there is only on trip, its not in a list...
+    if (!root2["Trip"].isArray() && root2["Trip"].isObject()) {
+        triplist.append(root2["Trip"].toObject());
     } else {
-        triplist = hafas.value("Trip").toArray();
-        lentrips = triplist.size();
+        triplist = root2["Trip"].toArray();
     }
 
-
     for (int i = 0; i < triplist.size(); i++) {
-        //qDebug() << "######################### NEW TRIP" << i << "/" << triplist.size();
+        qDebug() << "######################### NEW TRIP" << i << "/" << triplist.size();
         Trip *strip = new Trip();
         strip->setParent(this);
         strip->valid = true;
         strip->passed = false;
         strip->errmsg = "";
 
-        //Check if there is only one trip
-        QJsonObject trip;
-        if (lentrips == 1) {
-            trip = hafas.value("Trip").toObject();
+        QJsonObject trip = triplist.at(i).toObject();
+        QJsonObject trip2 = trip["LegList"].toObject();
+        //qDebug() << "Legs" << trip2["Leg"].isArray();
+
+        QJsonArray leglist = QJsonArray();
+        // If there is only one leg, its not in a list...
+        if (!trip2["Leg"].isArray() && trip2["Leg"].isObject()) {
+            leglist.append(trip2["Leg"].toObject());
         } else {
-            trip = triplist.at(i).toObject();
+            leglist = trip2["Leg"].toArray();
         }
-
-        QJsonObject summary = trip.value("Summary").toObject();
-
-        strip->depdate = toappdate(summary.value("DepartureDate").toString());
-        strip->deprtdate = strip->depdate;
-        strip->deptime = summary.value("DepartureTime").toObject().value("#text").toString();
-        strip->deprttime = strip->deptime;
-        strip->arivdate = toappdate(summary.value("ArrivalDate").toString());
-        strip->arivrtdate = strip->arivdate;
-        strip->arivtime = summary.value("ArrivalTime").toObject().value("#text").toString();
-        strip->arivrttime = strip->arivtime;
-
-
-        //qDebug() << strip->depdate << strip->deptime << strip->arivdate << strip->arivrttime;
-
-        //See if the subtrips are in a list
-        int len;
-        QJsonArray subtriplist;
-        if(trip.value("SubTrip").isObject()) {
-            len = 1;
-        } else {
-            subtriplist = trip.value("SubTrip").toArray();
-            len = subtriplist.size();
-        }
-
         Leg *leg = NULL;
-        for (int j = 0; j < len; j++) {
-            //qDebug() << "######################### NEW SUBTRIP" << j << "/" << subtriplist.size();
+        for (int j = 0; j < leglist.size(); j++) {
+            qDebug() << "######################### NEW Leg" << j << "/" << leglist.size();
             leg = new Leg();
             leg->setParent(strip);
 
-            //Check if the Subtrips are in a list
-            QJsonObject subtrip;
-            if (len == 1) {
-                subtrip = trip.value("SubTrip").toObject();
+            QJsonObject legobj = leglist.at(j).toObject();
+
+            QJsonObject origin = legobj["Origin"].toObject();
+            QJsonObject dest = legobj["Destination"].toObject();
+
+            QString type = legobj["type"].toString();
+            if (type == "WALK") {
+                leg->mdir = tr("Walk");
+                leg->mline = tr("Walk");
             } else {
-                subtrip = subtriplist.at(j).toObject();
+                leg->mdir= legobj["dir"].toString();
+                leg->mline = legobj["line"].toString();
             }
+            qDebug() << leg->mline << (leg->mdir);
 
-            QJsonObject transport = subtrip.value("Transport").toObject();
-            //Add leg info
-            leg->mline = transport.value("Line").toString();
-            leg->mdir = transport.value("Towards").toString();
-
-            //qDebug() << leg->mline << leg->mdir;
-
-            QString type = transport.value("Type").toString();
-            //qDebug() << "Type" << type;
-            if (type == "MET") {
+            if (type == "METRO") {
                 if (leg->mline == "10" || leg->mline == "11") {
                     leg->mfgcolour = blue;
                 } else if (leg->mline == "13" || leg->mline == "14") {
@@ -151,16 +128,16 @@ void SL::parsereply(QNetworkReply *reply) {
                 }
                 leg->mbgcolour = "#ffffff";
                 leg->mline = "T" + leg->mline;
-            } else if (type == "BUS") {
+            } else if (type == "BUS" || type == "NARBUSS") {
                 leg->mfgcolour = "#ffffff";
                 leg->mbgcolour = "#00abe5";
-            } else if (type == "SHP") {
+            } else if (type == "SHIP" || type == "FERRY") {
                 leg->mfgcolour = "#00abe5";
                 leg->mbgcolour = "#ffffff";
-            } else if (type == "TRN") {
+            } else if (type == "TRAIN") {
                 leg->mfgcolour = "#000000";
                 leg->mbgcolour = "#ffffff";
-            } else if (type == "TRM") {
+            } else if (type == "TRAM") {
                 leg->mfgcolour = "#ffe600";
                 leg->mbgcolour = "#00abe5";
             } else {
@@ -168,34 +145,63 @@ void SL::parsereply(QNetworkReply *reply) {
                 leg->mbgcolour = "#00abe5";
             }
 
-
-
-
-            QJsonObject origin = subtrip.value("Origin").toObject();
             //Add origin info
-            leg->mfrom = origin.value("#text").toString();
+            leg->mfrom = origin["name"].toString();
             leg->mfromid = "null";
             leg->mfromtrack = "";
-            leg->mdepdate = toappdate(subtrip.value("DepartureDate").toString());
-            leg->mdeprtdate = leg->mdepdate;
-            leg->mdeptime = subtrip.value("DepartureTime").toObject().value("#text").toString();
-            leg->mdeprttime = leg->mdeptime;
+            leg->mdepdate = origin["date"].toString();
+            if (origin.contains("rtDate")) {
+                leg->mdeprtdate = origin["rtDate"].toString();
+            } else {
+                leg->mdeprtdate = leg->mdepdate;
+            }
+            leg->mdeptime = origin["time"].toString();
+            if (origin.contains("rtTime")) {
+                leg->mdeprttime = origin["rtTime"].toString();
+            } else {
+                leg->mdeprttime = leg->mdeptime;
+            }
 
 
-            //qDebug() << leg->mfrom << leg->mdepdate << leg->mdeptime;
 
-            QJsonObject destination = subtrip.value("Destination").toObject();
+            qDebug() << leg->mfrom << leg->mdepdate << leg->mdeptime;
+
             //Add destination info
-            leg->mto = destination.value("#text").toString();
+            leg->mto = dest["name"].toString();
             leg->mtoid = "null";
             leg->mtotrack = "";
-            leg->marivdate = toappdate(subtrip.value("ArrivalDate").toString());
-            leg->marivrtdate = leg->marivdate;
-            leg->marivtime = subtrip.value("ArrivalTime").toObject().value("#text").toString();
-            leg->marivrttime = leg->marivtime;
+            leg->marivdate = dest["date"].toString();
+            if (dest.contains("rtDate")) {
+                leg->marivrtdate = dest["rtDate"].toString();
+            } else {
+                leg->marivrtdate = leg->marivdate;
+            }
+            leg->marivtime = dest["time"].toString();
+            if (dest.contains("rtTime")) {
+                leg->marivrttime = dest["rtTime"].toString();
+            } else {
+                leg->marivrttime = leg->marivtime;
+            }
 
-            //qDebug() << leg->mto << leg->marivdate << leg->marivtime;
+            // Remove unnecessary walking
+            if (type == "WALK" && (leg->mfrom == leg->mto) && (j != (leglist.size() -1))) {
+                continue;
+            }
 
+            qDebug() << leg->mto << leg->marivdate << leg->marivtime;
+
+            if (j == 0) { //First leg -> Trip departure
+                strip->depdate = leg->mdepdate;
+                strip->deprtdate = leg->mdeprtdate;
+                strip->deptime = leg->mdeptime;
+                strip->deprttime = leg->mdeptime;
+            }
+            if (j == (leglist.size() -1)) { //Last leg -> Trip arrival
+                strip->arivdate = leg->marivdate;
+                strip->arivrtdate = leg->marivrtdate;
+                strip->arivtime = leg->marivtime;
+                strip->arivrttime = leg->marivrttime;
+            }
 
             //Add it
             leg->calculatetimes();
@@ -242,8 +248,8 @@ void SL::parsestops_json(QNetworkReply *reply) {
     QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8());
     QJsonObject obj = jsonResponse.object();
 
-    qDebug() << obj.keys();
-    qDebug() << obj["ResponseData"].toArray();
+    //qDebug() << obj.keys();
+    //qDebug() << obj["ResponseData"].toArray();
     QJsonArray array = obj["ResponseData"].toArray();
     int count = 0;
     while(array.size() > count && count < 10) {
@@ -251,69 +257,15 @@ void SL::parsestops_json(QNetworkReply *reply) {
             break;
         }
         QJsonObject elem = array.at(count).toObject();
-        //qDebug() << "Name" << elem["Name"].toString() << "Id" << elem["SiteId"].toDouble();
+        qDebug() << "Name" << elem["Name"].toString() << "Id" << elem["SiteId"].toString().toInt()
+                    ;
         count++;
-        QString id = QString::number(elem["SiteId"].toDouble());
+        QString id = QString::number(elem["SiteId"].toString().toInt());
         stops->append(elem["Name"].toString() + "#" + id);
     }
     emit stopsready("");
     sender()->deleteLater();
 }
-
-
-//void SL::parsestops(QNetworkReply *reply) {
-//    if (reply->error() != QNetworkReply::NoError) {
-//        qDebug() << "No connection in stoplist search";
-//        sender()->deleteLater();
-//        return;
-//    }
-//    QXmlStreamReader xml;
-//    xml.setDevice(reply);
-//    stops->clear();
-//    xml.readNextStartElement(); //Hafas
-//    //qDebug() << "Hafas?" << xml.name() << xml.isEndElement();
-//    if(xml.name() == "ErrorMessage") {
-//        qDebug() << "No stops found";
-//        sender()->deleteLater();
-//        return;
-//    }
-
-
-//    xml.readNextStartElement(); //Execution time
-//    xml.skipCurrentElement();
-//    //qDebug() << "Exec true?" << xml.name() << xml.isEndElement();
-//    xml.readNextStartElement(); //Sites
-//    //qDebug() << "Sites?" << xml.name() << xml.isEndElement();
-
-//    int count = 0;
-//    xml.readNextStartElement(); //Read first Site
-//    while (!xml.isEndElement() && count < 10) {
-//        //qDebug() << "Site?" << xml.name() << xml.isEndElement();
-
-//        xml.readNextStartElement(); //Number
-//        //qDebug() << "Number?" << xml.name() << xml.isEndElement();
-
-//        QString num = xml.readElementText();
-
-//        xml.readNextStartElement(); //Name
-//        //qDebug() << "Name?" << xml.name() << xml.isEndDocument();
-
-//        QString name  = xml.readElementText();
-//        //qDebug() << "RES:" << num << name;
-//        stops->append(name + "#" + num);
-
-//        xml.skipCurrentElement();//Skip the site end tag
-//        //qDebug() << "Site true?" << xml.name() << xml.isEndElement();
-//        xml.readNextStartElement();//Read next site
-//        //qDebug() << "Site | Sites true?" << xml.name() << xml.isEndElement();
-//        count++;
-//    }
-//    emit stopsready("");
-//    sender()->deleteLater();
-//}
-
-
-
 
 QString SL::toappdate(QString sldate) {
     QStringList l = sldate.split(".");
