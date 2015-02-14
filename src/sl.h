@@ -40,6 +40,7 @@ public slots:
 private:   
     static QString address;
     static QString nameaddress;
+    static QString teststr;
     static SL *msl;
     explicit SL();
 

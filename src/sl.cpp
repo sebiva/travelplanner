@@ -65,10 +65,14 @@ void SL::parsereply(QNetworkReply *reply) {
 
     QJsonObject root = jsondoc.object();
     //qDebug() << root.keys();
+
     QJsonObject root2 = root["TripList"].toObject();
     //qDebug() << "List?" << root2["Trip"].isArray();
     if (!root2.contains("Trip")) {
-        emit replyready("No trips found"); //TODO: Better error msg
+        qDebug() << "No trips found";
+        emit replyready("No trips found");
+        sender()->deleteLater();
+        return;
     }
     QJsonArray triplist = QJsonArray();
     // If there is only on trip, its not in a list...
@@ -104,6 +108,29 @@ void SL::parsereply(QNetworkReply *reply) {
             leg->setParent(strip);
 
             QJsonObject legobj = leglist.at(j).toObject();
+            qDebug() << legobj.keys();
+            if (legobj.contains("RTUMessages")) {
+                QJsonArray errlist = QJsonArray();
+                QJsonObject rtus = legobj["RTUMessages"].toObject();
+                if (rtus.contains("RTUMessage") && !rtus["RTUMessage"].isArray() && rtus["RTUMessage"].isObject()) {
+                    errlist.append(rtus["RTUMessage"].toObject());
+                } else if (rtus["RTUMessage"].isArray()){
+                    errlist = rtus["RTUMessage"].toArray();
+                }
+                for (int k = 0; k < errlist.size(); k++) {
+                    QJsonObject rtu = errlist.at(k).toObject();
+                    qDebug() << "RTU Message found!" << rtu.keys();
+                    if (rtu.contains("$")) {
+                        QString msg = rtu["$"].toString();
+                        qDebug() << "Message: " << msg;
+                        if (msg.contains("inställd", Qt::CaseInsensitive )) {
+                            qDebug() << "Cancelled!!";
+                            strip->errmsg = tr("Cancelled");
+                        }
+                    }
+                }
+            }
+
 
             QJsonObject origin = legobj["Origin"].toObject();
             QJsonObject dest = legobj["Destination"].toObject();
@@ -211,7 +238,10 @@ void SL::parsereply(QNetworkReply *reply) {
         //Check if the departure time has passed, if so notify by setting errmsg.
         if (Timehelper::beforenow(strip->deprtdate, strip->deprttime)) {
             strip->passed = true;
-            strip->errmsg = tr("Departed");
+            if (strip->errmsg == "") { // Don't overwrite cancelled status
+                strip->errmsg = tr("Departed");
+            }
+
         }
 
         //Add it
@@ -276,3 +306,63 @@ QString SL::tosldate(QString appdate) {
     QStringList l = appdate.split("-");
     return l.at(2) + "." + l.at(1) + "." + l.at(0).right(2);
 }
+
+// For testing RTU-messages..
+QString SL::teststr = "{\"TripList\":{"
+                 " \"noNamespaceSchemaLocation\":\"hafasRestTrip.xsd\","
+                  "\"Trip\":{"
+                   " \"dur\":\"10\","
+                    "\"chg\":\"0\","
+                    "\"co2\":\"0.00\","
+                    "\"LegList\":{"
+                    "  \"Leg\":{"
+                     "   \"idx\":\"0\","
+                      "  \"name\":\"tunnelbanans gröna linje 19\","
+                      "  \"type\":\"METRO\","
+                      "  \"dir\":\"Hagsätra\","
+                      "  \"line\":\"19\","
+                      "  \"Origin\":{"
+                      "    \"name\":\"Hässelby strand\","
+                      "    \"type\":\"ST\","
+                      "    \"id\":\"400101332\","
+                      "    \"lon\":\"17.832468\","
+                      "    \"lat\":\"59.361741\","
+                      "    \"routeIdx\":\"0\","
+                      "    \"time\":\"15:30\","
+                      "    \"date\":\"2015-02-14\""
+                      "    },"
+                      "  \"Destination\":{"
+                      "    \"name\":\"Islandstorget\","
+                      "    \"type\":\"ST\","
+                      "    \"id\":\"400101262\","
+                      "    \"lon\":\"17.893217\","
+                      "    \"lat\":\"59.345992\","
+                      "    \"routeIdx\":\"6\","
+                      "    \"time\":\"15:40\","
+                      "    \"date\":\"2015-02-14\""
+                      "    },"
+                      "  \"RTUMessages\":{"
+                      "      \"RTUMessage\":[{"
+                      "          \"$\":\"Inställd pga trafikhändelse\""
+                      "      },"
+                      "      {\"$\":\"Hej\"}]"
+                      "    },"
+                      "  \"JourneyDetailRef\":{"
+                      "    \"ref\":\"ref%3D152385%2F56781%2F314894%2F106654%2F74%3Fdate%3D2015-02-14%26station_evaId%3D400101332%26station_type%3Ddep%26lang%3Dsv%26format%3Djson%26\""
+                      "    },"
+                      "  \"GeometryRef\":{"
+                      "    \"ref\":\"ref%3D152385%2F56781%2F314894%2F106654%2F74%26startIdx%3D0%26endIdx%3D6%26lang%3Dsv%26format%3Djson%26\""
+                      "    }"
+                      "  }"
+                      "},"
+                    "\"PriceInfo\":{"
+                     " \"TariffZones\":{"
+                      "  \"$\":\"A\""
+                      "  },"
+                      "\"TariffRemark\":{"
+                      "  \"$\":\"2 biljett\""
+                      "  }"
+                      "}"
+                    "}"
+                  "}"
+                "}";
