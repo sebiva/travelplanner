@@ -108,7 +108,7 @@ void SL::parsereply(QNetworkReply *reply) {
             leg->setParent(strip);
 
             QJsonObject legobj = leglist.at(j).toObject();
-            qDebug() << legobj.keys();
+            //qDebug() << legobj.keys();
             if (legobj.contains("RTUMessages")) {
                 QJsonArray errlist = QJsonArray();
                 QJsonObject rtus = legobj["RTUMessages"].toObject();
