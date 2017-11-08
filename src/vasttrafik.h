@@ -26,16 +26,23 @@ public:
 
     bool getXML(QString fromid, QString toid, QString date, QString time);
     bool getstops(QString str);
+    QByteArray get_token();
+
+    QNetworkRequest build_request(QString url);
 
 signals:
-
+    void parsed_token();
 public slots:
     void parsestops(QNetworkReply *reply);
     void parsereply(QNetworkReply *reply);
+    void parse_token(QNetworkReply *reply);
 private:
     static QString address;
     static QString nameaddress;
     static Vasttrafik *mvasttrafik;
+    static QString secret;
+    QByteArray token;
+    QDateTime expiry;
     explicit Vasttrafik();
 };
 

@@ -1,11 +1,14 @@
 #include "vasttrafik.h"
 
 QString Vasttrafik::address =
-        "http://api.vasttrafik.se/bin/rest.exe/v1/trip?authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml";
+        "https://api.vasttrafik.se/bin/rest.exe/v2/trip";
 QString Vasttrafik::nameaddress =
-        "http://api.vasttrafik.se/bin/rest.exe/v1/location.name?authKey=924b3c93-d187-47ab-bfde-12c230a7e97b&format=xml&input=";
+        "https://api.vasttrafik.se/bin/rest.exe/v2/location.name?input=";
 Vasttrafik *Vasttrafik::mvasttrafik = 0;
 
+QString Vasttrafik::secret = QByteArray("Basic WUcxMjltQ0VoZmpQMDF6QThLNmpvUURSVjVJYTpSZnBBcW12c3hXYllpMW9ZaFNSZlRxZ3dQSXNh", -1);
+QByteArray token;
+QDateTime expiry;
 
 Vasttrafik::Vasttrafik()
 {
@@ -24,21 +27,91 @@ Parser *Vasttrafik::getinstance() {
     return mvasttrafik;
 }
 
+QByteArray Vasttrafik::get_token() {
+    if (expiry.isNull() || expiry < QDateTime::currentDateTimeUtc()) {
+        //Get a new token.
+
+        //Set up timer and loop to wait for the post request to complete and be parsed
+        QTimer timer;
+        timer.setSingleShot(true);
+        QEventLoop loop;
+        QNetworkAccessManager * manager = new QNetworkAccessManager(this);
+        connect(manager, SIGNAL(finished(QNetworkReply*)),
+                this, SLOT(parse_token(QNetworkReply*)));
+        connect(this, SIGNAL(parsed_token()),
+                &loop, SLOT(quit()) );
+
+        QUrl url = QUrl("https://api.vasttrafik.se/token");
+        QNetworkRequest request = QNetworkRequest(url);
+        request.setRawHeader(QByteArray("Content-Type", -1), QByteArray("application/x-www-form-urlencoded", -1));
+        request.setRawHeader(QByteArray("Authorization", -1), secret.toUtf8());
+        QString id = "42"; // Static for now
+
+        manager->post(request, QByteArray("grant_type=client_credentials&scope=", -1) + id.toUtf8());
+
+        connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
+        //Wait max 5 seconds for the network request to arrive
+        timer.start(5000);
+        loop.exec();
+        if(timer.isActive())
+            qDebug() << "New token received";
+        else
+            qDebug() << "No new token, something failed";
+        return token;
+    } else {
+        qDebug() << "Reusing token, expires: " << expiry.toString();
+        return token;
+    }
+}
+
+void Vasttrafik::parse_token(QNetworkReply* reply) {
+    if (reply->error() != QNetworkReply::NoError) {
+        qDebug() << "Error getting token: " << reply->error();
+        sender()->deleteLater();
+        return;
+    }
+    QString strReply = (QString)reply->readAll();
+
+    qDebug() << "Response:" << strReply;
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8());
+    QJsonObject jsonObj = jsonResponse.object();
+
+    token = (jsonObj["token_type"].toString() + " " + jsonObj["access_token"].toString()).toUtf8();
+    int expires_in = jsonObj["expires_in"].toInt();
+    if (expiry.isNull()) {
+        expiry = QDateTime::currentDateTimeUtc();
+    }
+    expiry = expiry.addSecs(expires_in);
+    qDebug() << "token:" << token << "expires:" << expiry.toString();
+    emit parsed_token();
+}
+
+QNetworkRequest Vasttrafik::build_request(QString url) {
+    url = url + "&format=xml";
+    QNetworkRequest request = QNetworkRequest(url);
+    QByteArray token = this->get_token();
+    request.setRawHeader(QByteArray("Authorization", -1), token);
+    return request;
+}
+
 /*
  * Takes information about a trip and makes a search. Eventually emits ready() when the result is available
  * in the list trips.
  */
 bool Vasttrafik::getXML(QString fromid, QString toid, QString date, QString time) {
+    QString url = address +
+                  "?originId=" + fromid +
+                  "&destId=" + toid +
+                  "&date=" + date +
+                  "&time=" + time;
+
+    qDebug()<<"ADDRESS::"<< url;
+
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(parsereply(QNetworkReply*)) );
-    // Make the search
-    manager->get(QNetworkRequest(QUrl(address +
-                                      "&date=" + date +
-                                      "&time=" + time +
-                                      "&originId=" + fromid +
-                                      "&destId=" + toid)));
-    qDebug()<<"ADDRESS::"<<(address+"&date="+date +"&time="+time+"&originId="+fromid+"&destId="+toid);
+    manager->get(build_request(url));
+
     return true;
 }
 
@@ -48,7 +121,7 @@ bool Vasttrafik::getXML(QString fromid, QString toid, QString date, QString time
  */
 void Vasttrafik::parsereply(QNetworkReply *reply) {
     if (reply->error() != QNetworkReply::NoError) {
-        qDebug() << "An error occured";
+        qDebug() << "An error occured: " << reply->error();
         emit replyready("No connection");
         sender()->deleteLater();
         return;
@@ -258,11 +331,14 @@ void Vasttrafik::parsereply(QNetworkReply *reply) {
 bool Vasttrafik::getstops(QString str) {
     str = removespecials(str);
     qDebug() << "SEARCHING STOPS::" << str;
+    QString url = QString(nameaddress + str);
+    qDebug()<<"NAMEADDRESS::"<< url;
+
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(parsestops(QNetworkReply*)) );
-    manager->get(QNetworkRequest(QUrl(nameaddress + str)));
-    qDebug()<<"NAMEADDRESS::"<<(nameaddress+str);
+    manager->get(build_request(url));
+
     return true;
 }
 
