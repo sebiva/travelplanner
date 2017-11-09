@@ -117,7 +117,7 @@ Page {
                 }
                 Text {
                     color: Theme.primaryColor;
-                    text: qsTr("Uses the") + ' <html><style type="text/css"></style><a href="http://labs.vasttrafik.se">Västtrafik</a></html>,'
+                    text: qsTr("Uses the") + ' <html><style type="text/css"></style><a href="https://developer.vasttrafik.se">Västtrafik</a></html>,'
                           + ' <html><style type="text/css"></style><a href="https://www.trafiklab.se/api/sl-reseplanerare-2">SL</a></html> ' + qsTr("and")
                     onLinkActivated: Qt.openUrlExternally(link)
                     linkColor: Theme.highlightColor

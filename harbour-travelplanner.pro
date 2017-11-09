@@ -54,3 +54,10 @@ lupdate_only {
     TRANSLATIONS = languages/harbour_travelplanner_en.ts \
                 languages/harbour_travelplanner_sv.ts
 }
+
+SAILFISHAPP_ICONS += 86x86 108x108 128x128 256x256
+
+DISTFILES += icons/86x86/harbour-travelplanner.png \
+icons/108x108/harbour-travelplanner.png \
+icons/128x128/harbour-travelplanner.png \
+icons/256x256/harbour-travelplanner.png
